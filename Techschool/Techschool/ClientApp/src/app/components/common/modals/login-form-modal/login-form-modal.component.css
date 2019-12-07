@@ -1,0 +1,20 @@
+mat-form-field {
+  width: 100%;
+}
+
+.button {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+mat-dialog-title {
+  margin-bottom: 10px;
+}
+
+.mat-dialog-actions > p {
+  color: #673ab7;
+}
+
+.mat-dialog-actions > p > span {
+  cursor: pointer;
+}

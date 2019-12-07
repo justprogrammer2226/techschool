@@ -1,0 +1,63 @@
+<main>
+  <aside>
+    <div id="side-menu" (mouseenter)="openSideBarMenu()" (mouseleave)="closeSideBarMenu()">
+      <mat-accordion [displayMode]="flat" [multi]="true">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header [collapsedHeight]="'48px'" [expandedHeight]="'48px'" #testHeader>
+            <mat-panel-title>
+              <mat-icon>people</mat-icon><span class="icon-text">Особисті картки</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <p (click)="openAddPersonalCardModal()">
+            <span class="item-text">Додати картку</span>
+          </p>
+          <p>
+            <a class="item-text" routerLink="/personal-cards">Переглянути картки</a>
+          </p>
+
+        </mat-expansion-panel>
+        <mat-divider></mat-divider>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon>library_books</mat-icon><a class="icon-text" routerLink="/disciplines">Навчальні дисципліни</a>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item>
+            <mat-icon>mood</mat-icon><span class="icon-text">Обычный пункт 2</span>
+          </mat-list-item>
+        </mat-list>
+        <mat-divider></mat-divider>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header [collapsedHeight]="'48px'" [expandedHeight]="'48px'">
+            <mat-panel-title>
+              <mat-icon>person</mat-icon><span class="icon-text">Адміністратор</span>
+            </mat-panel-title>
+
+          </mat-expansion-panel-header>
+
+          <p>
+            <a class="item-text" routerLink="/registration-requests"> Переглянути запити на реєстрацію </a>
+          </p>
+
+        </mat-expansion-panel>
+        <mat-list (click)="logout()" *ngIf="isAuthentificated">
+          <mat-list-item>
+            <mat-icon>cancel</mat-icon><span class="icon-text">Вихід</span>
+          </mat-list-item>
+        </mat-list>
+        <mat-list (click)="openLoginFormDialog()" *ngIf="!isAuthentificated">
+          <mat-list-item>
+            <mat-icon>cancel</mat-icon><span class="icon-text">Вхід</span>
+          </mat-list-item>
+        </mat-list>
+      </mat-accordion>     
+    </div>
+  </aside>
+  <section>
+    <router-outlet></router-outlet>
+  </section>
+</main>
+
+
+

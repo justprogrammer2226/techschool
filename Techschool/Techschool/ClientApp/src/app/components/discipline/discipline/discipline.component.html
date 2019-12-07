@@ -1,0 +1,67 @@
+<div class="grid-cols-400">
+  <div>
+    <div class="block-wrapper">
+      <p>
+        <span>Циклові комісії</span>
+      </p>
+
+      <table mat-table [dataSource]="cycleCommissionsDataSource" class="mat-elevation-z8" style="width: 100%">
+
+        <ng-container matColumnDef="add-edit">
+          <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openAddCycleCommissionModal()"> <mat-icon>add</mat-icon> </th>
+          <td mat-cell *matCellDef="let element" (click)="openEditCycleCommissionModal(element.id)"> <mat-icon>edit</mat-icon> </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Назва </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="subjects">
+          <th mat-header-cell *matHeaderCellDef> Предмети </th>
+          <td mat-cell *matCellDef="let element"> {{element.subjects}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef style="width: 48px"> </th>
+          <td mat-cell *matCellDef="let element" (click)="deleteCycleCommission(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="cycleCommissionDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: cycleCommissionDisplayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+  <div>
+    <div class="block-wrapper">
+      <p>
+        <span>Предмети</span>
+      </p>
+      <table mat-table [dataSource]="subjectsDataSource" class="mat-elevation-z8" style="width: 100%">
+
+        <ng-container matColumnDef="add-edit">
+          <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openAddSubjectModal()"> <mat-icon>add</mat-icon> </th>
+          <td mat-cell *matCellDef="let element" (click)="openEditSubjectModal(element.id)"> <mat-icon>edit</mat-icon> </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Назва </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cycleCommissions">
+          <th mat-header-cell *matHeaderCellDef> Циклові комісії </th>
+          <td mat-cell *matCellDef="let element"> {{element.cycleCommissions}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef style="width: 48px"> </th>
+          <td mat-cell *matCellDef="let element" (click)="deleteSubject(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="subjectsDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: subjectsDisplayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+</div>

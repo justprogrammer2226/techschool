@@ -1,0 +1,32 @@
+mat-form-field {
+  width: 100%;
+}
+
+.button {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+mat-dialog-title {
+  margin-bottom: 10px;
+}
+
+.mat-table {
+  border: 1px solid #eee;
+  box-shadow: none;
+  border-radius: 10px;
+  border-collapse: separate;
+  overflow: hidden;
+}
+
+.mat-cell + .mat-cell {
+  border-left: 1px solid #eee;
+}
+
+.mat-header-cell + .mat-header-cell {
+  border-left: 1px solid #eee;
+}
+
+h5 {
+  margin-bottom: 1rem;
+}

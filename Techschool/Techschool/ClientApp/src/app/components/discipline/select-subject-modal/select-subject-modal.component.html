@@ -1,0 +1,16 @@
+<h1 mat-dialog-title> Виберіть предмет </h1>
+<div mat-dialog-content>
+
+  <p>
+    <mat-form-field class="form-element">
+      <mat-label>Предмет</mat-label>
+      <mat-select placeholder="Тест" [(ngModel)]="selectedSubject">
+        <mat-option *ngFor="let subject of subjects" [value]="subject"> {{ subject.name }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="select()">Зберегти</button>
+</div>

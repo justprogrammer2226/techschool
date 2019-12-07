@@ -1,0 +1,39 @@
+<div class="block-wrapper">
+
+  <h5 *hasRole="'Administrator'">Запити на реєстрацію</h5>
+  <table mat-table [dataSource]="registrationRequests" class="mat-elevation-z8" style="width: 100%" *hasRole="'Administrator'">
+
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef> Ім'я </th>
+      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef> Прізвище </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Пошта </th>
+      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef> Роль </th>
+      <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="approve">
+      <th mat-header-cell *matHeaderCellDef> Підтвердити </th>
+      <td mat-cell *matCellDef="let element"> <mat-icon style="color: #1db954" (click)="confirmRequest(element)">check</mat-icon> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cancel">
+      <th mat-header-cell *matHeaderCellDef> Відхилити </th>
+      <td mat-cell *matCellDef="let element"> <mat-icon style="color: #D33;" (click)="cancelRequest(element)">cancel</mat-icon> </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

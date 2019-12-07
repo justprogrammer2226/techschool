@@ -1,0 +1,19 @@
+body {
+  min-height: 100vh;
+}
+
+.block-wrapper {
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 10px rgba(204,204,204,.5);
+}
+
+.grid-cols-400 {
+  display: grid;
+  grid-column-gap: 15px;
+  grid-row-gap: 15px;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}

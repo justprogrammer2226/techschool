@@ -1,0 +1,172 @@
+main {
+  display: flex;
+  height: 100%;
+}
+
+aside {
+  flex: 0 0 50px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+section {
+  flex: 1;
+  padding: 15px;
+  background-color: #f5f6f8;
+  min-height: 100vh;
+  box-shadow: inset 13px 0 8px -10px rgba(202,204,204,.18);
+}
+
+#side-menu {
+  position: fixed;
+  background-color: #fff;
+  overflow: hidden;
+  height: 100%;
+  width: 50px;
+  transition: 0.5s;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(204,204,204,.5)
+}
+
+ul {
+  padding-left: 0px;
+}
+
+li {
+  list-style: none;
+  white-space: nowrap;
+  height: 50px;
+}
+
+.mat-table {
+  border: 1px solid #eee;
+  box-shadow: none;
+}
+
+mat-icon {
+  height: 50px;
+  width: 50px;
+  font-size: 26px;
+  padding: 12px;
+  opacity: .42;
+  transition: 0.5s;
+}
+
+.icon-text {
+  font-size: 13px;
+  line-height: 50px;
+  color: #48655d !important;
+  font-weight: 500;
+  transition: 0.5s;
+  width: 100%;
+}
+
+.mat-expansion-panel {
+  box-shadow: none;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0px !important;
+  white-space: nowrap;
+}
+
+::ng-deep .mat-expansion-panel-header {
+  padding: 0px !important;
+  white-space: nowrap;
+  width: 275px;
+  transition: 0.5s;
+}
+
+::ng-deep .mat-expansion-panel-header:hover {
+  background-color: rgba(0, 0, 0, .04) !important;
+}
+
+
+::ng-deep .mat-expansion-panel-body > p:before {
+  width: 50px;
+  content: '–';
+  color: rgba(72, 101, 93, 0.4);
+  display: inline-block;
+  text-align: center;
+  font-weight: 600;
+}
+
+::ng-deep .mat-expansion-indicator {
+  margin-right: 20px;
+}
+
+::ng-deep .mat-expansion-panel-body > p {
+  font-size: 12px;
+  padding: 0px;
+  margin: 0px;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+::ng-deep .mat-expansion-panel-body > p:hover {
+  background-color: rgba(0, 0, 0, .04);
+}
+
+::ng-deep .mat-expansion-panel-header.mat-expanded > .mat-content > mat-panel-title > mat-icon {
+  color: #1db954;
+  opacity: 1;
+}
+
+::ng-deep .mat-expansion-panel-header.mat-expanded > .mat-content > mat-panel-title > .icon-text {
+  color: #1db954;
+  opacity: 1;
+}
+
+.item-text {
+  margin: 5px 0px;
+  transition: 0.5s;
+  color: #48655d;
+  width: calc(100% - 50px);
+  display: inline-block;
+}
+
+.item-text:hover {
+  color: #111111;
+}
+
+mat-accordion {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+/*Logout*/
+mat-list:last-child {
+  margin-top: auto;
+  justify-content: flex-end;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+mat-list:last-child:hover {
+  background-color: rgba(0, 0, 0, .04);
+}
+/*Logout*/
+
+mat-list {
+  padding: 0px;
+}
+
+mat-list-item {
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.5s;
+}
+
+mat-list-item:hover {
+  background-color: rgba(0, 0, 0, .04);
+}
+
+::ng-deep .mat-list-item-content {
+  padding: 0px !important;
+}
+
+
+a {
+  text-decoration: none;
+} 

@@ -1,0 +1,24 @@
+<ng-container *ngIf="!isError">
+  <h1 mat-dialog-title> {{ title }} </h1>
+  <p>
+    {{ message }}
+  </p>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" class="button" (click)="close()">Ок</button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isError">
+  <mat-error>
+    <h1 mat-dialog-title> {{ title }} </h1>
+  </mat-error>
+  <p>
+    <mat-error>
+      {{ message }}
+    </mat-error>
+  </p>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="warn" class="button" (click)="close()">Ок</button>
+  </div>
+</ng-container>
+

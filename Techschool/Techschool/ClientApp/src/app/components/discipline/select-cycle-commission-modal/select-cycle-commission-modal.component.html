@@ -1,0 +1,16 @@
+<h1 mat-dialog-title> Виберіть циклову коміссію </h1>
+<div mat-dialog-content>
+
+  <p>
+    <mat-form-field class="form-element">
+      <mat-label>Циклова коміссія</mat-label>
+      <mat-select placeholder="Тест" [(ngModel)]="selectedCycleCommission">
+        <mat-option *ngFor="let cycleCommission of cycleCommissions" [value]="cycleCommission"> {{ cycleCommission.name }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </p>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="select()">Зберегти</button>
+</div>

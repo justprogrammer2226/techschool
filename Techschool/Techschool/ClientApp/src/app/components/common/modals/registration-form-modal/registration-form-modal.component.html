@@ -1,0 +1,57 @@
+<form [formGroup]="formGroup" (ngSubmit)="register(formGroup.value)" class="form">
+
+  <h1 mat-dialog-title class="title">Реєстрація</h1>
+
+
+  <div mat-dialog-content>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Ім'я" formControlName="firstname">
+        <mat-error *ngIf="formGroup.controls['firstname'].invalid">
+          {{getError('firstname')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Прізвище" formControlName="lastname">
+        <mat-error *ngIf="formGroup.controls['lastname'].invalid">
+          {{getError('lastname')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <mat-label>Роль</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="Methodist">Методист</mat-option>
+          <mat-option value="Administrator">Адміністратор</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.controls['role'].invalid">
+          {{getError('role')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Електронна пошта" formControlName="email">
+        <mat-error *ngIf="formGroup.controls['email'].invalid">
+          {{getError('email')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="password" matInput placeholder="Пароль" formControlName="password">
+        <mat-error *ngIf="formGroup.controls['password'].invalid">
+          {{getError('password')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Зареєструватись</button>
+  </div>
+
+</form>

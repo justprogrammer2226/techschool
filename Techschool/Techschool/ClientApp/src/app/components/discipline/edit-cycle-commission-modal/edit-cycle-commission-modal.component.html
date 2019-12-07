@@ -1,0 +1,29 @@
+<h1 mat-dialog-title> Редагування циклової комісії </h1>
+<div mat-dialog-content>
+
+  <table mat-table [dataSource]="cycleCommissionDataSource" class="mat-elevation-z8" style="width: 100%">
+
+    <ng-container matColumnDef="add-delete">
+      <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openSelectSubjectModal()"> <mat-icon style="color: #1db954">add</mat-icon> </th>
+      <td mat-cell *matCellDef="let element" (click)="delete(element.subjectId)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Назва </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="subjectName">
+      <th mat-header-cell *matHeaderCellDef> Циклова комісія </th>
+      <td mat-cell *matCellDef="let element"> {{element.subjectName}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="cycleCommissionDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: cycleCommissionDisplayedColumns;"></tr>
+
+  </table>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button>Зберегти</button>
+</div>
