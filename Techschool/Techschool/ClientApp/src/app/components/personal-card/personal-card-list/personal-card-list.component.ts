@@ -21,6 +21,7 @@ export class PersonalCardListComponent implements OnInit {
   public ngOnInit(): void {
     this.personalCardService.getAll().subscribe(response => {
       this.personalCards = response;
+      console.log(this.personalCards);
     });
   }
 

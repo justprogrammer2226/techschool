@@ -17,3 +17,41 @@ body {
   grid-auto-flow: row;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 }
+
+/*Material table*/
+.mat-table {
+  border: 1px solid #eee;
+  box-shadow: none;
+  border-radius: 10px;
+  border-collapse: separate;
+  overflow: hidden;
+}
+
+.mat-cell + .mat-cell {
+  border-left: 1px solid #eee;
+}
+
+.mat-header-cell + .mat-header-cell {
+  border-left: 1px solid #eee;
+}
+
+.mat-row, .mat-header-row {
+  height: auto !important;
+}
+
+.icon-cell.mat-cell:first-of-type, .icon-cell.mat-footer-cell:first-of-type, .icon-cell.mat-header-cell:first-of-type {
+  padding: 7px;
+  text-align: center;
+}
+
+.icon-cell.mat-cell:last-of-type, .icon-cell.mat-footer-cell:last-of-type, .icon-cell.mat-header-cell:last-of-type {
+  padding: 7px;
+  text-align: center;
+}
+
+.text-cell.mat-header-cell, .text-cell.mat-cell, .text-cell.mat-footer-cell {
+  padding: 7px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0,0,0,.54);
+}

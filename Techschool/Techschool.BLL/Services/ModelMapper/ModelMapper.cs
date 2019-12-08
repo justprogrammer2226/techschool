@@ -38,7 +38,8 @@ namespace Techschool.BLL.Services
                 .ForMember(destMember => destMember.Role, memberOptions => memberOptions.Ignore());
 
             cfg.CreateMap<PersonalCard, PersonalCardModel>()
-                .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.MapFrom(src => src.EmploymentType.Name.ToString()));
+                .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.MapFrom(src => src.EmploymentType.Name.ToString()))
+                .ForMember(destMember => destMember.Subjects, memberOptions => memberOptions.MapFrom(_ => GetSubjectModelsByPersonalCardId(_.Id)));
             cfg.CreateMap<PersonalCardModel, PersonalCard>()
                 .ForMember(destMember => destMember.EmploymentTypeId, memberOptions => memberOptions.MapFrom(src => context.EmploymentTypes.SingleOrDefault(_ => _.Name == src.EmploymentType).Id))
                 .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.Ignore()).ForMember(destMember => destMember.EmploymentTypeId, memberOptions => memberOptions.MapFrom(src => context.EmploymentTypes.SingleOrDefault(_ => _.Name == src.EmploymentType).Id));
@@ -66,6 +67,14 @@ namespace Techschool.BLL.Services
                 .Select(_ => _.CycleCommission)
                 .ToList();
             return subjects.Select(_ => new CycleCommissionModel() { Id = _.Id, Name = _.Name });
+        }
+
+        private IEnumerable<SubjectModel> GetSubjectModelsByPersonalCardId(string id)
+        {
+            var subjects = context.PersonalCardsSubjects.Where(_ => _.PersonalCardId == id)
+                .Select(_ => _.Subject)
+                .ToList();
+            return subjects.Select(_ => new SubjectModel() { Id = _.Id, Name = _.Name });
         }
     }
 }
