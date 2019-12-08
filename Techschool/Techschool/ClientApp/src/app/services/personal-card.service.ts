@@ -17,6 +17,10 @@ export class PersonalCardService {
     return this.http.get<PersonalCardModel[]>(this.baseUrl + 'api/personal-cards');
   }
 
+  public getById(id: string): Observable<PersonalCardModel> {
+    return this.http.get<PersonalCardModel>(this.baseUrl + 'api/personal-cards/' + id);
+  }
+
   public save(model: PersonalCardModel): Observable<any> {
     return this.http.post(this.baseUrl + 'api/personal-cards', model);
   }

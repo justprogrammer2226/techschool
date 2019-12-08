@@ -35,6 +35,16 @@ namespace Techschool.BLL.Services
             return personalCards;
         }
 
+        public PersonalCardModel GetById(string id)
+        {
+            var personalCardEntity = context.PersonalCards.AsNoTracking()
+                .Include(_ => _.EmploymentType)
+                .Include(_ => _.CycleCommission)
+                .Single(_ => _.Id == id);
+            var personalCard = modelMapper.MapTo<PersonalCard, PersonalCardModel>(personalCardEntity);
+            return personalCard;
+        }
+
         public void Save(PersonalCardModel model)
         {
             var personalCard = context.PersonalCards.AsNoTracking()

@@ -30,6 +30,21 @@ namespace Techschool.Api
             }
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetById(string id)
+        {
+            try
+            {
+                var personalCard = personalCardService.GetById(id);
+                return Ok(personalCard);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public IActionResult Save(PersonalCardModel model)
         {

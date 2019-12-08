@@ -1,71 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTableDataSource, MAT_DIALOG_DATA } from '@angular/material';
 import { CycleCommissionModel } from '@models/cycle-commission.model';
 import { PersonalCardModel } from '@models/personal-card.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
 import { PersonalCardService } from '@services/personal-card.service';
 import { NotificationModalComponent } from '../../common/modals/notification-modal/notification-modal.component';
-import { SubjectModel } from '../../../models/subject.model';
+import { SubjectModel } from '@models/subject.model';
 import { SelectSubjectModalComponent } from '../../discipline/select-subject-modal/select-subject-modal.component';
 
 @Component({
-  templateUrl: './add-personal-card-modal.component.html',
+  templateUrl: './edit-personal-card-modal.component.html',
   styleUrls: [
-    './add-personal-card-modal.component.css'
+    './edit-personal-card-modal.component.css'
   ]
 })
-export class AddPersonalCardModalComponent {
+export class EditPersonalCardModalComponent {
 
   public formGroup: FormGroup;
   datemask = ['(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/];
-
-  //+name: string;
-  //+surname: string;
-  //+patronymic: string;
-  //+birthday: Date;
-  //+address: string;
-  //+phoneNumber: number;
-  //+email: string;
-  // photo: string;
-  //+isEmployee: boolean;
-  //+isTeacher: boolean;
-  //+employmentType: string;
 
   public cycleCommissions: CycleCommissionModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   public subjectsDisplayedColumns: string[] = ['add-delete', 'name'];
 
-  constructor(private authService: AuthService, private dialogRef: MatDialogRef<AddPersonalCardModalComponent>, private formBuilder: FormBuilder, private dialog: MatDialog,
-    private personalCardService: PersonalCardService, private disciplineService: DisciplineService) {
-    this.formGroup = this.formBuilder.group({
-      'name': ['', Validators.required],
-      'surname': ['', Validators.required],
-      'patronymic': ['', Validators.required],
-      'birthday': ['', Validators.required],
-      'address': ['', Validators.required],
-      'phone': ['', Validators.required],
-      'email': ['', [Validators.required, Validators.email]],
-      'employmentType': ['', Validators.required],
-      'isTeacher': [false, ],
-      'isEmployee': [false,],
-      'cycleCommission': [''],
-    });
+  public personalCard: PersonalCardModel = new PersonalCardModel();
 
-    this.formGroup.get('isTeacher').valueChanges.subscribe(isTeacher => {
-      const cycleCommissionControl = this.formGroup.get('cycleCommission');
-      if (isTeacher) {
-        cycleCommissionControl.setValidators([Validators.required]);
-      } else {
-        cycleCommissionControl.setValidators(null);
-      }
-      cycleCommissionControl.updateValueAndValidity();
-    });
-
-    this.disciplineService.getCycleCommissions().subscribe(response => {
-      this.cycleCommissions = response;
-    });
+  constructor(private authService: AuthService, private dialogRef: MatDialogRef<EditPersonalCardModalComponent>, private formBuilder: FormBuilder, private dialog: MatDialog,
+    private personalCardService: PersonalCardService, private disciplineService: DisciplineService, @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.initFormGroup();
+    if (data.personalCard) {
+      this.personalCard = data.personalCard;
+      this.subjectsDataSource.data = this.subjectsToDataSource(this.personalCard.subjects);
+      this.disciplineService.getCycleCommissions().subscribe(response => {
+        this.cycleCommissions = response;
+        this.setFormGroupByPersonalCard(this.personalCard);
+      });
+    }
   }
 
   public getError(controlElementName): string {
@@ -132,27 +104,26 @@ export class AddPersonalCardModalComponent {
   }
 
   public save(formValue: any): void {
-    const personalCard: PersonalCardModel = new PersonalCardModel();
-    personalCard.name = formValue.name;
-    personalCard.surname = formValue.surname;
-    personalCard.patronymic = formValue.patronymic;
-    personalCard.birthday = formValue.birthday;
-    personalCard.address = formValue.address;
-    personalCard.phoneNumber = formValue.phone;
-    personalCard.email = formValue.email;
-    personalCard.employmentType = formValue.employmentType;
-    personalCard.isTeacher = formValue.isTeacher;
-    personalCard.isEmployee = formValue.isEmployee;
-    personalCard.cycleCommission = formValue.cycleCommission;
-    personalCard.subjects = [];
+    this.personalCard.name = formValue.name;
+    this.personalCard.surname = formValue.surname;
+    this.personalCard.patronymic = formValue.patronymic;
+    this.personalCard.birthday = formValue.birthday;
+    this.personalCard.address = formValue.address;
+    this.personalCard.phoneNumber = formValue.phone;
+    this.personalCard.email = formValue.email;
+    this.personalCard.employmentType = formValue.employmentType;
+    this.personalCard.isTeacher = formValue.isTeacher;
+    this.personalCard.isEmployee = formValue.isEmployee;
+    this.personalCard.cycleCommission = formValue.cycleCommission;
+    this.personalCard.subjects = [];
     this.subjectsDataSource.data.forEach(item => {
       const newSubject = new SubjectModel();
       newSubject.id = item.id;
       newSubject.name = item.name;
-      personalCard.subjects.push(newSubject);
+      this.personalCard.subjects.push(newSubject);
     });
 
-    this.personalCardService.save(personalCard).subscribe(response => {
+    this.personalCardService.save(this.personalCard).subscribe(response => {
       this.dialog.open(NotificationModalComponent, {
         width: '300px',
         data: {
@@ -201,6 +172,57 @@ export class AddPersonalCardModalComponent {
   }
 
   public delete(subjectId: string): void {
+    console.log(this.personalCard);
     this.subjectsDataSource.data = this.subjectsDataSource.data.filter(_ => _.id != subjectId);
+  }
+
+  private initFormGroup(): void {
+    this.formGroup = this.formBuilder.group({
+      'name': ['', Validators.required],
+      'surname': ['', Validators.required],
+      'patronymic': ['', Validators.required],
+      'birthday': ['', Validators.required],
+      'address': ['', Validators.required],
+      'phone': ['', Validators.required],
+      'email': ['', [Validators.required, Validators.email]],
+      'employmentType': ['', Validators.required],
+      'isTeacher': [false,],
+      'isEmployee': [false,],
+      'cycleCommission': [''],
+    });
+
+    this.formGroup.get('isTeacher').valueChanges.subscribe(isTeacher => {
+      const cycleCommissionControl = this.formGroup.get('cycleCommission');
+      if (isTeacher) {
+        cycleCommissionControl.setValidators([Validators.required]);
+      } else {
+        cycleCommissionControl.setValidators(null);
+      }
+      cycleCommissionControl.updateValueAndValidity();
+    });
+  }
+
+  private setFormGroupByPersonalCard(personalCard: PersonalCardModel): void {
+    this.formGroup.controls['name'].setValue(personalCard.name);
+    this.formGroup.controls['surname'].setValue(personalCard.surname);
+    this.formGroup.controls['patronymic'].setValue(personalCard.patronymic);
+    this.formGroup.controls['birthday'].setValue(personalCard.birthday);
+    this.formGroup.controls['address'].setValue(personalCard.address);
+    this.formGroup.controls['phone'].setValue(personalCard.phoneNumber);
+    this.formGroup.controls['email'].setValue(personalCard.email);
+    this.formGroup.controls['employmentType'].setValue(personalCard.employmentType);
+    this.formGroup.controls['isTeacher'].setValue(personalCard.isTeacher);
+    this.formGroup.controls['isEmployee'].setValue(personalCard.isEmployee);
+    const selectedCycleCommission = this.cycleCommissions.find(_ => _.id == personalCard.cycleCommission.id);
+    this.formGroup.controls['cycleCommission'].setValue(selectedCycleCommission);
+  }
+
+  private subjectsToDataSource(subjects: SubjectModel[]): any {
+    return subjects.map(subject => {
+      return {
+        id: subject.id,
+        name: subject.name
+      };
+    });
   }
 }
