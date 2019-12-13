@@ -14,11 +14,10 @@ import { map, startWith } from 'rxjs/operators';
 })
 export class SelectCycleCommissionModalComponent implements OnInit  {
 
-  public selectedCycleCommission: CycleCommissionModel;
   public cycleCommissions: CycleCommissionModel[] = [];
 
   public myControl = new FormControl();
-  public filteredOptions: Observable<string[]>;
+  public filteredOptions: Observable<CycleCommissionModel[]>;
 
   constructor(private dialogRef: MatDialogRef<SelectCycleCommissionModalComponent>, private dialog: MatDialog, private disciplineService: DisciplineService) { }
 
@@ -28,14 +27,14 @@ export class SelectCycleCommissionModalComponent implements OnInit  {
       this.filteredOptions = this.myControl.valueChanges
         .pipe(
           startWith(''),
-          map(value => this.cycleCommissions.filter(option => option.name.toLowerCase().includes(value.toLowerCase())).map(_ => _.name))
+          map(value => this.cycleCommissions.filter(option => option.name.toLowerCase().includes(value.toLowerCase())))
         );
     });
   }
 
-  public select(): void {
+  public select(cycleCommission: CycleCommissionModel): void {
     this.dialogRef.close({
-      selectedCycleCommission: this.selectedCycleCommission
+      selectedCycleCommission: cycleCommission
     });
   }
 }

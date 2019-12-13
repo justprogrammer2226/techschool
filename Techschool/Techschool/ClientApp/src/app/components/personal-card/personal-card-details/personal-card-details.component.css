@@ -3,11 +3,17 @@ mat-form-field {
 }
 
 .button {
-  margin-bottom: 20px;
   width: 100%;
 }
 
-mat-dialog-title {
+.mat-dialog-title {
+  margin-bottom: 15px;
+}
+
+p {
   margin-bottom: 10px;
 }
 
+table {
+  margin-bottom: 10px;
+}

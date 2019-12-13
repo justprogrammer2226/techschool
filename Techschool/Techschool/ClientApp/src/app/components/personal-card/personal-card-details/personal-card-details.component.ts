@@ -28,6 +28,7 @@ export class PersonalCardDetailsComponent {
   public subjectsDisplayedColumns: string[] = ['name'];
 
   public personalCard: PersonalCardModel = new PersonalCardModel();
+  public typeOfPersonalCard: string;
 
   constructor(private authService: AuthService, private formBuilder: FormBuilder, private dialog: MatDialog,
     private personalCardService: PersonalCardService, private disciplineService: DisciplineService, private activateRoute: ActivatedRoute) {
@@ -36,6 +37,7 @@ export class PersonalCardDetailsComponent {
       if (params['id']) {
         this.personalCardService.getById(params['id']).subscribe(response => {
           this.personalCard = response;
+          this.typeOfPersonalCard = this.getTypeOfPersonalCard();
           this.subjectsDataSource.data = this.subjectsToDataSource(this.personalCard.subjects);
           this.disciplineService.getCycleCommissions().subscribe(response => {
             this.cycleCommissions = response;
@@ -44,6 +46,13 @@ export class PersonalCardDetailsComponent {
         });
       }
     });
+  }
+
+  private getTypeOfPersonalCard(): string {
+    let type: string = '';
+    type += this.personalCard.isEmployee ? type ? ", Працівник" : "Працівник" : '';
+    type += this.personalCard.isTeacher ? type ? ", Викладач" : "Викладач" : '';
+    return type;
   }
 
   private initFormGroup(): void {
@@ -92,6 +101,7 @@ export class PersonalCardDetailsComponent {
       }).afterClosed().subscribe(response => {
         this.personalCardService.getById(this.personalCard.id).subscribe(response => {
           this.personalCard = response;
+          this.typeOfPersonalCard = this.getTypeOfPersonalCard();
           this.subjectsDataSource.data = this.subjectsToDataSource(this.personalCard.subjects);
           this.disciplineService.getCycleCommissions().subscribe(response => {
             this.cycleCommissions = response;
