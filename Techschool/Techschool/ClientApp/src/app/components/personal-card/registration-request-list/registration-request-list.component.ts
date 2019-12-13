@@ -15,9 +15,7 @@ export class RegistrationRequestListComponent implements OnInit {
   public registrationRequests: RegistrationRequestModel[] = [];
   public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'role', 'approve', 'cancel'];
 
-  constructor(private authService: AuthService, private personalCardService: PersonalCardService) {
-
-  }
+  constructor(private authService: AuthService, private personalCardService: PersonalCardService) { }
 
   public ngOnInit(): void {
     this.authService.getAllRequests().subscribe(response => {

@@ -5,13 +5,13 @@ import { PersonalCardListComponent } from './components/personal-card/personal-c
 import { RegistrationRequestListComponent } from './components/personal-card/registration-request-list/registration-request-list.component';
 import { DisciplineComponent } from './components/discipline/discipline/discipline.component';
 import { PersonalCardDetailsComponent } from './components/personal-card/personal-card-details/personal-card-details.component';
+import { CanActiveAdministrator } from './services/administrator.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
     children: [
-      //{ path: 'personal-cards', component: PersonalCardListComponent },
       {
         path: 'personal-cards',
         children: [
@@ -25,7 +25,7 @@ const routes: Routes = [
           }
         ]
       },
-      { path: 'registration-requests', component: RegistrationRequestListComponent },
+      { path: 'registration-requests', component: RegistrationRequestListComponent, canActivate: [CanActiveAdministrator] },
       { path: 'disciplines', component: DisciplineComponent }
     ]
   }

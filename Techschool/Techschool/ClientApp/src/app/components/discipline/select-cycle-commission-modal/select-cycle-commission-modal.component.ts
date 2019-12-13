@@ -1,7 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CycleCommissionModel } from '@models/cycle-commission.model';
 import { DisciplineService } from '@services/discipline.service';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   templateUrl: './select-cycle-commission-modal.component.html',
@@ -9,14 +12,24 @@ import { DisciplineService } from '@services/discipline.service';
     './select-cycle-commission-modal.component.css'
   ]
 })
-export class SelectCycleCommissionModalComponent {
+export class SelectCycleCommissionModalComponent implements OnInit  {
 
   public selectedCycleCommission: CycleCommissionModel;
   public cycleCommissions: CycleCommissionModel[] = [];
 
-  constructor(private dialogRef: MatDialogRef<SelectCycleCommissionModalComponent>, private dialog: MatDialog, private disciplineService: DisciplineService) {
+  public myControl = new FormControl();
+  public filteredOptions: Observable<string[]>;
+
+  constructor(private dialogRef: MatDialogRef<SelectCycleCommissionModalComponent>, private dialog: MatDialog, private disciplineService: DisciplineService) { }
+
+  public ngOnInit(): void {
     this.disciplineService.getCycleCommissions().subscribe(response => {
       this.cycleCommissions = response;
+      this.filteredOptions = this.myControl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this.cycleCommissions.filter(option => option.name.toLowerCase().includes(value.toLowerCase())).map(_ => _.name))
+        );
     });
   }
 
@@ -25,5 +38,4 @@ export class SelectCycleCommissionModalComponent {
       selectedCycleCommission: this.selectedCycleCommission
     });
   }
-
 }

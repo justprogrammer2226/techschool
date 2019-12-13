@@ -4,21 +4,23 @@
     <h1 mat-dialog-title class="title">Перегляд особистої картки</h1>
 
     <div mat-dialog-content>
-      <p>
-        <mat-form-field class="form-element">
-          <input type="text" matInput placeholder="Ім'я" formControlName="name">
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="form-element">
-          <input type="text" matInput placeholder="Прізвище" formControlName="surname">
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="form-element">
-          <input type="text" matInput placeholder="По-батькові" formControlName="patronymic">
-        </mat-form-field>
-      </p>
+      <div class="grid-cols-400">
+        <p>
+          <mat-form-field class="form-element">
+            <input type="text" matInput placeholder="Ім'я" formControlName="name">
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field class="form-element">
+            <input type="text" matInput placeholder="Прізвище" formControlName="surname">
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field class="form-element">
+            <input type="text" matInput placeholder="По-батькові" formControlName="patronymic">
+          </mat-form-field>
+        </p>
+      </div>
       <p>
         <mat-form-field>
           <input matInput [matDatepicker]="picker" placeholder="Дата народження" formControlName="birthday">

@@ -78,6 +78,15 @@ export class DisciplineComponent implements OnInit {
   public deleteSubject(id: string): void {
     this.disciplineService.deleteSubject(id).subscribe(response => {
       this.refreshTables();
+    }, error => {
+        this.dialog.open(NotificationModalComponent, {
+          width: '300px',
+          data: {
+            title: 'Помилка',
+            message: 'Предмет не може бути видалений, якщо його викладають.',
+            isError: true
+          }
+        });
     });
   }
 
@@ -125,6 +134,15 @@ export class DisciplineComponent implements OnInit {
   public deleteCycleCommission(id: string): void {
     this.disciplineService.deleteCycleCommission(id).subscribe(response => {
       this.refreshTables();
+    }, error => {
+        this.dialog.open(NotificationModalComponent, {
+          width: '300px',
+          data: {
+            title: 'Помилка',
+            message: 'Циклова комісія не може бути видалена, коли хоча б один викладач, відноситься до неї.',
+            isError: true
+          }
+        });
     });
   }
 

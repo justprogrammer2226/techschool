@@ -25,6 +25,7 @@ import { RegistrationRequestListComponent } from './components/personal-card/reg
 import { RoleDirective } from './directives/role.directive';
 import { TechschoolInterceptor } from './services/techschool.interceptor';
 import { EditPersonalCardModalComponent } from './components/personal-card/edit-personal-card-modal/edit-personal-card-modal.component';
+import { CanActiveAdministrator } from './services/administrator.guard';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { EditPersonalCardModalComponent } from './components/personal-card/edit-
       provide: HTTP_INTERCEPTORS,
       useClass: TechschoolInterceptor,
       multi: true
-    }
+    },
+    CanActiveAdministrator
   ],
   bootstrap: [AppComponent],
   entryComponents: [

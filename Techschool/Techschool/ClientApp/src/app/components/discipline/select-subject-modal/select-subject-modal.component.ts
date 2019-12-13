@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { DisciplineService } from '@services/discipline.service';
 import { SubjectModel } from '../../../models/subject.model';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   templateUrl: './select-subject-modal.component.html',
@@ -9,14 +12,24 @@ import { SubjectModel } from '../../../models/subject.model';
     './select-subject-modal.component.css'
   ]
 })
-export class SelectSubjectModalComponent {
+export class SelectSubjectModalComponent implements OnInit {
 
   public selectedSubject: SubjectModel;
-  public subjects: SubjectModel[] = [];
+  private subjects: SubjectModel[] = [];
 
-  constructor(private dialogRef: MatDialogRef<SelectSubjectModalComponent>, private dialog: MatDialog, private disciplineService: DisciplineService) {
+  public myControl = new FormControl();
+  public filteredOptions: Observable<string[]>;
+
+  constructor(private dialogRef: MatDialogRef<SelectSubjectModalComponent>, private dialog: MatDialog, private disciplineService: DisciplineService) { }
+
+  public ngOnInit(): void {
     this.disciplineService.getSubjects().subscribe(response => {
       this.subjects = response;
+      this.filteredOptions = this.myControl.valueChanges
+        .pipe(
+          startWith(''),
+          map(value => this.subjects.filter(option => option.name.toLowerCase().includes(value.toLowerCase())).map(_ => _.name))
+        );
     });
   }
 
@@ -25,5 +38,4 @@ export class SelectSubjectModalComponent {
       selectedSubject: this.selectedSubject
     });
   }
-
 }

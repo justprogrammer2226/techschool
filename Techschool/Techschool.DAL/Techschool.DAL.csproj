@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20191201123850_AddPatronymicToUser.Designer.cs" />
     <Compile Remove="Migrations\20191207161642_AddCycleCommissionAndSubjectsToPersonalCards.cs" />
     <Compile Remove="Migrations\20191207161642_AddCycleCommissionAndSubjectsToPersonalCards.Designer.cs" />
+    <Compile Remove="Migrations\20191208145441_AddCascadeDeleteToDisciplineTables.cs" />
+    <Compile Remove="Migrations\20191208145441_AddCascadeDeleteToDisciplineTables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,11 +2,13 @@
 <div mat-dialog-content>
 
   <p>
-    <mat-form-field class="form-element">
-      <mat-label>Циклова коміссія</mat-label>
-      <mat-select placeholder="Тест" [(ngModel)]="selectedCycleCommission">
-        <mat-option *ngFor="let cycleCommission of cycleCommissions" [value]="cycleCommission"> {{ cycleCommission.name }} </mat-option>
-      </mat-select>
+    <mat-form-field class="example-full-width">
+      <input type="text" placeholder="Введіть циклову комісію" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 

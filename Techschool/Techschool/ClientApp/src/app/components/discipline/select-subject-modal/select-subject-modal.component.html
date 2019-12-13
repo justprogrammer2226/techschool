@@ -2,11 +2,13 @@
 <div mat-dialog-content>
 
   <p>
-    <mat-form-field class="form-element">
-      <mat-label>Предмет</mat-label>
-      <mat-select placeholder="Тест" [(ngModel)]="selectedSubject">
-        <mat-option *ngFor="let subject of subjects" [value]="subject"> {{ subject.name }} </mat-option>
-      </mat-select>
+    <mat-form-field class="example-full-width">
+      <input type="text" placeholder="Введіть предмет" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </p>
 

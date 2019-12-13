@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { LoginModel } from '../../models/login.model';
 import { RegistrationRequestModel } from '../../models/registration-request.model';
 import { AuthService } from '../../services/auth.service';
 import { LoginFormModalComponent } from '../common/modals/login-form-modal/login-form-modal.component';
 import { NotificationModalComponent } from '../common/modals/notification-modal/notification-modal.component';
-import { RegistrationFormModalComponent } from '../common/modals/registration-form-modal/registration-form-modal.component';
 import { AddPersonalCardModalComponent } from '../personal-card/add-personal-card-modal/add-personal-card-modal.component';
 
 @Component({
@@ -112,4 +111,5 @@ export class HomeComponent implements OnInit {
       itemTexts[i].style.opacity = '0';
     }
   }
+
 }
