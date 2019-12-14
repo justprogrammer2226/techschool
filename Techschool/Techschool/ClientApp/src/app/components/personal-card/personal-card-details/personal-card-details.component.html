@@ -3,7 +3,7 @@
 
     <h1 mat-dialog-title class="title">Перегляд особистої картки ({{ typeOfPersonalCard }})</h1>
 
-    <div mat-dialog-content>
+    <div>
       <p>
         ФІО: {{ personalCard.surname }} {{ personalCard.name }} {{ personalCard.patronymic}}
       </p>
@@ -41,7 +41,7 @@
       </table>
     </div>
 
-    <div mat-dialog-actions>
+    <div>
       <button mat-raised-button color="primary" type="submit" class="button" (click)="openEditPersonalCardModal()">Редагувати</button>
     </div>
 

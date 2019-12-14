@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup" (ngSubmit)="save(formGroup.value)" class="form">
 
-  <h1 mat-dialog-title class="title">Додання особистої картки</h1>
+  <h1 mat-dialog-title class="title">Редагування особистої картки</h1>
 
 
   <div mat-dialog-content>
@@ -110,7 +110,7 @@
   </div>
 
   <div mat-dialog-actions>
-    <button mat-raised-button color="primary" type="submit" class="button" [disabled]="formGroup.invalid || (!formGroup.value.isTeacher && !formGroup.value.isEmployee)">Зареєструватись</button>
+    <button mat-raised-button color="primary" type="submit" class="button" [disabled]="formGroup.invalid || (!formGroup.value.isTeacher && !formGroup.value.isEmployee)">Зберегти</button>
   </div>
 
 </form>

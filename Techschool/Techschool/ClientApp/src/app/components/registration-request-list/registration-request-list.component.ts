@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PersonalCardModel } from '@models/personal-card.model';
+import { RegistrationRequestModel } from '@models/registration-request.model';
 import { AuthService } from '@services/auth.service';
 import { PersonalCardService } from '@services/personal-card.service';
-import { RegistrationRequestModel } from '../../../models/registration-request.model';
 
 @Component({
   templateUrl: './registration-request-list.component.html',

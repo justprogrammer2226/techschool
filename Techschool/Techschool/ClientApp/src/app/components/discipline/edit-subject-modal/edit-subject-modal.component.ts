@@ -48,7 +48,6 @@ export class EditSubjectModalComponent {
           });
           // Refresh data source
           this.subjectDataSource.data = this.subjectDataSource.data;
-          this.disciplineService.saveSubject(this.subject).subscribe();
         } else {
           this.dialog.open(NotificationModalComponent, {
             width: '300px',
@@ -67,6 +66,12 @@ export class EditSubjectModalComponent {
     this.disciplineService.deleteCycleCommissionSubject(this.subject.id, cycleCommissionId).subscribe(response => {
       // Refresh data source
       this.subjectDataSource.data = this.subjectDataSource.data.filter(_ => _.cycleCommissionId != cycleCommissionId);
+    });
+  }
+
+  public save(): void {
+    this.disciplineService.saveSubject(this.subject).subscribe(response => {
+      this.dialogRef.close();
     });
   }
 }

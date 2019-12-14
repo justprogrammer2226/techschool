@@ -19,13 +19,13 @@ import { SelectCycleCommissionModalComponent } from './components/discipline/sel
 import { SelectSubjectModalComponent } from './components/discipline/select-subject-modal/select-subject-modal.component';
 import { HomeComponent } from './components/home/home.component';
 import { AddPersonalCardModalComponent } from './components/personal-card/add-personal-card-modal/add-personal-card-modal.component';
+import { EditPersonalCardModalComponent } from './components/personal-card/edit-personal-card-modal/edit-personal-card-modal.component';
 import { PersonalCardDetailsComponent } from './components/personal-card/personal-card-details/personal-card-details.component';
 import { PersonalCardListComponent } from './components/personal-card/personal-card-list/personal-card-list.component';
-import { RegistrationRequestListComponent } from './components/personal-card/registration-request-list/registration-request-list.component';
+import { RegistrationRequestListComponent } from './components/registration-request-list/registration-request-list.component';
 import { RoleDirective } from './directives/role.directive';
-import { TechschoolInterceptor } from './services/techschool.interceptor';
-import { EditPersonalCardModalComponent } from './components/personal-card/edit-personal-card-modal/edit-personal-card-modal.component';
 import { CanActiveAdministrator } from './services/administrator.guard';
+import { TechschoolInterceptor } from './services/techschool.interceptor';
 
 @NgModule({
   declarations: [
