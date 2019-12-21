@@ -18,6 +18,12 @@ namespace Techschool.DAL.Entities
         public string Photo { get; set; }
         public bool IsEmployee { get; set; }
         public bool IsTeacher { get; set; }
+        public DateTime TotalWorkExperienceOnDate { get; set; }
+        public string NumberOfYearsOfTotalWorkExperience { get; set; }
+        public string NumberOfMonthsOfTotalWorkExperience { get; set; }
+        public DateTime TeachingWorkExperienceOnDate { get; set; }
+        public string NumberOfYearsOfTeachingWorkExperience { get; set; }
+        public string NumberOfMonthsOfTeachingWorkExperience { get; set; }
 
         public string EmploymentTypeId { get; set; }
         public EmploymentType EmploymentType { get; set; }

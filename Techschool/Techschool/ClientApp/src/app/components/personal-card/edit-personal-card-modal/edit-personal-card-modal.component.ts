@@ -109,6 +109,42 @@ export class EditPersonalCardModalComponent {
         } else {
           return 'Невідома помилка';
         }
+      case 'totalWorkExperienceOnDate':
+        if (this.formGroup.get('totalWorkExperienceOnDate').hasError('required')) {
+          return 'Дата обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'numberOfYearsOfTotalWorkExperience':
+        if (this.formGroup.get('numberOfYearsOfTotalWorkExperience').hasError('required')) {
+          return 'Кількість років загального стажу роботи обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'numberOfMonthsOfTotalWorkExperience':
+        if (this.formGroup.get('numberOfMonthsOfTotalWorkExperience').hasError('required')) {
+          return 'Кількість місяців загального стажу роботи обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'teachingWorkExperienceOnDate':
+        if (this.formGroup.get('teachingWorkExperienceOnDate').hasError('required')) {
+          return 'Дата обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'numberOfYearsOfTeachingWorkExperience':
+        if (this.formGroup.get('numberOfYearsOfTeachingWorkExperience').hasError('required')) {
+          return 'Кількість років педагогічного стажу роботи обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'numberOfMonthsOfTeachingWorkExperience':
+        if (this.formGroup.get('numberOfMonthsOfTeachingWorkExperience').hasError('required')) {
+          return 'Кількість місяців педагогічного стажу роботи обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
       default:
         return 'Невідомий елемент для отримання помилки';
     }
@@ -128,6 +164,12 @@ export class EditPersonalCardModalComponent {
     this.personalCard.isTeacher = formValue.isTeacher;
     this.personalCard.isEmployee = formValue.isEmployee;
     this.personalCard.cycleCommission = formValue.cycleCommission;
+    this.personalCard.totalWorkExperienceOnDate = formValue.totalWorkExperienceOnDate;
+    this.personalCard.numberOfYearsOfTotalWorkExperience = formValue.numberOfYearsOfTotalWorkExperience;
+    this.personalCard.numberOfMonthsOfTotalWorkExperience = formValue.numberOfMonthsOfTotalWorkExperience;
+    this.personalCard.teachingWorkExperienceOnDate = formValue.teachingWorkExperienceOnDate;
+    this.personalCard.numberOfYearsOfTeachingWorkExperience = formValue.numberOfYearsOfTeachingWorkExperience;
+    this.personalCard.numberOfMonthsOfTeachingWorkExperience = formValue.numberOfMonthsOfTeachingWorkExperience;
     this.personalCard.subjects = [];
     this.subjectsDataSource.data.forEach(item => {
       const newSubject = new SubjectModel();
@@ -248,20 +290,39 @@ export class EditPersonalCardModalComponent {
       'isTeacher': [false, []],
       'isEmployee': [false, []],
       'cycleCommission': ['', []],
+      'totalWorkExperienceOnDate': ['', Validators.required],
+      'numberOfYearsOfTotalWorkExperience': ['', Validators.required],
+      'numberOfMonthsOfTotalWorkExperience': ['', Validators.required],
+      'teachingWorkExperienceOnDate': ['', []],
+      'numberOfYearsOfTeachingWorkExperience': ['', []],
+      'numberOfMonthsOfTeachingWorkExperience': ['', []],
     });
 
     this.formGroup.get('isTeacher').valueChanges.subscribe(isTeacher => {
       const teacherQualificationControl = this.formGroup.get('teacherQualification');
       const cycleCommissionControl = this.formGroup.get('cycleCommission');
+      const teachingWorkExperienceOnDateControl = this.formGroup.get('teachingWorkExperienceOnDate');
+      const numberOfYearsOfTeachingWorkExperienceControl = this.formGroup.get('numberOfYearsOfTeachingWorkExperience');
+      const numberOfMonthsOfTeachingWorkExperienceControl = this.formGroup.get('numberOfMonthsOfTeachingWorkExperience');
+
       if (isTeacher) {
         teacherQualificationControl.setValidators([Validators.required]);
         cycleCommissionControl.setValidators([Validators.required]);
+        teachingWorkExperienceOnDateControl.setValidators([Validators.required]);
+        numberOfYearsOfTeachingWorkExperienceControl.setValidators([Validators.required]);
+        numberOfMonthsOfTeachingWorkExperienceControl.setValidators([Validators.required]);
       } else {
         teacherQualificationControl.setValidators(null);
         cycleCommissionControl.setValidators(null);
+        teachingWorkExperienceOnDateControl.setValidators(null);
+        numberOfYearsOfTeachingWorkExperienceControl.setValidators(null);
+        numberOfMonthsOfTeachingWorkExperienceControl.setValidators(null);
       }
       teacherQualificationControl.updateValueAndValidity();
       cycleCommissionControl.updateValueAndValidity();
+      teachingWorkExperienceOnDateControl.updateValueAndValidity();
+      numberOfYearsOfTeachingWorkExperienceControl.updateValueAndValidity();
+      numberOfMonthsOfTeachingWorkExperienceControl.updateValueAndValidity();
     });
   }
 
@@ -278,6 +339,12 @@ export class EditPersonalCardModalComponent {
     this.formGroup.controls['teacherQualificationNote'].setValue(personalCard.teacherQualificationNote);
     this.formGroup.controls['isTeacher'].setValue(personalCard.isTeacher);
     this.formGroup.controls['isEmployee'].setValue(personalCard.isEmployee);
+    this.formGroup.controls['totalWorkExperienceOnDate'].setValue(personalCard.totalWorkExperienceOnDate);
+    this.formGroup.controls['numberOfYearsOfTotalWorkExperience'].setValue(personalCard.numberOfYearsOfTotalWorkExperience);
+    this.formGroup.controls['numberOfMonthsOfTotalWorkExperience'].setValue(personalCard.numberOfMonthsOfTotalWorkExperience);
+    this.formGroup.controls['teachingWorkExperienceOnDate'].setValue(personalCard.teachingWorkExperienceOnDate);
+    this.formGroup.controls['numberOfYearsOfTeachingWorkExperience'].setValue(personalCard.numberOfYearsOfTeachingWorkExperience);
+    this.formGroup.controls['numberOfMonthsOfTeachingWorkExperience'].setValue(personalCard.numberOfMonthsOfTeachingWorkExperience);
     if (personalCard.cycleCommission) {
       const selectedCycleCommission = this.cycleCommissions.find(_ => _.id == personalCard.cycleCommission.id);
       this.formGroup.controls['cycleCommission'].setValue(selectedCycleCommission);

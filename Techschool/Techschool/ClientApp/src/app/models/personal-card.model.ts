@@ -17,6 +17,12 @@ export class PersonalCardModel {
   employmentType: string;
   teacherQualification: string;
   teacherQualificationNote: string;
+  totalWorkExperienceOnDate: Date;
+  numberOfYearsOfTotalWorkExperience: string;
+  numberOfMonthsOfTotalWorkExperience: string;
+  teachingWorkExperienceOnDate: Date;
+  numberOfYearsOfTeachingWorkExperience: string;
+  numberOfMonthsOfTeachingWorkExperience: string;
   cycleCommission: CycleCommissionModel;
   subjects: SubjectModel[];
   diplomas: DiplomaModel[];

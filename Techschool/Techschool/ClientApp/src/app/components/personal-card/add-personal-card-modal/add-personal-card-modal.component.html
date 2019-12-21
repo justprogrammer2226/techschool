@@ -130,6 +130,71 @@
       <mat-checkbox color="primary" formControlName="isTeacher">Викладач</mat-checkbox>
       <mat-checkbox color="primary" formControlName="isEmployee">Працівник</mat-checkbox>
     </p>
+
+    <!--Work Experience-->
+    <p>
+      Стаж роботи
+    </p>
+    <p>
+      Загальний стаж роботи
+    </p>
+    <p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="totalWorkExperienceOnDatePicker" placeholder="Станом на" formControlName="totalWorkExperienceOnDate">
+        <mat-datepicker-toggle matSuffix [for]="totalWorkExperienceOnDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #totalWorkExperienceOnDatePicker></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls['totalWorkExperienceOnDate'].invalid">
+          {{getError('totalWorkExperienceOnDate')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Років" formControlName="numberOfYearsOfTotalWorkExperience">
+        <mat-error *ngIf="formGroup.controls['numberOfYearsOfTotalWorkExperience'].invalid">
+          {{getError('numberOfYearsOfTotalWorkExperience')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Місяців" formControlName="numberOfMonthsOfTotalWorkExperience">
+        <mat-error *ngIf="formGroup.controls['numberOfMonthsOfTotalWorkExperience'].invalid">
+          {{getError('numberOfMonthsOfTotalWorkExperience')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p *ngIf="formGroup.value.isTeacher">
+      Педагогічний стаж роботи
+    </p>
+    <p *ngIf="formGroup.value.isTeacher">
+      <mat-form-field>
+        <input matInput [matDatepicker]="teachingWorkExperienceOnDatePicker" placeholder="Станом на" formControlName="teachingWorkExperienceOnDate">
+        <mat-datepicker-toggle matSuffix [for]="teachingWorkExperienceOnDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #teachingWorkExperienceOnDatePicker></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls['teachingWorkExperienceOnDate'].invalid">
+          {{getError('teachingWorkExperienceOnDate')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p *ngIf="formGroup.value.isTeacher">
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Років" formControlName="numberOfYearsOfTeachingWorkExperience">
+        <mat-error *ngIf="formGroup.controls['numberOfYearsOfTeachingWorkExperience'].invalid">
+          {{getError('numberOfYearsOfTeachingWorkExperience')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p *ngIf="formGroup.value.isTeacher">
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Місяців" formControlName="numberOfMonthsOfTeachingWorkExperience">
+        <mat-error *ngIf="formGroup.controls['numberOfMonthsOfTeachingWorkExperience'].invalid">
+          {{getError('numberOfMonthsOfTeachingWorkExperience')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+
+    <!--Teacher Category-->
     <p *ngIf="formGroup.value.isTeacher">
       <mat-form-field class="form-element">
         <mat-label>Категорія</mat-label>
@@ -146,7 +211,7 @@
       </mat-form-field>
     </p>
 
-    <!--Teacher Qualification Note-->
+    <!--Teacher Category Note-->
     <p *ngIf="formGroup.value.isTeacher">
       <mat-form-field class="form-element">
         <input type="text" matInput placeholder="Поле для нотатків про кваліфікацію" formControlName="teacherQualificationNote">
