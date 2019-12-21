@@ -11,6 +11,7 @@ import { SubjectModel } from '../../../models/subject.model';
 import { SelectSubjectModalComponent } from '../../discipline/select-subject-modal/select-subject-modal.component';
 import { ActivatedRoute } from '@angular/router';
 import { EditPersonalCardModalComponent } from '../edit-personal-card-modal/edit-personal-card-modal.component';
+import { DiplomaModel } from '../../../models/diploma.model';
 
 @Component({
   templateUrl: './personal-card-details.component.html',
@@ -26,6 +27,8 @@ export class PersonalCardDetailsComponent {
   public cycleCommissions: CycleCommissionModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   public subjectsDisplayedColumns: string[] = ['name'];
+  public diplomasDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  public diplomasDisplayedColumns: string[] = ['number', 'graduationDate', 'qualification', 'specialization'];
 
   public personalCard: PersonalCardModel = new PersonalCardModel();
   public typeOfPersonalCard: string;
@@ -39,6 +42,7 @@ export class PersonalCardDetailsComponent {
           this.personalCard = response;
           this.typeOfPersonalCard = this.getTypeOfPersonalCard();
           this.subjectsDataSource.data = this.subjectsToDataSource(this.personalCard.subjects);
+          this.diplomasDataSource.data = this.diplomasToDataSource(this.personalCard.diplomas);
           this.disciplineService.getCycleCommissions().subscribe(response => {
             this.cycleCommissions = response;
             this.setFormGroupByPersonalCard(this.personalCard);
@@ -82,12 +86,25 @@ export class PersonalCardDetailsComponent {
     this.formGroup.controls['employmentType'].setValue(personalCard.employmentType);
     this.formGroup.controls['isTeacher'].setValue(personalCard.isTeacher);
     this.formGroup.controls['isEmployee'].setValue(personalCard.isEmployee);
-    this.formGroup.controls['cycleCommission'].setValue(personalCard.cycleCommission.id);
+    this.formGroup.controls['cycleCommission'].setValue(personalCard.cycleCommission ? personalCard.cycleCommission.id : null);
   }
 
   private subjectsToDataSource(subjects: SubjectModel[]): any {
     return subjects.map(subject => {
-      return { name: subject.name };
+      return {
+        name: subject.name
+      };
+    });
+  }
+
+  private diplomasToDataSource(diplomas: DiplomaModel[]): any {
+    return diplomas.map(diploma => {
+      return {
+        number: diploma.number,
+        graduationDate: diploma.graduationDate,
+        qualification: diploma.qualification,
+        specialization: diploma.specialization
+      };
     });
   }
 

@@ -21,5 +21,6 @@ namespace Techschool.BLL.Models
         public string TeacherQualificationNote { get; set; }
         public CycleCommissionModel CycleCommission { get; set; }
         public ICollection<SubjectModel> Subjects { get; set; }
+        public ICollection<DiplomaModel> Diplomas { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using Techschool.BLL.Models;
@@ -41,7 +42,8 @@ namespace Techschool.BLL.Services
                 .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.MapFrom(src => src.EmploymentType.Name.ToString()))
                 .ForMember(destMember => destMember.TeacherQualification, memberOptions => memberOptions.MapFrom(src => src.TeacherQualification.Name.ToString()))
                 .ForMember(destMember => destMember.TeacherQualificationNote, memberOptions => memberOptions.MapFrom(src => src.TeacherQualification.Note))
-                .ForMember(destMember => destMember.Subjects, memberOptions => memberOptions.MapFrom(_ => GetSubjectModelsByPersonalCardId(_.Id)));
+                .ForMember(destMember => destMember.Subjects, memberOptions => memberOptions.MapFrom(_ => GetSubjectModelsByPersonalCardId(_.Id)))
+                .ForMember(destMember => destMember.Diplomas, memberOptions => memberOptions.MapFrom(_ => GetDiplomasByPersonalCardId(_.Id)));
             cfg.CreateMap<PersonalCardModel, PersonalCard>()
                 .ForMember(destMember => destMember.EmploymentTypeId, memberOptions => memberOptions.MapFrom(src => context.EmploymentTypes.SingleOrDefault(_ => _.Name == src.EmploymentType).Id))
                 .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.Ignore())
@@ -55,6 +57,9 @@ namespace Techschool.BLL.Services
             cfg.CreateMap<Subject, SubjectModel>()
                 .ForMember(destMember => destMember.CycleCommissions, memberOptions => memberOptions.MapFrom(_ => GetCycleCommissionModelsBySubjectId(_.Id)));
             cfg.CreateMap<SubjectModel, Subject>();
+
+            cfg.CreateMap<Diploma, DiplomaModel>();
+            cfg.CreateMap<DiplomaModel, Diploma>();
         }
 
         private IEnumerable<SubjectModel> GetSubjectModelsByCycleComissionId(string id)
@@ -79,6 +84,25 @@ namespace Techschool.BLL.Services
                 .Select(_ => _.Subject)
                 .ToList();
             return subjects.Select(_ => new SubjectModel() { Id = _.Id, Name = _.Name });
+        }
+
+        private IEnumerable<DiplomaModel> GetDiplomasByPersonalCardId(string id)
+        {
+            var diplomaEntities = context.PersonalCards.AsNoTracking()
+                .Include(_ => _.Diplomas)
+                .FirstOrDefault(_ => _.Id == id).Diplomas;
+
+            var diplomas = diplomaEntities.Select(_ =>  new DiplomaModel()
+                {
+                    Id = _.Id,
+                    Number = _.Number,
+                    GraduationDate = _.GraduationDate,
+                    Qualification = _.Qualification,
+                    Specialization = _.Specialization
+                })
+                .ToList();
+
+            return diplomas;
         }
     }
 }

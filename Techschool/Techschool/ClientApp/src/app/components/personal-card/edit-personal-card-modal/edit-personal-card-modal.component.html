@@ -75,6 +75,40 @@
         </mat-error>
       </mat-form-field>
     </p>
+
+    <!--Diplomas-->
+    <table mat-table [dataSource]="diplomasDataSource" class="mat-elevation-z8" style="width: 100%">
+
+      <ng-container matColumnDef="add-delete">
+        <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openAddDiplomaModal()" class="icon-cell"> <mat-icon style="color: #1db954">add</mat-icon> </th>
+        <td mat-cell *matCellDef="let element" (click)="deleteDiplomaByNumber(element.number)" class="icon-cell"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef class="text-cell"> Номер </th>
+        <td mat-cell *matCellDef="let element" class="text-cell"> {{element.number}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="graduationDate">
+        <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата закінчення </th>
+        <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate  | date:'shortDate'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="qualification">
+        <th mat-header-cell *matHeaderCellDef class="text-cell"> Кваліфікація </th>
+        <td mat-cell *matCellDef="let element" class="text-cell"> {{element.qualification}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="specialization">
+        <th mat-header-cell *matHeaderCellDef class="text-cell"> Спеціалізація </th>
+        <td mat-cell *matCellDef="let element" class="text-cell"> {{element.specialization}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="diplomasDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: diplomasDisplayedColumns;"></tr>
+
+    </table>
+
     <p>
       Ви повинні вибрати хоча б 1
       <mat-checkbox color="primary" formControlName="isTeacher">Викладач</mat-checkbox>
@@ -115,7 +149,7 @@
 
       <ng-container matColumnDef="add-delete">
         <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openSelectSubjectModal()" class="icon-cell"> <mat-icon style="color: #1db954">add</mat-icon> </th>
-        <td mat-cell *matCellDef="let element" (click)="delete(element.id)" class="icon-cell"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+        <td mat-cell *matCellDef="let element" (click)="deleteSubject(element.id)" class="icon-cell"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
       </ng-container>
 
       <ng-container matColumnDef="name">

@@ -22,6 +22,38 @@
       <p>
         Вид працевлаштування: {{ personalCard.employmentType }}
       </p>
+
+      <!--Diplomas-->
+      <p>
+        Освіта
+      </p>
+      <table mat-table [dataSource]="diplomasDataSource" class="mat-elevation-z8" style="width: 100%">
+
+        <ng-container matColumnDef="number">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Номер </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.number}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="graduationDate">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата закінчення </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate  | date:'shortDate'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="qualification">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Кваліфікація </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.qualification}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="specialization">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Спеціалізація </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.specialization}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="diplomasDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: diplomasDisplayedColumns;"></tr>
+
+      </table>
+
       <p *ngIf="formGroup.value.isTeacher">
         Категорія: {{ personalCard.teacherQualification }}
       </p>

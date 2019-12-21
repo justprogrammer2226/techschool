@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit {
       });
     } else {
       this.dialog.open(AddPersonalCardModalComponent, {
-        width: '400px'
+        width: '600px'
       });
     }
   }

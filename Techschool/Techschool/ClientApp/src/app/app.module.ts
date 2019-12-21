@@ -26,6 +26,7 @@ import { RegistrationRequestListComponent } from './components/registration-requ
 import { RoleDirective } from './directives/role.directive';
 import { CanActiveAdministrator } from './services/administrator.guard';
 import { TechschoolInterceptor } from './services/techschool.interceptor';
+import { AddDiplomaModalComponent } from './components/personal-card/add-diploma-modal/add-diploma-modal.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     EditCycleCommissionModalComponent,
     SelectSubjectModalComponent,
     PersonalCardDetailsComponent,
-    EditPersonalCardModalComponent
+    EditPersonalCardModalComponent,
+    AddDiplomaModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -78,7 +80,8 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     AddCycleCommissionModalComponent,
     EditCycleCommissionModalComponent,
     SelectSubjectModalComponent,
-    EditPersonalCardModalComponent
+    EditPersonalCardModalComponent,
+    AddDiplomaModalComponent
   ]
 })
 export class AppModule { }

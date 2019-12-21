@@ -29,5 +29,6 @@ namespace Techschool.DAL.Entities
         public TeacherQualification TeacherQualification { get; set; }
 
         public ICollection<PersonalCardSubject> PersonalCardSubjects { get; set; }
+        public ICollection<Diploma> Diplomas { get; set; }
     }
 }

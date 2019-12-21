@@ -9,6 +9,8 @@ import { PersonalCardService } from '@services/personal-card.service';
 import { NotificationModalComponent } from '../../common/modals/notification-modal/notification-modal.component';
 import { SubjectModel } from '../../../models/subject.model';
 import { SelectSubjectModalComponent } from '../../discipline/select-subject-modal/select-subject-modal.component';
+import { AddDiplomaModalComponent } from '../add-diploma-modal/add-diploma-modal.component';
+import { DiplomaModel } from '../../../models/diploma.model';
 
 @Component({
   templateUrl: './add-personal-card-modal.component.html',
@@ -24,6 +26,8 @@ export class AddPersonalCardModalComponent {
   public cycleCommissions: CycleCommissionModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   public subjectsDisplayedColumns: string[] = ['add-delete', 'name'];
+  public diplomasDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  public diplomasDisplayedColumns: string[] = ['add-delete', 'number', 'graduationDate', 'qualification', 'specialization'];
 
   constructor(private authService: AuthService, private dialogRef: MatDialogRef<AddPersonalCardModalComponent>, private formBuilder: FormBuilder, private dialog: MatDialog,
     private personalCardService: PersonalCardService, private disciplineService: DisciplineService) {
@@ -63,7 +67,6 @@ export class AddPersonalCardModalComponent {
   }
 
   public getError(controlElementName): string {
-    console.log(this.formGroup);
     switch (controlElementName) {
       case 'name':
         if (this.formGroup.get('name').hasError('required')) {
@@ -146,7 +149,7 @@ export class AddPersonalCardModalComponent {
     personalCard.teacherQualificationNote = formValue.teacherQualificationNote;
     personalCard.isTeacher = formValue.isTeacher;
     personalCard.isEmployee = formValue.isEmployee;
-    personalCard.cycleCommission = formValue.cycleCommission;
+    if (formValue.cycleCommission) personalCard.cycleCommission = formValue.cycleCommission;
     personalCard.subjects = [];
     this.subjectsDataSource.data.forEach(item => {
       const newSubject = new SubjectModel();
@@ -154,6 +157,16 @@ export class AddPersonalCardModalComponent {
       newSubject.name = item.name;
       personalCard.subjects.push(newSubject);
     });
+    personalCard.diplomas = [];
+    this.diplomasDataSource.data.forEach(item => {
+      const newDiploma = new DiplomaModel();
+      newDiploma.number = item.number;
+      newDiploma.graduationDate = item.graduationDate;
+      newDiploma.qualification = item.qualification;
+      newDiploma.specialization = item.specialization;
+      personalCard.diplomas.push(newDiploma);
+    });
+    console.log('this.personalCard', personalCard);
 
     this.personalCardService.save(personalCard).subscribe(response => {
       this.dialog.open(NotificationModalComponent, {
@@ -203,7 +216,42 @@ export class AddPersonalCardModalComponent {
     });
   }
 
-  public delete(subjectId: string): void {
-    this.subjectsDataSource.data = this.subjectsDataSource.data.filter(_ => _.id != subjectId);
+  public openAddDiplomaModal(): void {
+    this.dialog.open(AddDiplomaModalComponent, {
+      width: '350px'
+    }).afterClosed().subscribe(data => {
+
+      if (data && data.diploma) {
+
+        const isExist = this.diplomasDataSource.data.find(_ => _.number == data.diploma.number);
+        if (!isExist) {
+          this.diplomasDataSource.data.push({
+            number: data.diploma.number,
+            graduationDate: data.diploma.graduationDate,
+            qualification: data.diploma.qualification,
+            specialization: data.diploma.specialization
+          });
+          // Refresh data source
+          this.diplomasDataSource.data = this.diplomasDataSource.data;
+        } else {
+          this.dialog.open(NotificationModalComponent, {
+            width: '300px',
+            data: {
+              title: 'Помилка',
+              message: 'Данний диплом вже добавлений',
+              isError: true
+            }
+          });
+        }
+      }
+    });
+  }
+
+  public deleteSubject(id: string): void {
+    this.subjectsDataSource.data = this.subjectsDataSource.data.filter(_ => _.id != id);
+  }
+
+  public deleteDiplomaByNumber(number: string): void {
+    this.diplomasDataSource.data = this.diplomasDataSource.data.filter(_ => _.number != number);
   }
 }

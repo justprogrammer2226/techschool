@@ -1,5 +1,6 @@
 import { CycleCommissionModel } from "@models/cycle-commission.model";
 import { SubjectModel } from "@models/subject.model";
+import { DiplomaModel } from "./diploma.model";
 
 export class PersonalCardModel {
   id: string;
@@ -18,4 +19,5 @@ export class PersonalCardModel {
   teacherQualificationNote: string;
   cycleCommission: CycleCommissionModel;
   subjects: SubjectModel[];
+  diplomas: DiplomaModel[];
 }

@@ -54,16 +54,20 @@ namespace Techschool.BLL.Services
             if (personalCard == null)
             {
                 var newPersonalCardModel = modelMapper.MapTo<PersonalCardModel, PersonalCard>(model);
-                newPersonalCardModel.CycleCommission = null;
-                model.Id = context.PersonalCards.Add(newPersonalCardModel).Entity.Id;
+                var entryEntity = context.PersonalCards.Add(newPersonalCardModel);
+                model.Id = entryEntity.Entity.Id;
             }
             else
             {
                 var newPersonalCard = modelMapper.MapTo<PersonalCardModel, PersonalCard>(model);
+                var missedDiplomas = context.Diplomas.Where(_ => _.PersonalCardId == newPersonalCard.Id).ToList()
+                    .Except(newPersonalCard.Diplomas);
+                context.Diplomas.RemoveRange(missedDiplomas);
                 context.PersonalCards.Update(newPersonalCard);
             }
             context.SaveChanges();
 
+            // Subjects
             var personalCardsSubjects = model.Subjects.Select(_ => new PersonalCardSubject() { PersonalCardId = model.Id, SubjectId = _.Id });
             foreach (var personalCardSubject in personalCardsSubjects)
             {
@@ -75,6 +79,7 @@ namespace Techschool.BLL.Services
                     context.SaveChanges();
                 }
             }
+
             context.SaveChanges();
         }
 
