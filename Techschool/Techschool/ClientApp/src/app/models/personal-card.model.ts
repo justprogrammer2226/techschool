@@ -14,6 +14,8 @@ export class PersonalCardModel {
   isEmployee: boolean;
   isTeacher: boolean;
   employmentType: string;
+  teacherQualification: string;
+  teacherQualificationNote: string;
   cycleCommission: CycleCommissionModel;
   subjects: SubjectModel[];
 }

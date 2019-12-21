@@ -17,7 +17,8 @@ namespace Techschool.BLL.Models
         public bool IsEmployee { get; set; }
         public bool IsTeacher { get; set; }
         public string EmploymentType { get; set; }
-
+        public string TeacherQualification { get; set; }
+        public string TeacherQualificationNote { get; set; }
         public CycleCommissionModel CycleCommission { get; set; }
         public ICollection<SubjectModel> Subjects { get; set; }
     }

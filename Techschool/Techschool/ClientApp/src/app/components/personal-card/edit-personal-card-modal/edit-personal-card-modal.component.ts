@@ -92,6 +92,12 @@ export class EditPersonalCardModalComponent {
         } else {
           return 'Невідома помилка';
         }
+      case 'teacherQualification':
+        if (this.formGroup.get('teacherQualification').hasError('required')) {
+          return 'Категорія обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
       case 'cycleCommission':
         if (this.formGroup.get('cycleCommission').hasError('required')) {
           return 'Циклова комісія обов\'язкова';
@@ -112,6 +118,8 @@ export class EditPersonalCardModalComponent {
     this.personalCard.phoneNumber = formValue.phone;
     this.personalCard.email = formValue.email;
     this.personalCard.employmentType = formValue.employmentType;
+    this.personalCard.teacherQualification = formValue.teacherQualification;
+    this.personalCard.teacherQualificationNote = formValue.teacherQualificationNote;
     this.personalCard.isTeacher = formValue.isTeacher;
     this.personalCard.isEmployee = formValue.isEmployee;
     this.personalCard.cycleCommission = formValue.cycleCommission;
@@ -186,18 +194,24 @@ export class EditPersonalCardModalComponent {
       'phone': ['', Validators.required],
       'email': ['', [Validators.required, Validators.email]],
       'employmentType': ['', Validators.required],
-      'isTeacher': [false,],
-      'isEmployee': [false,],
-      'cycleCommission': [''],
+      'teacherQualification': ['', []],
+      'teacherQualificationNote': ['', []],
+      'isTeacher': [false, []],
+      'isEmployee': [false, []],
+      'cycleCommission': ['', []],
     });
 
     this.formGroup.get('isTeacher').valueChanges.subscribe(isTeacher => {
+      const teacherQualificationControl = this.formGroup.get('teacherQualification');
       const cycleCommissionControl = this.formGroup.get('cycleCommission');
       if (isTeacher) {
+        teacherQualificationControl.setValidators([Validators.required]);
         cycleCommissionControl.setValidators([Validators.required]);
       } else {
+        teacherQualificationControl.setValidators(null);
         cycleCommissionControl.setValidators(null);
       }
+      teacherQualificationControl.updateValueAndValidity();
       cycleCommissionControl.updateValueAndValidity();
     });
   }
@@ -211,6 +225,8 @@ export class EditPersonalCardModalComponent {
     this.formGroup.controls['phone'].setValue(personalCard.phoneNumber);
     this.formGroup.controls['email'].setValue(personalCard.email);
     this.formGroup.controls['employmentType'].setValue(personalCard.employmentType);
+    this.formGroup.controls['teacherQualification'].setValue(personalCard.teacherQualification);
+    this.formGroup.controls['teacherQualificationNote'].setValue(personalCard.teacherQualificationNote);
     this.formGroup.controls['isTeacher'].setValue(personalCard.isTeacher);
     this.formGroup.controls['isEmployee'].setValue(personalCard.isEmployee);
     const selectedCycleCommission = this.cycleCommissions.find(_ => _.id == personalCard.cycleCommission.id);

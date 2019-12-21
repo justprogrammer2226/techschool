@@ -21,18 +21,6 @@ export class AddPersonalCardModalComponent {
   public formGroup: FormGroup;
   datemask = ['(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/];
 
-  //+name: string;
-  //+surname: string;
-  //+patronymic: string;
-  //+birthday: Date;
-  //+address: string;
-  //+phoneNumber: number;
-  //+email: string;
-  // photo: string;
-  //+isEmployee: boolean;
-  //+isTeacher: boolean;
-  //+employmentType: string;
-
   public cycleCommissions: CycleCommissionModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   public subjectsDisplayedColumns: string[] = ['add-delete', 'name'];
@@ -48,18 +36,24 @@ export class AddPersonalCardModalComponent {
       'phone': ['', Validators.required],
       'email': ['', [Validators.required, Validators.email]],
       'employmentType': ['', Validators.required],
-      'isTeacher': [false, ],
-      'isEmployee': [false,],
-      'cycleCommission': [''],
+      'teacherQualification': ['', []],
+      'teacherQualificationNote': ['', []],
+      'isTeacher': [false, []],
+      'isEmployee': [false, []],
+      'cycleCommission': ['', []],
     });
 
     this.formGroup.get('isTeacher').valueChanges.subscribe(isTeacher => {
+      const teacherQualificationControl = this.formGroup.get('teacherQualification');
       const cycleCommissionControl = this.formGroup.get('cycleCommission');
       if (isTeacher) {
+        teacherQualificationControl.setValidators([Validators.required]);
         cycleCommissionControl.setValidators([Validators.required]);
       } else {
+        teacherQualificationControl.setValidators(null);
         cycleCommissionControl.setValidators(null);
       }
+      teacherQualificationControl.updateValueAndValidity();
       cycleCommissionControl.updateValueAndValidity();
     });
 
@@ -69,6 +63,7 @@ export class AddPersonalCardModalComponent {
   }
 
   public getError(controlElementName): string {
+    console.log(this.formGroup);
     switch (controlElementName) {
       case 'name':
         if (this.formGroup.get('name').hasError('required')) {
@@ -120,6 +115,12 @@ export class AddPersonalCardModalComponent {
         } else {
           return 'Невідома помилка';
         }
+      case 'teacherQualification':
+        if (this.formGroup.get('teacherQualification').hasError('required')) {
+          return 'Категорія обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
       case 'cycleCommission':
         if (this.formGroup.get('cycleCommission').hasError('required')) {
           return 'Циклова комісія обов\'язкова';
@@ -141,6 +142,8 @@ export class AddPersonalCardModalComponent {
     personalCard.phoneNumber = formValue.phone;
     personalCard.email = formValue.email;
     personalCard.employmentType = formValue.employmentType;
+    personalCard.teacherQualification = formValue.teacherQualification;
+    personalCard.teacherQualificationNote = formValue.teacherQualificationNote;
     personalCard.isTeacher = formValue.isTeacher;
     personalCard.isEmployee = formValue.isEmployee;
     personalCard.cycleCommission = formValue.cycleCommission;

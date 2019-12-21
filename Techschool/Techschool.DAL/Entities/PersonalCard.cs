@@ -25,7 +25,9 @@ namespace Techschool.DAL.Entities
         public string CycleCommissionId { get; set; }
         public CycleCommission CycleCommission { get; set; }
 
-        public ICollection<PersonalCardSubject> PersonalCardSubjects { get; set; }
+        public string TeacherQualificationId { get; set; }
+        public TeacherQualification TeacherQualification { get; set; }
 
+        public ICollection<PersonalCardSubject> PersonalCardSubjects { get; set; }
     }
 }

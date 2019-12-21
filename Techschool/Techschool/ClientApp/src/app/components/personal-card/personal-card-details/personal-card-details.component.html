@@ -23,6 +23,12 @@
         Вид працевлаштування: {{ personalCard.employmentType }}
       </p>
       <p *ngIf="formGroup.value.isTeacher">
+        Категорія: {{ personalCard.teacherQualification }}
+      </p>
+      <p *ngIf="formGroup.value.isTeacher">
+        Нотатки до категорії: {{ personalCard.teacherQualificationNote }}
+      </p>
+      <p *ngIf="formGroup.value.isTeacher">
         Циклова комісія: {{ personalCard.cycleCommission.name }}
       </p>
       <p *ngIf="formGroup.value.isTeacher">

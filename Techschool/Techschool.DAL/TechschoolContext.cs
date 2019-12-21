@@ -13,6 +13,7 @@ namespace Techschool.DAL
         public DbSet<CycleCommission> CycleCommissions { get; set; }
         public DbSet<CycleCommissionSubject> CycleCommissionsSubjects { get; set; }
         public DbSet<PersonalCardSubject> PersonalCardsSubjects { get; set; }
+        public DbSet<TeacherQualification> TeacherQualifications { get; set; }
 
         public TechschoolContext(DbContextOptions<TechschoolContext> options) : base(options)
         {

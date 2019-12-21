@@ -39,7 +39,9 @@ export class EditCycleCommissionModalComponent {
       width: '350px'
     }).afterClosed().subscribe(data => {
       if (data.selectedSubject) {
-        const isExist = this.cycleCommissionDataSource.data.find(_ => _.cycleCommissionId == data.selectedSubject.id);
+        const isExist = this.cycleCommissionDataSource.data.find(_ => _.subjectId == data.selectedSubject.id);
+        console.log('data', data);
+        console.log('isExist', isExist);
         if (!isExist) {
           this.cycleCommission.subjects.push(data.selectedSubject);
           this.cycleCommissionDataSource.data.push({

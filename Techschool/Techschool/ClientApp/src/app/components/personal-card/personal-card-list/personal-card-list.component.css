@@ -18,3 +18,13 @@ mat-dialog-title {
 h5 {
   margin-bottom: 1rem;
 }
+
+.tp-card {
+  max-width: 400px;
+}
+
+.tp-header-image {
+
+  background: url('assets/img/IMG_1624.png') no-repeat center center;
+  background-size: cover;
+}

@@ -39,6 +39,7 @@ namespace Techschool.BLL.Services
         {
             var personalCardEntity = context.PersonalCards.AsNoTracking()
                 .Include(_ => _.EmploymentType)
+                .Include(_ => _.TeacherQualification)
                 .Include(_ => _.CycleCommission)
                 .Single(_ => _.Id == id);
             var personalCard = modelMapper.MapTo<PersonalCard, PersonalCardModel>(personalCardEntity);
