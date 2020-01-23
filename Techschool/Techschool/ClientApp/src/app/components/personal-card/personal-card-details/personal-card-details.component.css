@@ -17,3 +17,7 @@ p {
 table {
   margin-bottom: 10px;
 }
+
+.mat-icon {
+  color: #1db954;
+}

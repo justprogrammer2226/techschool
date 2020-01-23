@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTableDataSource, MatDatepicker } from '@angular/material';
 import { CycleCommissionModel } from '@models/cycle-commission.model';
 import { PersonalCardModel } from '@models/personal-card.model';
 import { AuthService } from '@services/auth.service';
@@ -12,6 +12,9 @@ import { SelectSubjectModalComponent } from '../../discipline/select-subject-mod
 import { ActivatedRoute } from '@angular/router';
 import { EditPersonalCardModalComponent } from '../edit-personal-card-modal/edit-personal-card-modal.component';
 import { DiplomaModel } from '../../../models/diploma.model';
+import { AnnualVacationModel } from '@models/annual-vacation.model';
+import { AddAnnualVacationModalComponent } from '../vacation/add-annual-vacation-modal/add-annual-vacation-modal.component';
+import { EditAnnualVacationModalComponent } from '../vacation/edit-annual-vacation-modal/edit-annual-vacation-modal.component';
 
 @Component({
   templateUrl: './personal-card-details.component.html',
@@ -33,8 +36,18 @@ export class PersonalCardDetailsComponent {
   public personalCard: PersonalCardModel = new PersonalCardModel();
   public typeOfPersonalCard: string;
 
-  constructor(private authService: AuthService, private formBuilder: FormBuilder, private dialog: MatDialog,
-    private personalCardService: PersonalCardService, private disciplineService: DisciplineService, private activateRoute: ActivatedRoute) {
+  public annualVacations: AnnualVacationModel[] = [];
+  public annualVacationsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  public annualVacationsDisplayedColumns: string[] = ['add-edit', 'year', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'delete'];
+
+  constructor(
+    private authService: AuthService,
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private personalCardService: PersonalCardService,
+    private disciplineService: DisciplineService,
+    private activateRoute: ActivatedRoute
+  ) {
     this.initFormGroup();
     this.activateRoute.params.subscribe(params => {
       if (params['id']) {
@@ -48,14 +61,18 @@ export class PersonalCardDetailsComponent {
             this.setFormGroupByPersonalCard(this.personalCard);
           });
         });
+        this.personalCardService.getAnnualVacationsByPersonalCardId(params['id']).subscribe(response => {
+          this.annualVacations = response;
+          this.annualVacationsDataSource.data = this.annualVacations;
+        });
       }
     });
   }
 
   private getTypeOfPersonalCard(): string {
-    let type: string = '';
-    type += this.personalCard.isEmployee ? type ? ", Працівник" : "Працівник" : '';
-    type += this.personalCard.isTeacher ? type ? ", Викладач" : "Викладач" : '';
+    let type = '';
+    type += this.personalCard.isEmployee ? type ? ', Працівник' : 'Працівник' : '';
+    type += this.personalCard.isTeacher ? type ? ', Викладач' : 'Викладач' : '';
     return type;
   }
 
@@ -108,6 +125,40 @@ export class PersonalCardDetailsComponent {
     });
   }
 
+  public openAddAnnualVacationModal(): void {
+    if (this.authService.isAuthentificated()) {
+      this.dialog.open(AddAnnualVacationModalComponent, {
+        width: '500px'
+      }).afterClosed().subscribe(response => {
+        this.personalCardService.saveAnnualVacation(response.annualVacation).subscribe(_ => {
+          this.personalCardService.getAnnualVacationsByPersonalCardId(this.personalCard.id).subscribe(annualVacations => {
+            this.annualVacations = annualVacations;
+            this.annualVacationsDataSource.data = this.annualVacations;
+          });
+        });
+      });
+    } else {
+      this.dialog.open(NotificationModalComponent, {
+        width: '300px',
+        data: {
+          title: 'Помилка',
+          message: 'Ви не маєте прав на редагування предмету',
+          isError: true
+        }
+      });
+    }
+  }
+
+  public selectYear(selectedDate: Date, datepicker: MatDatepicker<Date>): void {
+    console.log(selectedDate.getFullYear());
+    datepicker.close();
+  }
+
+  public getDaysBetweenDates(date1: Date, date2: Date): number {
+    const days = Math.ceil(Math.abs(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
+    return days;
+  }
+
   public openEditPersonalCardModal(): void {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditPersonalCardModalComponent, {
@@ -136,5 +187,39 @@ export class PersonalCardDetailsComponent {
         }
       });
     }
+  }
+
+  public openEditAnnualVacationModal(annualVacation: AnnualVacationModel): void {
+    if (this.authService.isAuthentificated()) {
+      this.dialog.open(EditAnnualVacationModalComponent, {
+        data: {
+          annualVacation: annualVacation
+        },
+        width: '500px'
+      }).afterClosed().subscribe(response => {
+        this.personalCardService.getAnnualVacationsByPersonalCardId(this.personalCard.id).subscribe(annualVacations => {
+          this.annualVacations = annualVacations;
+          this.annualVacationsDataSource.data = this.annualVacations;
+        });
+      });
+    } else {
+      this.dialog.open(NotificationModalComponent, {
+        width: '300px',
+        data: {
+          title: 'Помилка',
+          message: 'Ви не маєте прав на редагування відпустки',
+          isError: true
+        }
+      });
+    }
+  }
+
+  public deleteAnnualVacation(id: string): void {
+    this.personalCardService.deleteAnnualVacation(id).subscribe(_ => {
+      this.personalCardService.getAnnualVacationsByPersonalCardId(this.personalCard.id).subscribe(annualVacations => {
+        this.annualVacations = annualVacations;
+        this.annualVacationsDataSource.data = this.annualVacations;
+      });
+    });
   }
 }

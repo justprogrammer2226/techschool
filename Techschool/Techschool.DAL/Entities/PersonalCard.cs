@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Techschool.DAL.Entities.Vacations;
 
 namespace Techschool.DAL.Entities
 {
@@ -36,5 +37,6 @@ namespace Techschool.DAL.Entities
 
         public ICollection<PersonalCardSubject> PersonalCardSubjects { get; set; }
         public ICollection<Diploma> Diplomas { get; set; }
+        public ICollection<AnnualVacation> AnnualVacations { get; set; }
     }
 }

@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Techschool.BLL.Models;
+using Techschool.BLL.Models.Vacations;
 using Techschool.DAL;
 using Techschool.DAL.Entities;
+using Techschool.DAL.Entities.Vacations;
 
 namespace Techschool.BLL.Services
 {
@@ -87,6 +89,40 @@ namespace Techschool.BLL.Services
         {
             var personalCard = context.PersonalCards.SingleOrDefault(_ => _.Id == id);
             context.PersonalCards.Remove(personalCard);
+            context.SaveChanges();
+        }
+
+        public IEnumerable<AnnualVacationModel> GetAnnualVacationsByPersonalCardId(string id)
+        {
+            var annualVcations = context.AnnualVacations.AsNoTracking()
+                .Select(_ => modelMapper.MapTo<AnnualVacation, AnnualVacationModel>(_))
+                .ToList();
+            return annualVcations;
+        }
+
+        public void SaveAnnualVacation(AnnualVacationModel model)
+        {
+            var annualVcations = context.AnnualVacations.AsNoTracking()
+                .SingleOrDefault(_ => _.Id == model.Id);
+
+            if (annualVcations == null)
+            {
+                var newAnnualVacation = modelMapper.MapTo<AnnualVacationModel, AnnualVacation>(model);
+                context.AnnualVacations.Add(newAnnualVacation);
+            }
+            else
+            {
+                var newAnnualVacation = modelMapper.MapTo<AnnualVacationModel, AnnualVacation>(model);
+                context.AnnualVacations.Update(newAnnualVacation);
+            }
+            context.SaveChanges();
+        }
+
+        public void DeleteAnnualVacation(string id)
+        {
+            var annualVacation = context.AnnualVacations.SingleOrDefault(_ => _.Id == id);
+            context.AnnualVacations.Remove(annualVacation);
+            context.SaveChanges();
         }
     }
 }

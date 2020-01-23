@@ -54,4 +54,7 @@ body {
   font-size: 14px;
   font-weight: 500;
   color: rgba(0,0,0,.54);
+  border-width: 0px 0px 1px 0px;
 }
+
+.mat-header-row {}

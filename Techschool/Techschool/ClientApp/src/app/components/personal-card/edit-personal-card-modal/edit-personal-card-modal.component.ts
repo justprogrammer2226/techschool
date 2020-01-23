@@ -31,8 +31,15 @@ export class EditPersonalCardModalComponent {
 
   public personalCard: PersonalCardModel = new PersonalCardModel();
 
-  constructor(private authService: AuthService, private dialogRef: MatDialogRef<EditPersonalCardModalComponent>, private formBuilder: FormBuilder, private dialog: MatDialog,
-    private personalCardService: PersonalCardService, private disciplineService: DisciplineService, @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(
+    private authService: AuthService,
+    private dialogRef: MatDialogRef<EditPersonalCardModalComponent>,
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private personalCardService: PersonalCardService,
+    private disciplineService: DisciplineService,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     this.initFormGroup();
     if (data.personalCard) {
       this.personalCard = data.personalCard;

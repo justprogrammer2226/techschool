@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Techschool.DAL.Entities;
+using Techschool.DAL.Entities.Vacations;
 
 namespace Techschool.DAL
 {
@@ -15,6 +16,7 @@ namespace Techschool.DAL
         public DbSet<PersonalCardSubject> PersonalCardsSubjects { get; set; }
         public DbSet<TeacherQualification> TeacherQualifications { get; set; }
         public DbSet<Diploma> Diplomas { get; set; }
+        public DbSet<AnnualVacation> AnnualVacations { get; set; }
 
         public TechschoolContext(DbContextOptions<TechschoolContext> options) : base(options)
         {

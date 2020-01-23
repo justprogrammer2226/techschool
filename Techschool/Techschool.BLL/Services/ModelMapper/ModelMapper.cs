@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using Techschool.BLL.Models;
+using Techschool.BLL.Models.Vacations;
 using Techschool.DAL;
 using Techschool.DAL.Entities;
+using Techschool.DAL.Entities.Vacations;
 
 namespace Techschool.BLL.Services
 {
@@ -60,6 +62,9 @@ namespace Techschool.BLL.Services
 
             cfg.CreateMap<Diploma, DiplomaModel>();
             cfg.CreateMap<DiplomaModel, Diploma>();
+
+            cfg.CreateMap<AnnualVacation, AnnualVacationModel>();
+            cfg.CreateMap<AnnualVacationModel, AnnualVacation>();
         }
 
         private IEnumerable<SubjectModel> GetSubjectModelsByCycleComissionId(string id)

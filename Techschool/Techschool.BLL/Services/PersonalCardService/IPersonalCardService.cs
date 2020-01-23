@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Techschool.BLL.Models;
+using Techschool.BLL.Models.Vacations;
 
 namespace Techschool.BLL.Services
 {
@@ -9,5 +10,9 @@ namespace Techschool.BLL.Services
         PersonalCardModel GetById(string id);
         void Save(PersonalCardModel model);
         void Delete(string id);
+
+        IEnumerable<AnnualVacationModel> GetAnnualVacationsByPersonalCardId(string id);
+        void SaveAnnualVacation(AnnualVacationModel model);
+        void DeleteAnnualVacation(string id);
     }
 }
