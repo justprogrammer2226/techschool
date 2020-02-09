@@ -22,8 +22,8 @@ export class DisciplineService {
     return this.http.get<SubjectModel>(this.baseUrl + 'api/disciplines/subjects/' + id);
   }
 
-  public saveSubject(model: SubjectModel): Observable<any> {
-    return this.http.post(this.baseUrl + 'api/disciplines/subjects', model);
+  public saveSubject(model: SubjectModel): Observable<SubjectModel> {
+    return this.http.post<SubjectModel>(this.baseUrl + 'api/disciplines/subjects', model);
   }
 
   public deleteSubject(id: string): Observable<any> {
@@ -38,15 +38,19 @@ export class DisciplineService {
     return this.http.get<CycleCommissionModel>(this.baseUrl + 'api/disciplines/cycle-commissions/' + id);
   }
 
-  public saveCycleCommission(model: CycleCommissionModel): Observable<any> {
-    return this.http.post(this.baseUrl + 'api/disciplines/cycle-commissions', model);
+  public saveCycleCommission(model: CycleCommissionModel): Observable<CycleCommissionModel> {
+    return this.http.post<CycleCommissionModel>(this.baseUrl + 'api/disciplines/cycle-commissions', model);
   }
 
   public deleteCycleCommission(id: string): Observable<any> {
     return this.http.delete(this.baseUrl + 'api/disciplines/cycle-commissions/' + id);
   }
 
-  public deleteCycleCommissionSubject(subjectId: string, cycleCommissionId: string): Observable<any> {
-    return this.http.delete(this.baseUrl + 'api/disciplines/cycle-commission-subject/' + subjectId + '/' + cycleCommissionId)
+  public addSubjectToCycleCommission(subjectId: string, cycleCommissionId: string): Observable<any> {
+    return this.http.post(this.baseUrl + 'api/disciplines/subject-to-cycle-commissions/' + subjectId + '/' + cycleCommissionId, null);
+  }
+
+  public deleteSubjectFromCycleCommission(subjectId: string, cycleCommissionId: string): Observable<any> {
+    return this.http.delete(this.baseUrl + 'api/disciplines/subject-from-cycle-commissions/' + subjectId + '/' + cycleCommissionId);
   }
 }

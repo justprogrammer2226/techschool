@@ -1,8 +1,8 @@
 export class AnnualVacationModel {
   id: string;
-  startVacationDate: Date;
-  endVacationDate: Date;
+  startOfVacationDate: Date;
+  endOfVacationDate: Date;
   orderNumber: string;
   orderDate: Date;
-  personalCardId: string;
+  annualVacationFormId: string;
 }

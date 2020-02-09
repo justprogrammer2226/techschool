@@ -10,12 +10,8 @@ import { AppComponent } from './app.component';
 import { LoginFormModalComponent } from './components/common/modals/login-form-modal/login-form-modal.component';
 import { NotificationModalComponent } from './components/common/modals/notification-modal/notification-modal.component';
 import { RegistrationFormModalComponent } from './components/common/modals/registration-form-modal/registration-form-modal.component';
-import { AddCycleCommissionModalComponent } from './components/discipline/add-cycle-commission-modal/add-cycle-commission-modal.component';
-import { AddSubjectModalComponent } from './components/discipline/add-subject-modal/add-subject-modal.component';
+import { AddEditCycleCommissionModalComponent } from './components/discipline/add-edit-cycle-commission-modal/add-edit-cycle-commission-modal.component';
 import { DisciplineComponent } from './components/discipline/discipline/discipline.component';
-import { EditCycleCommissionModalComponent } from './components/discipline/edit-cycle-commission-modal/edit-cycle-commission-modal.component';
-import { EditSubjectModalComponent } from './components/discipline/edit-subject-modal/edit-subject-modal.component';
-import { SelectCycleCommissionModalComponent } from './components/discipline/select-cycle-commission-modal/select-cycle-commission-modal.component';
 import { SelectSubjectModalComponent } from './components/discipline/select-subject-modal/select-subject-modal.component';
 import { HomeComponent } from './components/home/home.component';
 import { AddDiplomaModalComponent } from './components/personal-card/add-diploma-modal/add-diploma-modal.component';
@@ -23,12 +19,16 @@ import { AddPersonalCardModalComponent } from './components/personal-card/add-pe
 import { EditPersonalCardModalComponent } from './components/personal-card/edit-personal-card-modal/edit-personal-card-modal.component';
 import { PersonalCardDetailsComponent } from './components/personal-card/personal-card-details/personal-card-details.component';
 import { PersonalCardListComponent } from './components/personal-card/personal-card-list/personal-card-list.component';
+import { AddAnnualVacationFormModalComponent } from './components/personal-card/vacation/add-annual-vacation-form-modal/add-annual-vacation-form-modal.component';
 import { AddAnnualVacationModalComponent } from './components/personal-card/vacation/add-annual-vacation-modal/add-annual-vacation-modal.component';
+import { AnnualVacationFormComponent } from './components/personal-card/vacation/annual-vacation-form/annual-vacation-form.component';
+import { EditAnnualVacationFormModalComponent } from './components/personal-card/vacation/edit-annual-vacation-form-modal/edit-annual-vacation-form-modal.component';
 import { EditAnnualVacationModalComponent } from './components/personal-card/vacation/edit-annual-vacation-modal/edit-annual-vacation-modal.component';
 import { RegistrationRequestListComponent } from './components/registration-request-list/registration-request-list.component';
 import { RoleDirective } from './directives/role.directive';
 import { CanActiveAdministrator } from './services/administrator.guard';
 import { TechschoolInterceptor } from './services/techschool.interceptor';
+import { AddEditSubjectModalComponent } from './components/discipline/add-edit-subject-modal/add-edit-subject-modal.component';
 
 @NgModule({
   declarations: [
@@ -42,17 +42,17 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     PersonalCardListComponent,
     RegistrationRequestListComponent,
     DisciplineComponent,
-    EditSubjectModalComponent,
-    SelectCycleCommissionModalComponent,
-    AddSubjectModalComponent,
-    AddCycleCommissionModalComponent,
-    EditCycleCommissionModalComponent,
     SelectSubjectModalComponent,
     PersonalCardDetailsComponent,
     EditPersonalCardModalComponent,
     AddDiplomaModalComponent,
     AddAnnualVacationModalComponent,
-    EditAnnualVacationModalComponent
+    EditAnnualVacationModalComponent,
+    AnnualVacationFormComponent,
+    AddAnnualVacationFormModalComponent,
+    EditAnnualVacationFormModalComponent,
+    AddEditCycleCommissionModalComponent,
+    AddEditSubjectModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -78,16 +78,15 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     NotificationModalComponent,
     RegistrationFormModalComponent,
     AddPersonalCardModalComponent,
-    EditSubjectModalComponent,
-    SelectCycleCommissionModalComponent,
-    AddSubjectModalComponent,
-    AddCycleCommissionModalComponent,
-    EditCycleCommissionModalComponent,
     SelectSubjectModalComponent,
     EditPersonalCardModalComponent,
     AddDiplomaModalComponent,
     AddAnnualVacationModalComponent,
-    EditAnnualVacationModalComponent
+    EditAnnualVacationModalComponent,
+    AddAnnualVacationFormModalComponent,
+    EditAnnualVacationFormModalComponent,
+    AddEditCycleCommissionModalComponent,
+    AddEditSubjectModalComponent
   ]
 })
 export class AppModule { }

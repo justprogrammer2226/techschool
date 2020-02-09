@@ -36,8 +36,7 @@ namespace Techschool.Api.Controllers
         [Route("subjects")]
         public IActionResult SaveSubject(SubjectModel model)
         {
-            disciplines.SaveSubject(model);
-            return Ok();
+            return Ok(disciplines.SaveSubject(model));
         }
 
         [HttpDelete]
@@ -68,23 +67,37 @@ namespace Techschool.Api.Controllers
         [Route("cycle-commissions")]
         public IActionResult SaveCycleCommission(CycleCommissionModel model)
         {
-            disciplines.SaveCycleCommission(model);
-            return Ok();
+            return Ok(disciplines.SaveCycleCommission(model));
         }
 
         [HttpDelete]
         [Route("cycle-commissions/{id}")]
         public IActionResult DeleteCycleCommission(string id)
         {
-            disciplines.DeleteCycleCommissionById(id);
+            try
+            {
+                disciplines.DeleteCycleCommissionById(id);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("subject-to-cycle-commissions/{subjectId}/{cycleCommissionId}")]
+        public IActionResult AddSubjectToCycleCommission(string subjectId, string cycleCommissionId)
+        {
+            disciplines.AddSubjectToCycleCommission(subjectId, cycleCommissionId);
             return Ok();
         }
 
         [HttpDelete]
-        [Route("cycle-commission-subject/{subjectId}/{cycleCommissionId}")]
-        public IActionResult DeleteCycleCommissionSubject(string subjectId, string cycleCommissionId)
+        [Route("subject-from-cycle-commissions/{subjectId}/{cycleCommissionId}")]
+        public IActionResult DeleteSubjectFromCycleCommission(string subjectId, string cycleCommissionId)
         {
-            disciplines.DeleteCycleCommissionSubject(subjectId, cycleCommissionId);
+            disciplines.DeleteSubjectFromCycleCommission(subjectId, cycleCommissionId);
             return Ok();
         }
     }

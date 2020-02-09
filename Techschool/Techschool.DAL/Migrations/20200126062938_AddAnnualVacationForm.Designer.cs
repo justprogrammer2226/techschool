@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Techschool.DAL;
 
 namespace Techschool.DAL.Migrations
 {
     [DbContext(typeof(TechschoolContext))]
-    partial class TechschoolContextModelSnapshot : ModelSnapshot
+    [Migration("20200126062938_AddAnnualVacationForm")]
+    partial class AddAnnualVacationForm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -481,13 +483,13 @@ namespace Techschool.DAL.Migrations
                     b.Property<int>("Days")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndOfWorkingYear")
+                    b.Property<DateTime>("EndOfWorkingDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PersonalCardId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("StartOfWorkingYear")
+                    b.Property<DateTime>("StartOfWorkingDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")

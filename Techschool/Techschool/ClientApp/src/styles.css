@@ -1,5 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   min-height: 100vh;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
 }
 
 .block-wrapper {
@@ -27,10 +33,6 @@ body {
   overflow: hidden;
 }
 
-.mat-cell + .mat-cell {
-  border-left: 1px solid #eee;
-}
-
 .mat-header-cell + .mat-header-cell {
   border-left: 1px solid #eee;
 }
@@ -49,12 +51,104 @@ body {
   text-align: center;
 }
 
+.icon-cell.mat-header-cell {
+  width: 38px;
+}
+
+.icon-cell.green {
+  color: #1db954;
+}
+
+.icon-cell.red {
+  color: #D33;
+}
+
 .text-cell.mat-header-cell, .text-cell.mat-cell, .text-cell.mat-footer-cell {
   padding: 7px;
   font-size: 14px;
   font-weight: 500;
   color: rgba(0,0,0,.54);
-  border-width: 0px 0px 1px 0px;
+  border-left: 1px solid #eee;
 }
 
-.mat-header-row {}
+.icon-cell.mat-header-cell, .icon-cell.mat-cell, .icon-cell.mat-footer-cell {
+  border-left: 1px solid #eee;
+}
+
+.grid-two-col {
+  display: grid;
+  grid-column-gap: 15px;
+  grid-row-gap: 15px;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.block-header {
+  display: flex;
+}
+
+.block-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.block-header > .block-header-buttons {
+  margin-left: auto;
+  background-color: #fff;
+  z-index: 1;
+  padding-left: 20px;
+}
+
+.block-header > .block-header-buttons > button.green {
+  background-color: #1db954;
+}
+
+.block-header > .block-header-buttons > button.green > span {
+  color: #fff;
+}
+
+.block-header > .block-header-buttons > button.red {
+  background-color: #D33;
+}
+
+.block-header > .block-header-buttons > button.red > span {
+  color: #fff;
+}
+
+.block-header > .block-header-buttons > button:not(:last-child) {
+  margin-right: 20px;
+}
+
+.dotted-line {
+  position: relative;
+}
+
+.dotted-line > .block-title {
+  background-color: #fff;
+  z-index: 1;
+  position: relative;
+  padding-left: 10px;
+  padding-right: 20px;
+}
+
+.dotted-line::after {
+  position: absolute;
+  width: 100%;
+  left: 0px;
+  content: '';
+  border-bottom: 3px dotted rgba(72, 101, 93, .18);
+  top: 20px;
+}
+
+.marging-bottom-15 {
+  margin-bottom: 15px;
+}
+
+.marging-bottom-10 {
+  margin-bottom: 10px;
+}
+
+.mat-icon {
+  box-sizing: border-box;
+}

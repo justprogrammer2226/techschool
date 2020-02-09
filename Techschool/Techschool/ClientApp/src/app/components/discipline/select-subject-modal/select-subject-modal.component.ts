@@ -5,6 +5,9 @@ import { SubjectModel } from '../../../models/subject.model';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
+import { AuthService } from '@services/auth.service';
+import { AddEditSubjectModalComponent } from '../add-edit-subject-modal/add-edit-subject-modal.component';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   templateUrl: './select-subject-modal.component.html',
@@ -19,15 +22,30 @@ export class SelectSubjectModalComponent implements OnInit {
   public myControl = new FormControl();
   public filteredOptions: Observable<SubjectModel[]>;
 
-  constructor(private dialogRef: MatDialogRef<SelectSubjectModalComponent>, private dialog: MatDialog, private disciplineService: DisciplineService) { }
+  constructor(
+    private dialogRef: MatDialogRef<SelectSubjectModalComponent>,
+    private dialog: MatDialog,
+    private modalService: ModalService,
+    private disciplineService: DisciplineService,
+    private authService: AuthService
+  ) { }
 
   public ngOnInit(): void {
+    this.refreshSubjects();
+  }
+
+  private refreshSubjects(): void {
     this.disciplineService.getSubjects().subscribe(response => {
       this.subjects = response;
       this.filteredOptions = this.myControl.valueChanges
         .pipe(
           startWith(''),
-          map(value => this.subjects.filter(option => option.name.toLowerCase().includes(value.toLowerCase())))
+          map(value => {
+            return this.subjects.filter(option => {
+              console.log(option);
+              return option.name.toLowerCase().includes(value.toLowerCase());
+            });
+          })
         );
     });
   }
@@ -36,5 +54,19 @@ export class SelectSubjectModalComponent implements OnInit {
     this.dialogRef.close({
       selectedSubject: subject
     });
+  }
+
+  public openAddSubjectModal(): void {
+    if (this.authService.isAuthentificated()) {
+      this.dialog.open(AddEditSubjectModalComponent, {
+        width: '400px'
+      }).afterClosed().subscribe(response => {
+        this.dialogRef.close({
+          selectedSubject: response.subject
+        });
+      });
+    } else {
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання предмету');
+    }
   }
 }

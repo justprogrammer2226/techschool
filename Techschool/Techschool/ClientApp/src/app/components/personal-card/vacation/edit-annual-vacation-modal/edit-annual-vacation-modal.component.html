@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" (ngSubmit)="save(formGroup.value)" class="form">
+<form [formGroup]="formGroup" (ngSubmit)="saveVacation(formGroup.value)" class="form">
 
   <h1 mat-dialog-title class="title"> Редагування щорічної відпустки</h1>
 
@@ -6,21 +6,21 @@
   <div mat-dialog-content>
     <p>
       <mat-form-field>
-        <input matInput [matDatepicker]="picker1" placeholder="Дата початку" formControlName="startVacationDate">
+        <input matInput [matDatepicker]="picker1" placeholder="Дата початку" formControlName="startOfVacationDate">
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
-        <mat-error *ngIf="formGroup.controls['startVacationDate'].invalid">
-          {{getError('startVacationDate')}}
+        <mat-error *ngIf="formGroup.controls['startOfVacationDate'].invalid">
+          {{getError('startOfVacationDate')}}
         </mat-error>
       </mat-form-field>
     </p>
     <p>
       <mat-form-field>
-        <input matInput [matDatepicker]="picker2" placeholder="Дата закінчення" formControlName="endVacationDate">
+        <input matInput [matDatepicker]="picker2" placeholder="Дата закінчення" formControlName="endOfVacationDate">
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
-        <mat-error *ngIf="formGroup.controls['endVacationDate'].invalid">
-          {{getError('endVacationDate')}}
+        <mat-error *ngIf="formGroup.controls['endOfVacationDate'].invalid">
+          {{getError('endOfVacationDate')}}
         </mat-error>
       </mat-form-field>
     </p>

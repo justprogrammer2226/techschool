@@ -1,47 +1,38 @@
-<div class="grid-cols-400">
+<div class="block-wrapper marging-bottom-15">
+  <div class="block-header dotted-line">
+    <h3 class="block-title">Циклові комісії</h3>
+    <div class="block-header-buttons">
+      <button mat-flat-button class="green" (click)="openAddCycleCommissionModal()">Додати циклову комісію</button>
+    </div>
+  </div>
+</div>
+<div class="grid-two-col">
   <div>
-    <div class="block-wrapper">
-      <p>
-        <span>Циклові комісії</span>
-      </p>
-
-      <table mat-table [dataSource]="cycleCommissionsDataSource" class="mat-elevation-z8" style="width: 100%">
-
-        <ng-container matColumnDef="add-edit">
-          <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openAddCycleCommissionModal()" class="icon-cell"> <mat-icon>add</mat-icon> </th>
-          <td mat-cell *matCellDef="let element" (click)="openEditCycleCommissionModal(element.id)" class="icon-cell"> <mat-icon>edit</mat-icon> </td>
-        </ng-container>
-
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef class="text-cell"> Назва </th>
-          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.name}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="subjects">
-          <th mat-header-cell *matHeaderCellDef class="text-cell"> Предмети </th>
-          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.subjects}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef style="width: 48px"> </th>
-          <td mat-cell *matCellDef="let element" (click)="deleteCycleCommission(element.id)" class="icon-cell"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="cycleCommissionDisplayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: cycleCommissionDisplayedColumns;"></tr>
-      </table>
+    <div class="cycle-commission-wrapper marging-bottom-10" *ngFor="let cycleCommission of cycleCommissions"
+      (click)="selectCycleCommission(cycleCommission)">
+      <span>{{cycleCommission.name}}</span>
+      <div class="cycle-commission-icons">
+        <mat-icon class="action-icon" [class.hide]="!checkSelectCycleCommission(cycleCommission)"
+          (click)="openEditCycleCommissionModal(cycleCommission.id)">edit</mat-icon>
+        <mat-icon class="action-icon" [class.hide]="!checkSelectCycleCommission(cycleCommission)"
+          (click)="deleteCycleCommission(cycleCommission.id)">delete</mat-icon>
+        <mat-icon [class.selected]="checkSelectCycleCommission(cycleCommission)" class="anchor-icon">play_arrow</mat-icon>
+      </div>
     </div>
   </div>
   <div>
-    <div class="block-wrapper">
-      <p>
-        <span>Предмети</span>
+    <div class="block-wrapper" id="subjects-list" [class.disabled]="!isSubjectListShowed">
+      <p *ngIf="selectedCycleCommission.subjects && selectedCycleCommission.subjects.length == 0">
+        У цієї цикловій комісії немає предметів. Для додання предметів натисніть на <mat-icon class="action-icon" (click)="openSelectSubjectModal(selectedCycleCommission.id)">add</mat-icon>.
       </p>
-      <table mat-table [dataSource]="subjectsDataSource" class="mat-elevation-z8" style="width: 100%">
+      <p *ngIf="selectedCycleCommission.subjects && selectedCycleCommission.subjects.length != 0">
+        Список предметів:
+      </p>
+      <table mat-table [dataSource]="subjectsDataSource" class="mat-elevation-z8" style="width: 100%" *ngIf="selectedCycleCommission.subjects && selectedCycleCommission.subjects.length != 0">
 
         <ng-container matColumnDef="add-edit">
-          <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openAddSubjectModal()" class="icon-cell"> <mat-icon>add</mat-icon> </th>
-          <td mat-cell *matCellDef="let element" (click)="openEditSubjectModal(element.id)" class="icon-cell"> <mat-icon>edit</mat-icon> </td>
+          <th mat-header-cell *matHeaderCellDef (click)="openSelectSubjectModal()" class="icon-cell green"> <mat-icon>add</mat-icon> </th>
+          <td mat-cell *matCellDef="let element" (click)="openEditSubjectModal(element.id)" class="icon-cell green"> <mat-icon>edit</mat-icon> </td>
         </ng-container>
 
         <ng-container matColumnDef="name">
@@ -55,8 +46,8 @@
         </ng-container>
 
         <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef style="width: 48px"> </th>
-          <td mat-cell *matCellDef="let element" (click)="deleteSubject(element.id)" class="icon-cell"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+          <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+          <td mat-cell *matCellDef="let element" (click)="deleteSubjectFromCycleCommission(element)" class="icon-cell red"> <mat-icon>delete</mat-icon> </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="subjectsDisplayedColumns"></tr>
@@ -65,3 +56,4 @@
     </div>
   </div>
 </div>
+

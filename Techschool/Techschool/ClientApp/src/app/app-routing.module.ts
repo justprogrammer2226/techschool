@@ -6,6 +6,8 @@ import { PersonalCardDetailsComponent } from './components/personal-card/persona
 import { PersonalCardListComponent } from './components/personal-card/personal-card-list/personal-card-list.component';
 import { RegistrationRequestListComponent } from './components/registration-request-list/registration-request-list.component';
 import { CanActiveAdministrator } from './services/administrator.guard';
+import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
+import { AnnualVacationFormComponent } from './components/personal-card/vacation/annual-vacation-form/annual-vacation-form.component';
 
 const routes: Routes = [
   {
@@ -21,8 +23,14 @@ const routes: Routes = [
           },
           {
             path: ':id',
-            component: PersonalCardDetailsComponent
-          }
+            component: PersonalCardDetailsComponent,
+            canActivate: [CanActiveAdministrator]
+          },
+          {
+            path: ':id/annual-vacations/:formId',
+            component: AnnualVacationFormComponent,
+            canActivate: [CanActiveAdministrator]
+          },
         ]
       },
       { path: 'registration-requests', component: RegistrationRequestListComponent, canActivate: [CanActiveAdministrator] },

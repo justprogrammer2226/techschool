@@ -6,21 +6,22 @@ import { DisciplineService } from '@services/discipline.service';
 import { PersonalCardService } from '@services/personal-card.service';
 import { DiplomaModel } from '../../../../models/diploma.model';
 import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
+import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
 
 @Component({
-  templateUrl: './add-annual-vacation-modal.component.html',
+  templateUrl: './add-annual-vacation-form-modal.component.html',
   styleUrls: [
-    './add-annual-vacation-modal.component.css'
+    './add-annual-vacation-form-modal.component.css'
   ]
 })
-export class AddAnnualVacationModalComponent {
+export class AddAnnualVacationFormModalComponent {
 
   public formGroup: FormGroup;
-  private annualVacationFormId: string;
+  private personalCardId: string;
 
   constructor(
     private authService: AuthService,
-    private dialogRef: MatDialogRef<AddAnnualVacationModalComponent>,
+    private dialogRef: MatDialogRef<AddAnnualVacationFormModalComponent>,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private personalCardService: PersonalCardService,
@@ -28,37 +29,37 @@ export class AddAnnualVacationModalComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.formGroup = this.formBuilder.group({
-      'startOfVacationDate': ['', Validators.required],
-      'endOfVacationDate': ['', Validators.required],
-      'orderNumber': ['', Validators.required],
-      'orderDate': ['', Validators.required]
+      'startOfWorkingYear': ['', Validators.required],
+      'endOfWorkingYear': ['', Validators.required],
+      'title': ['', Validators.required],
+      'days': ['', Validators.required]
     });
-    this.annualVacationFormId = data.annualVacationFormId;
+    this.personalCardId = data.personalCardId;
   }
 
   public getError(controlElementName): string {
     switch (controlElementName) {
-      case 'startOfVacationDate':
-        if (this.formGroup.get('startOfVacationDate').hasError('required')) {
+      case 'startOfWorkingYear':
+        if (this.formGroup.get('startOfWorkingYear').hasError('required')) {
           return 'Дата початку обов\'язкова';
         } else {
           return 'Невідома помилка';
         }
-      case 'endOfVacationDate':
-        if (this.formGroup.get('endOfVacationDate').hasError('required')) {
+      case 'endOfWorkingYear':
+        if (this.formGroup.get('endOfWorkingYear').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
         } else {
           return 'Невідома помилка';
         }
-      case 'orderNumber':
-        if (this.formGroup.get('orderNumber').hasError('required')) {
-          return 'Номер наказу обов\'язковий';
+      case 'title':
+        if (this.formGroup.get('title').hasError('required')) {
+          return 'Назва форми обов\'язкова';
         } else {
           return 'Невідома помилка';
         }
-      case 'orderDate':
-        if (this.formGroup.get('orderDate').hasError('required')) {
-          return 'Дата наказу обов\'язкова';
+      case 'days':
+        if (this.formGroup.get('days').hasError('required')) {
+          return 'Кількість днів обов\'язкова';
         } else {
           return 'Невідома помилка';
         }
@@ -67,14 +68,14 @@ export class AddAnnualVacationModalComponent {
     }
   }
 
-  public saveVacation(formValue: any): void {
-    const annualVacation: AnnualVacationModel = new AnnualVacationModel();
-    annualVacation.startOfVacationDate = formValue.startOfVacationDate;
-    annualVacation.endOfVacationDate = formValue.endOfVacationDate;
-    annualVacation.orderNumber = formValue.orderNumber;
-    annualVacation.orderDate = formValue.orderDate;
-    annualVacation.annualVacationFormId = this.annualVacationFormId;
-    this.personalCardService.saveAnnualVacation(annualVacation).subscribe(_ => {
+  public saveForm(formValue: any): void {
+    const form: AnnualVacationFormModel = new AnnualVacationFormModel();
+    form.startOfWorkingYear = formValue.startOfWorkingYear;
+    form.endOfWorkingYear = formValue.endOfWorkingYear;
+    form.title = formValue.title;
+    form.days = +formValue.days;
+    form.personalCardId = this.personalCardId;
+    this.personalCardService.saveAnnualVacationForm(form).subscribe(_ => {
       this.dialogRef.close();
     });
   }

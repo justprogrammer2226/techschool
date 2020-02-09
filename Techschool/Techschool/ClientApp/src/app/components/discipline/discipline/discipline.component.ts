@@ -4,11 +4,11 @@ import { CycleCommissionModel } from '@models/cycle-commission.model';
 import { SubjectModel } from '@models/subject.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
 import { NotificationModalComponent } from '../../common/modals/notification-modal/notification-modal.component';
-import { EditSubjectModalComponent } from '../edit-subject-modal/edit-subject-modal.component';
-import { AddSubjectModalComponent } from '../add-subject-modal/add-subject-modal.component';
-import { AddCycleCommissionModalComponent } from '../add-cycle-commission-modal/add-cycle-commission-modal.component';
-import { EditCycleCommissionModalComponent } from '../edit-cycle-commission-modal/edit-cycle-commission-modal.component';
+import { AddEditCycleCommissionModalComponent } from '../add-edit-cycle-commission-modal/add-edit-cycle-commission-modal.component';
+import { SelectSubjectModalComponent } from '../select-subject-modal/select-subject-modal.component';
+import { AddEditSubjectModalComponent } from '../add-edit-subject-modal/add-edit-subject-modal.component';
 
 @Component({
   templateUrl: './discipline.component.html',
@@ -18,15 +18,20 @@ import { EditCycleCommissionModalComponent } from '../edit-cycle-commission-moda
 })
 export class DisciplineComponent implements OnInit {
 
-  private cycleCommissions: CycleCommissionModel[] = [];
-  public cycleCommissionsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  public cycleCommissionDisplayedColumns: string[] = ['add-edit', 'name', 'subjects', 'delete'];
+  public cycleCommissions: CycleCommissionModel[] = [];
+  private selectedCycleCommission: CycleCommissionModel = new CycleCommissionModel();
 
   private subjects: SubjectModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  public subjectsDisplayedColumns: string[] = ['add-edit', 'name', 'cycleCommissions', 'delete'];
+  public subjectsDisplayedColumns: string[] = ['add-edit', 'name', 'delete'];
+  public isSubjectListShowed = true;
 
-  constructor(private authService: AuthService, private disciplineService: DisciplineService, private dialog: MatDialog) {
+  constructor(
+    private authService: AuthService,
+    private disciplineService: DisciplineService,
+    private modalService: ModalService,
+    private dialog: MatDialog
+  ) {
 
   }
 
@@ -34,138 +39,121 @@ export class DisciplineComponent implements OnInit {
     this.refreshTables();
   }
 
-  public openAddSubjectModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddSubjectModalComponent, {
-        width: '400px'
-      }).afterClosed().subscribe(response => {
-        this.refreshTables();
-      });
-    } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання предмету',
-          isError: true
-        }
-      });
-    }
-  }
-
   public openEditSubjectModal(id: string): void {
     if (this.authService.isAuthentificated()) {
-      this.dialog.open(EditSubjectModalComponent, {
+      this.dialog.open(AddEditSubjectModalComponent, {
         data: {
           subjectId: id
         },
         width: '500px'
       }).afterClosed().subscribe(response => {
         this.refreshTables();
-      });   
-    } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на редагування предмету',
-          isError: true
-        }
       });
+    } else {
+      this.modalService.showError('Помилка', 'Ви не маєте прав на редагування предмету');
     }
   }
 
-  public deleteSubject(id: string): void {
-    this.disciplineService.deleteSubject(id).subscribe(response => {
-      this.refreshTables();
-    }, error => {
-        this.dialog.open(NotificationModalComponent, {
-          width: '300px',
-          data: {
-            title: 'Помилка',
-            message: 'Предмет не може бути видалений, якщо його викладають.',
-            isError: true
-          }
+  public deleteSubjectFromCycleCommission(subject: SubjectModel): void {
+    if (this.authService.isAuthentificated()) {
+      if (window.confirm('Ви дійсно хочете видалити предмет \'' + subject.name + '\'?')) {
+        this.disciplineService.deleteSubjectFromCycleCommission(subject.id, this.selectedCycleCommission.id).subscribe(response => {
+          this.refreshTables();
+        }, error => {
+          this.modalService.showError('Помилка', 'Невідома помилка.');
         });
-    });
+      }
+    } else {
+      this.modalService.showError('Помилка', 'Ви не маєте прав на видалення предмета');
+    }
   }
 
   public openAddCycleCommissionModal(): void {
     if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddCycleCommissionModalComponent, {
+      this.dialog.open(AddEditCycleCommissionModalComponent, {
         width: '400px'
       }).afterClosed().subscribe(response => {
         this.refreshTables();
       });
     } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання циклової комісії',
-          isError: true
-        }
-      });
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання циклової комісії');
     }
   }
 
   public openEditCycleCommissionModal(id: string): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(EditCycleCommissionModalComponent, {
-        data: {
-          cycleCommissionId: id
-        },
-        width: '500px'
-      }).afterClosed().subscribe(response => {
-        this.refreshTables();
-      });
-    } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на редагування циклової комісії',
-          isError: true
-        }
-      });
+    if (this.selectedCycleCommission.id === id) { 
+      if (this.authService.isAuthentificated()) {
+        this.dialog.open(AddEditCycleCommissionModalComponent, {
+          data: {
+            cycleCommissionId: id
+          },
+          width: '500px'
+        }).afterClosed().subscribe(response => {
+          this.refreshTables();
+        });
+      } else {
+        this.modalService.showError('Помилка', 'Ви не маєте прав на редагування циклової комісії');
+      }
     }
   }
 
   public deleteCycleCommission(id: string): void {
-    this.disciplineService.deleteCycleCommission(id).subscribe(response => {
-      this.refreshTables();
-    }, error => {
-        this.dialog.open(NotificationModalComponent, {
-          width: '300px',
-          data: {
-            title: 'Помилка',
-            message: 'Циклова комісія не може бути видалена, коли хоча б один викладач, відноситься до неї.',
-            isError: true
-          }
-        });
-    });
+    if (this.selectedCycleCommission.id === id) {
+      if (this.authService.isAuthentificated()) {
+        if (window.confirm('Ви дійсно хочете видалити комісію \'' + this.selectedCycleCommission.name + '\'?')) {
+          this.disciplineService.deleteCycleCommission(id).subscribe(response => {
+            this.refreshTables();
+          }, error => {
+            this.modalService.showError('Помилка', 'Циклова комісія не може бути видалена, коли хоча б один викладач, відноситься до неї.');
+          });
+        }
+      } else {
+        this.modalService.showError('Помилка', 'Ви не маєте прав на видалення циклової комісії');
+      }
+    }
   }
 
   private refreshTables(): void {
-    this.disciplineService.getSubjects().subscribe(response => {
-      this.subjects = response;
-      this.subjectsDataSource.data = this.subjects.map(_ => {
-        return {
-          id: _.id,
-          name: _.name,
-          cycleCommissions: _.cycleCommissions.map(_ => _.name).join(', ')
-        };
-      });
-    });
     this.disciplineService.getCycleCommissions().subscribe(response => {
       this.cycleCommissions = response;
-      this.cycleCommissionsDataSource.data = this.cycleCommissions.map(_ => {
-        return {
-          id: _.id,
-          name: _.name,
-          subjects: _.subjects.map(_ => _.name).join(', ')
-        };
-      });
+      this.selectCycleCommission(this.cycleCommissions[0]);
     });
+  }
+
+  public selectCycleCommission(cycleCommission: CycleCommissionModel): void {
+    if (!this.checkSelectCycleCommission(cycleCommission)) {
+      this.isSubjectListShowed = false;
+      // Transition duration is 0.25s
+      setTimeout(() => {
+        this.selectedCycleCommission = cycleCommission;
+        this.subjectsDataSource.data = this.selectedCycleCommission.subjects.map(_ => {
+          return {
+            id: _.id,
+            name: _.name
+          };
+        });
+        this.isSubjectListShowed = true;
+      }, 250);
+    }
+  }
+
+  public checkSelectCycleCommission(cycleCommission: CycleCommissionModel): boolean {
+    return this.selectedCycleCommission.id === cycleCommission.id;
+  }
+
+  public openSelectSubjectModal(): void {
+    if (this.authService.isAuthentificated()) {
+      this.dialog.open(SelectSubjectModalComponent, {
+        width: '500px'
+      }).afterClosed().subscribe(response => {
+        if (response && response.selectedSubject) {
+          this.disciplineService.addSubjectToCycleCommission(response.selectedSubject.id, this.selectedCycleCommission.id).subscribe(_ => {
+            this.refreshTables();
+          });
+        }
+      });
+    } else {
+      this.modalService.showError('Помилка', 'Ви не маєте прав на редагування циклової комісії');
+    }
   }
 }

@@ -38,40 +38,29 @@ namespace Techschool.BLL.Services
             return subject;
         }
 
-        public void SaveSubject(SubjectModel model)
+        public SubjectModel SaveSubject(SubjectModel model)
         {
             var subject = context.Subjects.AsNoTracking()
                 .SingleOrDefault(_ => _.Id == model.Id);
 
             if (subject == null)
             {
-                var newSubject = new Subject
+                subject = new Subject
                 {
                     Name = model.Name
                 };
-                context.Subjects.Add(newSubject);
+                context.Subjects.Add(subject);
                 context.SaveChanges();
-                context.Entry(newSubject).State = EntityState.Detached;
+                context.Entry(subject).State = EntityState.Detached;
             }
             else
             {
-                foreach (var cycleCommission in model.CycleCommissions)
-                {
-                    var cycleCommissionSubjectEntity = context.CycleCommissionsSubjects.AsNoTracking()
-                        .FirstOrDefault(_ => _.SubjectId == model.Id && _.CycleCommissionId == cycleCommission.Id);
-                    if (cycleCommissionSubjectEntity == null)
-                    {
-                        var newCycleCommisioSubject = new CycleCommissionSubject
-                        {
-                            CycleCommissionId = cycleCommission.Id,
-                            SubjectId = model.Id
-                        };
-                        context.CycleCommissionsSubjects.Add(newCycleCommisioSubject);
-                        context.SaveChanges();
-                        context.Entry(newCycleCommisioSubject).State = EntityState.Detached;
-                    }
-                }
+                subject = context.Subjects.Update(modelMapper.MapTo<SubjectModel, Subject>(model)).Entity;
+                context.SaveChanges();
+                context.Entry(subject).State = EntityState.Detached;
             }
+
+            return modelMapper.MapTo<Subject, SubjectModel>(subject);
         }
 
         public void DeleteSubjectById(string id)
@@ -101,40 +90,66 @@ namespace Techschool.BLL.Services
             return cycleCommission;
         }
 
-        public void SaveCycleCommission(CycleCommissionModel model)
+        public CycleCommissionModel SaveCycleCommission(CycleCommissionModel model)
         {
             var cycleCommission = context.CycleCommissions.AsNoTracking()
                 .SingleOrDefault(_ => _.Id == model.Id);
 
             if (cycleCommission == null)
             {
-                var newCycleCommission = new CycleCommission
+                cycleCommission = new CycleCommission
                 {
                     Name = model.Name
                 };
-                context.CycleCommissions.Add(newCycleCommission);
+                context.CycleCommissions.Add(cycleCommission);
                 context.SaveChanges();
-                context.Entry(newCycleCommission).State = EntityState.Detached;
+                context.Entry(cycleCommission).State = EntityState.Detached;
             }
             else
             {
-                foreach (var subject in model.Subjects)
-                {
-                    var cycleCommissionSubjectEntity = context.CycleCommissionsSubjects.AsNoTracking()
-                        .FirstOrDefault(_ => _.SubjectId == subject.Id && _.CycleCommissionId == model.Id);
-                    if (cycleCommissionSubjectEntity == null)
-                    {
-                        var newCycleCommisioSubject = new CycleCommissionSubject
-                        {
-                            CycleCommissionId = model.Id,
-                            SubjectId = subject.Id
-                        };
-                        context.CycleCommissionsSubjects.Add(newCycleCommisioSubject);
-                        context.SaveChanges();
-                        context.Entry(newCycleCommisioSubject).State = EntityState.Detached;
-                    }
-                }
+                cycleCommission = context.CycleCommissions.Update(modelMapper.MapTo<CycleCommissionModel, CycleCommission>(model)).Entity;
+                context.SaveChanges();
+                context.Entry(cycleCommission).State = EntityState.Detached;
             }
+
+            // Delets existring links
+            var cycleCommissionsSubjects = context.CycleCommissionsSubjects.Where(_ => _.CycleCommissionId == cycleCommission.Id)
+                .ToList();
+            context.CycleCommissionsSubjects.RemoveRange(cycleCommissionsSubjects);
+            context.SaveChanges();
+
+            // Creating new cycleCommissionsSubjects
+            foreach (var subject in model.Subjects)
+            {
+                if (subject.Id == null)
+                {
+                    var newSubject = context.Subjects.Add(modelMapper.MapTo<SubjectModel, Subject>(subject)).Entity;
+                    context.SaveChanges();
+                    context.Entry(newSubject).State = EntityState.Detached;
+                    var newCycleCommisioSubject = new CycleCommissionSubject
+                    {
+                        CycleCommissionId = model.Id,
+                        SubjectId = newSubject.Id
+                    };
+                    context.CycleCommissionsSubjects.Add(newCycleCommisioSubject);
+                    context.SaveChanges();
+                    context.Entry(newCycleCommisioSubject).State = EntityState.Detached;
+                }
+                else
+                {
+                    var newCycleCommisioSubject = new CycleCommissionSubject
+                    {
+                        CycleCommissionId = model.Id,
+                        SubjectId = subject.Id
+                    };
+                    context.CycleCommissionsSubjects.Add(newCycleCommisioSubject);
+                    context.SaveChanges();
+                    context.Entry(newCycleCommisioSubject).State = EntityState.Detached;
+                }
+                context.SaveChanges();
+            }
+
+            return modelMapper.MapTo<CycleCommission, CycleCommissionModel>(cycleCommission);
         }
 
         public void DeleteCycleCommissionById(string id)
@@ -145,12 +160,31 @@ namespace Techschool.BLL.Services
             context.SaveChanges();
         }
 
-        public void DeleteCycleCommissionSubject(string subjectId, string cycleCommissionId)
+        public void AddSubjectToCycleCommission(string subjectId, string cycleCommissionId)
         {
-            var cycleCommisionSubject = context.CycleCommissionsSubjects.AsNoTracking()
-                .FirstOrDefault(_ => _.SubjectId == subjectId && _.CycleCommissionId == cycleCommissionId);
-            context.CycleCommissionsSubjects.Remove(cycleCommisionSubject);
+            var newCycleCommisioSubject = new CycleCommissionSubject
+            {
+                CycleCommissionId = cycleCommissionId,
+                SubjectId = subjectId
+            };
+            context.CycleCommissionsSubjects.Add(newCycleCommisioSubject);
             context.SaveChanges();
+        }
+
+        public void DeleteSubjectFromCycleCommission(string subjectId, string cycleCommissionId)
+        {
+            var cycleCommissionsSubject = context.CycleCommissionsSubjects.AsNoTracking()
+                .SingleOrDefault(_ => _.SubjectId == subjectId && _.CycleCommissionId == cycleCommissionId);
+            context.CycleCommissionsSubjects.Remove(cycleCommissionsSubject);
+            context.SaveChanges();
+
+            // Deletes subject if no one refers to it
+            var subject = context.Subjects.Include(_ => _.CycleCommissionSubjects).SingleOrDefault(_ => _.Id == subjectId);
+            if (subject.CycleCommissionSubjects.Count == 0)
+            {
+                context.Subjects.Remove(subject);
+                context.SaveChanges();
+            }
         }
     }
 }

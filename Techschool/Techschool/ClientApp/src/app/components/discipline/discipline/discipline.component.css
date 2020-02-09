@@ -11,26 +11,55 @@ mat-dialog-title {
   margin-bottom: 10px;
 }
 
-.mat-icon {
-  color: #1db954;
-}
-
-p {
-  position: relative;
-}
-
-p > span {
+.cycle-commission-wrapper {
+  padding: 10px;
   background-color: #fff;
-  z-index: 1;
-  position: relative;
-  padding-right: 10px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 10px rgba(204,204,204,.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
-p::after {
-  position: absolute;
-  width: 100%;
-  left: 0px;
-  content: '';
-  border-bottom: 3px dotted rgba(72, 101, 93, .18);
-  top: 12px;
+.cycle-commission-icons {
+  margin-left: auto;
+}
+
+.cycle-commission-icons > .mat-icon {
+  margin-left: 10px;
+}
+
+.anchor-icon {
+  transition: all 0.4s ease;
+  transform: rotateZ(90deg);
+  opacity: .42;
+}
+
+.anchor-icon.selected {
+  color: #1db954;
+  transform: rotateZ(0deg);
+  opacity: 1;
+}
+
+.more-icon {
+  opacity: .42;
+}
+
+#subjects-list {
+  transition: 0.25s ease;
+}
+
+#subjects-list.disabled {
+  opacity: 0;
+}
+
+.action-icon {
+  opacity: .42;
+  transition: 0.25s ease;
+}
+
+.action-icon.hide {
+  opacity: 0;
 }

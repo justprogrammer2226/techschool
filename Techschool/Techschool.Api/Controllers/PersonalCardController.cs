@@ -61,7 +61,7 @@ namespace Techschool.Api
         }
 
         
-[HttpDelete]
+        [HttpDelete]
         [Route("{id}")]
         public IActionResult Delete(string id)
         {
@@ -75,6 +75,7 @@ namespace Techschool.Api
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet]
         [Route("annual-vacations/{personalCardId}")]
         public IActionResult GetAnnualVacationByPersonalCardId(string personalCardId)
@@ -83,6 +84,51 @@ namespace Techschool.Api
             {
                 var annualVacations = PersonalCardService.GetAnnualVacationsByPersonalCardId(personalCardId);
                 return Ok(annualVacations);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("annual-vacation-forms/{personalCardId}")]
+        public IActionResult GetAnnualVacationFormsByPersonalCardId(string personalCardId)
+        {
+            try
+            {
+                var forms = PersonalCardService.GetAnnualVacationFormsByPersonalCardId(personalCardId);
+                return Ok(forms);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("annual-vacation-forms/{personalCardId}/{formId}")]
+        public IActionResult GetAnnualVacationForms(string personalCardId, string formId)
+        {
+            try
+            {
+                var form = PersonalCardService.GetAnnualVacationForm(personalCardId, formId);
+                return Ok(form);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("annual-vacation-forms")]
+        public IActionResult SaveAnnualVacationForm(AnnualVacationFormModel model)
+        {
+            try
+            {
+                PersonalCardService.SaveAnnualVacationForm(model);
+                return Ok();
             }
             catch (Exception ex)
             {

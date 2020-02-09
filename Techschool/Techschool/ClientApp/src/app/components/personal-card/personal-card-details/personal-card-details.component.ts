@@ -9,12 +9,14 @@ import { PersonalCardService } from '@services/personal-card.service';
 import { NotificationModalComponent } from '../../common/modals/notification-modal/notification-modal.component';
 import { SubjectModel } from '../../../models/subject.model';
 import { SelectSubjectModalComponent } from '../../discipline/select-subject-modal/select-subject-modal.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EditPersonalCardModalComponent } from '../edit-personal-card-modal/edit-personal-card-modal.component';
 import { DiplomaModel } from '../../../models/diploma.model';
-import { AnnualVacationModel } from '@models/annual-vacation.model';
 import { AddAnnualVacationModalComponent } from '../vacation/add-annual-vacation-modal/add-annual-vacation-modal.component';
 import { EditAnnualVacationModalComponent } from '../vacation/edit-annual-vacation-modal/edit-annual-vacation-modal.component';
+import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
+import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
+import { AddAnnualVacationFormModalComponent } from '../vacation/add-annual-vacation-form-modal/add-annual-vacation-form-modal.component';
 
 @Component({
   templateUrl: './personal-card-details.component.html',
@@ -40,12 +42,15 @@ export class PersonalCardDetailsComponent {
   public annualVacationsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   public annualVacationsDisplayedColumns: string[] = ['add-edit', 'year', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'delete'];
 
+  public annualVacationForms: AnnualVacationFormModel[] = [];
+
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private personalCardService: PersonalCardService,
     private disciplineService: DisciplineService,
+    private router: Router,
     private activateRoute: ActivatedRoute
   ) {
     this.initFormGroup();
@@ -64,6 +69,9 @@ export class PersonalCardDetailsComponent {
         this.personalCardService.getAnnualVacationsByPersonalCardId(params['id']).subscribe(response => {
           this.annualVacations = response;
           this.annualVacationsDataSource.data = this.annualVacations;
+        });
+        this.personalCardService.getAnnualVacationFormsByPersonalCardId(params['id']).subscribe(response => {
+          this.annualVacationForms = response;
         });
       }
     });
@@ -125,40 +133,6 @@ export class PersonalCardDetailsComponent {
     });
   }
 
-  public openAddAnnualVacationModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddAnnualVacationModalComponent, {
-        width: '500px'
-      }).afterClosed().subscribe(response => {
-        this.personalCardService.saveAnnualVacation(response.annualVacation).subscribe(_ => {
-          this.personalCardService.getAnnualVacationsByPersonalCardId(this.personalCard.id).subscribe(annualVacations => {
-            this.annualVacations = annualVacations;
-            this.annualVacationsDataSource.data = this.annualVacations;
-          });
-        });
-      });
-    } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на редагування предмету',
-          isError: true
-        }
-      });
-    }
-  }
-
-  public selectYear(selectedDate: Date, datepicker: MatDatepicker<Date>): void {
-    console.log(selectedDate.getFullYear());
-    datepicker.close();
-  }
-
-  public getDaysBetweenDates(date1: Date, date2: Date): number {
-    const days = Math.ceil(Math.abs(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
-    return days;
-  }
-
   public openEditPersonalCardModal(): void {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditPersonalCardModalComponent, {
@@ -189,17 +163,16 @@ export class PersonalCardDetailsComponent {
     }
   }
 
-  public openEditAnnualVacationModal(annualVacation: AnnualVacationModel): void {
+  public openAddAnnualVacationFormModal(): void {
     if (this.authService.isAuthentificated()) {
-      this.dialog.open(EditAnnualVacationModalComponent, {
+      this.dialog.open(AddAnnualVacationFormModalComponent, {
+        width: '500px',
         data: {
-          annualVacation: annualVacation
-        },
-        width: '500px'
+          personalCardId: this.personalCard.id
+        }
       }).afterClosed().subscribe(response => {
-        this.personalCardService.getAnnualVacationsByPersonalCardId(this.personalCard.id).subscribe(annualVacations => {
-          this.annualVacations = annualVacations;
-          this.annualVacationsDataSource.data = this.annualVacations;
+        this.personalCardService.getAnnualVacationFormsByPersonalCardId(this.personalCard.id).subscribe(response => {
+          this.annualVacationForms = response;
         });
       });
     } else {
@@ -207,19 +180,50 @@ export class PersonalCardDetailsComponent {
         width: '300px',
         data: {
           title: 'Помилка',
-          message: 'Ви не маєте прав на редагування відпустки',
+          message: 'Ви не маєте прав на додання форми щорічної відпустки',
           isError: true
         }
       });
     }
   }
 
-  public deleteAnnualVacation(id: string): void {
-    this.personalCardService.deleteAnnualVacation(id).subscribe(_ => {
-      this.personalCardService.getAnnualVacationsByPersonalCardId(this.personalCard.id).subscribe(annualVacations => {
-        this.annualVacations = annualVacations;
-        this.annualVacationsDataSource.data = this.annualVacations;
+  public navigateToAnnualVacationForm(form: AnnualVacationFormModel): void {
+    this.router.navigateByUrl('personal-cards/' + this.personalCard.id + '/annual-vacations/' + form.id);
+  }
+
+  public getDaysBetweenDates(date1: Date, date2: Date): number {
+    const days = Math.ceil(Math.abs(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
+    return days;
+  }
+
+  public getDays(): number {
+    if (this.annualVacationForms) {
+      let days = 0;
+      days += this.annualVacationForms.reduce((sum, current) => {
+        return sum + current.days;
+      }, 0);
+      return days;
+    }
+    return 0;
+  }
+
+  public getLeftDays(): number {
+    if (this.annualVacationForms) {
+      return this.getDays() - this.getVacationDays();
+    }
+    return 0;
+  }
+
+  public getVacationDays(): number {
+    if (this.annualVacationForms) {
+      let vacationDays = 0;
+      this.annualVacationForms.forEach(form => {
+        vacationDays += form.annualVacations.reduce((sum, current) => {
+          return sum + this.getDaysBetweenDates(current.startOfVacationDate, current.endOfVacationDate);
+        }, 0)
       });
-    });
+      return vacationDays;
+    }
+    return 0;
   }
 }

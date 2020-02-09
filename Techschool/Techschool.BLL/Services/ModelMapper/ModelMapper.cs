@@ -65,6 +65,9 @@ namespace Techschool.BLL.Services
 
             cfg.CreateMap<AnnualVacation, AnnualVacationModel>();
             cfg.CreateMap<AnnualVacationModel, AnnualVacation>();
+
+            cfg.CreateMap<AnnualVacationForm, AnnualVacationFormModel>();
+            cfg.CreateMap<AnnualVacationFormModel, AnnualVacationForm>();
         }
 
         private IEnumerable<SubjectModel> GetSubjectModelsByCycleComissionId(string id)

@@ -5,8 +5,8 @@ import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
 import { PersonalCardService } from '@services/personal-card.service';
 import { DiplomaModel } from '../../../../models/diploma.model';
-import { AnnualVacationModel } from '@models/annual-vacation.model';
 import { NotificationModalComponent } from 'app/components/common/modals/notification-modal/notification-modal.component';
+import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
 
 @Component({
   templateUrl: './edit-annual-vacation-modal.component.html',
@@ -29,8 +29,8 @@ export class EditAnnualVacationModalComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.formGroup = this.formBuilder.group({
-      'startVacationDate': ['', Validators.required],
-      'endVacationDate': ['', Validators.required],
+      'startOfVacationDate': ['', Validators.required],
+      'endOfVacationDate': ['', Validators.required],
       'orderNumber': ['', Validators.required],
       'orderDate': ['', Validators.required]
     });
@@ -43,14 +43,14 @@ export class EditAnnualVacationModalComponent {
   public getError(controlElementName): string {
     console.log(this.formGroup);
     switch (controlElementName) {
-      case 'startVacationDate':
-        if (this.formGroup.get('startVacationDate').hasError('required')) {
+      case 'startOfVacationDate':
+        if (this.formGroup.get('startOfVacationDate').hasError('required')) {
           return 'Дата початку обов\'язкова';
         } else {
           return 'Невідома помилка';
         }
-      case 'endVacationDate':
-        if (this.formGroup.get('endVacationDate').hasError('required')) {
+      case 'endOfVacationDate':
+        if (this.formGroup.get('endOfVacationDate').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
         } else {
           return 'Невідома помилка';
@@ -72,9 +72,9 @@ export class EditAnnualVacationModalComponent {
     }
   }
 
-  public save(formValue: any): void {
-    this.annualVacation.startVacationDate = formValue.startVacationDate;
-    this.annualVacation.endVacationDate = formValue.endVacationDate;
+  public saveVacation(formValue: any): void {
+    this.annualVacation.startOfVacationDate = formValue.startOfVacationDate;
+    this.annualVacation.endOfVacationDate = formValue.endOfVacationDate;
     this.annualVacation.orderNumber = formValue.orderNumber;
     this.annualVacation.orderDate = formValue.orderDate;
     this.personalCardService.saveAnnualVacation(this.annualVacation).subscribe(response => {
@@ -99,8 +99,8 @@ export class EditAnnualVacationModalComponent {
   }
 
   private setFormGroupByAnnualVacation(annualVacation: AnnualVacationModel): void {
-    this.formGroup.controls['startVacationDate'].setValue(annualVacation.startVacationDate);
-    this.formGroup.controls['endVacationDate'].setValue(annualVacation.endVacationDate);
+    this.formGroup.controls['startOfVacationDate'].setValue(annualVacation.startOfVacationDate);
+    this.formGroup.controls['endOfVacationDate'].setValue(annualVacation.endOfVacationDate);
     this.formGroup.controls['orderNumber'].setValue(annualVacation.orderNumber);
     this.formGroup.controls['orderDate'].setValue(annualVacation.orderDate);
   }

@@ -17,6 +17,7 @@ namespace Techschool.DAL
         public DbSet<TeacherQualification> TeacherQualifications { get; set; }
         public DbSet<Diploma> Diplomas { get; set; }
         public DbSet<AnnualVacation> AnnualVacations { get; set; }
+        public DbSet<AnnualVacationForm> AnnualVacationForms { get; set; }
 
         public TechschoolContext(DbContextOptions<TechschoolContext> options) : base(options)
         {

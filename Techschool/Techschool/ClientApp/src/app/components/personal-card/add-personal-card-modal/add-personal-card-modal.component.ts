@@ -21,7 +21,7 @@ import { DiplomaModel } from '../../../models/diploma.model';
 export class AddPersonalCardModalComponent {
 
   public formGroup: FormGroup;
-  datemask = ['(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/];
+  datemask = ['(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/];
 
   public cycleCommissions: CycleCommissionModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -207,7 +207,7 @@ export class AddPersonalCardModalComponent {
     personalCard.totalWorkExperienceOnDate = formValue.totalWorkExperienceOnDate;
     personalCard.numberOfYearsOfTotalWorkExperience = formValue.numberOfYearsOfTotalWorkExperience;
     personalCard.numberOfMonthsOfTotalWorkExperience = formValue.numberOfMonthsOfTotalWorkExperience;
-    personalCard.teachingWorkExperienceOnDate = formValue.teachingWorkExperienceOnDate;
+    if (formValue.teachingWorkExperienceOnDate) personalCard.teachingWorkExperienceOnDate = formValue.teachingWorkExperienceOnDate;
     personalCard.numberOfYearsOfTeachingWorkExperience = formValue.numberOfYearsOfTeachingWorkExperience;
     personalCard.numberOfMonthsOfTeachingWorkExperience = formValue.numberOfMonthsOfTeachingWorkExperience;
     if (formValue.cycleCommission) personalCard.cycleCommission = formValue.cycleCommission;

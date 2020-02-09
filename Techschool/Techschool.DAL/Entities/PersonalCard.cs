@@ -37,6 +37,6 @@ namespace Techschool.DAL.Entities
 
         public ICollection<PersonalCardSubject> PersonalCardSubjects { get; set; }
         public ICollection<Diploma> Diplomas { get; set; }
-        public ICollection<AnnualVacation> AnnualVacations { get; set; }
+        public ICollection<AnnualVacationForm> AnnualVacationForms { get; set; }
     }
 }

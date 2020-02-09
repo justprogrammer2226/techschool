@@ -124,5 +124,43 @@ namespace Techschool.BLL.Services
             context.AnnualVacations.Remove(annualVacation);
             context.SaveChanges();
         }
+
+        public IEnumerable<AnnualVacationFormModel> GetAnnualVacationFormsByPersonalCardId(string id)
+        {
+            var forms = context.AnnualVacationForms.AsNoTracking()
+                .Where(_ => _.PersonalCardId == id)
+                .Include(_ => _.AnnualVacations)
+                .Select(_ => modelMapper.MapTo<AnnualVacationForm, AnnualVacationFormModel>(_))
+                .ToList();
+            return forms;
+        }
+
+        public AnnualVacationFormModel GetAnnualVacationForm(string personalCardId, string formId)
+        {
+            var form = context.AnnualVacationForms.AsNoTracking()
+                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
+                .Include(_ => _.AnnualVacations)
+                .Select(_ => modelMapper.MapTo<AnnualVacationForm, AnnualVacationFormModel>(_))
+                .SingleOrDefault();
+            return form;
+        }
+
+        public void SaveAnnualVacationForm(AnnualVacationFormModel model)
+        {
+            var form = context.AnnualVacationForms.AsNoTracking()
+                .SingleOrDefault(_ => _.Id == model.Id);
+
+            if (form == null)
+            {
+                var newAnnualVacationForm = modelMapper.MapTo<AnnualVacationFormModel, AnnualVacationForm>(model);
+                context.AnnualVacationForms.Add(newAnnualVacationForm);
+            }
+            else
+            {
+                var newAnnualVacationForm = modelMapper.MapTo<AnnualVacationFormModel, AnnualVacationForm>(model);
+                context.AnnualVacationForms.Update(newAnnualVacationForm);
+            }
+            context.SaveChanges();
+        }
     }
 }
