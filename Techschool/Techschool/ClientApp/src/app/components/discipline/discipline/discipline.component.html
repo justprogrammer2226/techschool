@@ -9,7 +9,7 @@
 <div class="grid-two-col">
   <div>
     <div class="cycle-commission-wrapper marging-bottom-10" *ngFor="let cycleCommission of cycleCommissions"
-      (click)="selectCycleCommission(cycleCommission)">
+      (click)="selectCycleCommission(cycleCommission, true)">
       <span>{{cycleCommission.name}}</span>
       <div class="cycle-commission-icons">
         <mat-icon class="action-icon" [class.hide]="!checkSelectCycleCommission(cycleCommission)"

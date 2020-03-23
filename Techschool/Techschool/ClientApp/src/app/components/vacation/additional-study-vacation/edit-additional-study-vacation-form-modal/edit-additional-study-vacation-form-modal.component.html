@@ -1,0 +1,28 @@
+<form [formGroup]="formGroup" (ngSubmit)="saveForm(formGroup.value)" class="form">
+
+  <h1 mat-dialog-title class="title">Редагування відпустки для навчання</h1>
+
+  <div mat-dialog-content>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Діапазон років" formControlName="title">
+        <mat-error *ngIf="formGroup.controls['title'].invalid">
+          {{getError('title')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Навчальний заклад та курс" formControlName="additionalInfo">
+        <mat-error *ngIf="formGroup.controls['additionalInfo'].invalid">
+          {{getError('additionalInfo')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" type="submit" class="button" [disabled]="formGroup.invalid">Зберегти відпустку для навчання</button>
+  </div>
+
+</form>

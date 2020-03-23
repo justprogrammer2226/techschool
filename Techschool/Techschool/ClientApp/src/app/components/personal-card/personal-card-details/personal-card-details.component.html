@@ -86,32 +86,97 @@
         <div>
           <mat-form-field class="form-element">
             <mat-label>Тип відпустки</mat-label>
-            <mat-select>
-              <mat-option value="Сумісник">Щорічна основна + передбачена договором</mat-option>
-              <mat-option value="Штатний">Без збереження з/п</mat-option>
-              <mat-option value="Контракт">Додаткова у зв'язку з навчанням</mat-option>
-              <mat-option value="Контракт">Соціальна відпустка працівникам, що мають дітей</mat-option>
-              <mat-option value="Контракт">Соціальна відпустка у зв'язку з вагітністю та пологами; Соціальна відпустка для догляду</mat-option>
-              <mat-option value="Контракт">Інші види відпусток</mat-option>
+            <mat-select [(ngModel)]="selectedVacationType" [ngModelOptions]="{standalone: true}">
+              <mat-option [value]="VacationType.Annual">Щорічна основна + передбачена договором</mat-option>
+              <mat-option [value]="VacationType.WithoutPayroll">Без збереження з/п</mat-option>
+              <mat-option [value]="VacationType.AdditionalStudy">Додаткова у зв'язку з навчанням</mat-option>
+              <mat-option [value]="VacationType.SocialWithChildren">Соціальна відпустка працівникам, що мають дітей</mat-option>
+              <mat-option [value]="VacationType.SocialWithPregnancyOrLook">Соціальна відпустка у зв'язку з вагітністю та пологами; Соціальна відпустка для догляду</mat-option>
+              <mat-option [value]="VacationType.Other">Інші види відпусток</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
-        <div>
-          <mat-icon (click)="openAddAnnualVacationFormModal()">add</mat-icon>
-          <span (click)="openAddAnnualVacationFormModal()">Додати щорічну відпустку</span>
-        </div>
-        <div>
-          Всього положено днів: {{getDays()}} 
-        </div>
-        <div class="block-wrapper vacation" *ngFor="let form of annualVacationForms" (click)="navigateToAnnualVacationForm(form)">
-          {{ form.title }}
-        </div>
-        <div>
-          Всього днів: {{getVacationDays()}} 
-        </div>
-        <div>
-          Залишок днів: {{getLeftDays()}} 
-        </div>
+        <ng-container [ngSwitch]="selectedVacationType">
+
+          <ng-container *ngSwitchCase="VacationType.AdditionalStudy">
+            <div>
+              <mat-icon (click)="openAddAdditionalStudyVacationFormModal()">add</mat-icon>
+              <span (click)="openAddAdditionalStudyVacationFormModal()">Додати відпустку для навчання</span>
+            </div>
+            <div class="block-wrapper vacation" *ngFor="let form of additionalStudyVacationForms" (click)="navigateToAdditionalStudyVacationForm(form)">
+              {{ form.title }}
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="VacationType.Annual">
+            <div>
+              <mat-icon (click)="openAddAnnualVacationFormModal()">add</mat-icon>
+              <span (click)="openAddAnnualVacationFormModal()">Додати щорічну відпустку</span>
+            </div>
+            <div>
+              Всього положено днів: {{getDaysOfAnnualVacationForm()}} 
+            </div>
+            <div class="block-wrapper vacation" *ngFor="let form of annualVacationForms" (click)="navigateToAnnualVacationForm(form)">
+              {{ form.title }}
+            </div>
+            <div>
+              Всього днів: {{getVacationDaysOfAnnualVacationForm()}} 
+            </div>
+            <div>
+              Залишок днів: {{getLeftDaysOfAnnualVacationForm()}} 
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="VacationType.WithoutPayroll">
+            <div>
+              <mat-icon (click)="openAddWithoutPayrollVacationFormModal()">add</mat-icon>
+              <span (click)="openAddWithoutPayrollVacationFormModal()">Додати відпустку без збереження з/п</span>
+            </div>
+            <div class="block-wrapper vacation" *ngFor="let form of withoutPayrollVacationForms" (click)="navigateToWithoutPayrollVacationForm(form)">
+              {{ form.title }}
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="VacationType.SocialWithChildren">
+            <div>
+              <mat-icon (click)="openAddSocialWithChildrenVacationFormModal()">add</mat-icon>
+              <span (click)="openAddSocialWithChildrenVacationFormModal()">Додати соціальну відпустку</span>
+            </div>
+            <div>
+              Всього положено днів: {{getDaysOfSocialWithChildrenVacationForm()}} 
+            </div>
+            <div class="block-wrapper vacation" *ngFor="let form of socialWithChildrenVacationForms" (click)="navigateToSocialWithChildrenVacationForm(form)">
+              {{ form.title }}
+            </div>
+            <div>
+              Всього днів: {{getVacationDaysOfSocialWithChildrenVacationForm()}} 
+            </div>
+            <div>
+              Залишок днів: {{getLeftDaysOfSocialWithChildrenVacationForm()}} 
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="VacationType.SocialWithPregnancyOrLook">
+            <div>
+              <mat-icon (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">add</mat-icon>
+              <span (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">Додати соціальну відпустку</span>
+            </div>
+            <div class="block-wrapper vacation" *ngFor="let form of socialWithPregnancyOrLookVacationForms" (click)="navigateToSocialWithPregnancyOrLookVacationForm(form)">
+              {{ form.title }}
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="VacationType.Other">
+            <div>
+              <mat-icon (click)="openAddOtherVacationFormModal()">add</mat-icon>
+              <span (click)="openAddOtherVacationFormModal()">Додати відпустку іншого виду</span>
+            </div>
+            <div class="block-wrapper vacation" *ngFor="let form of otherVacationForms" (click)="navigateToOtherVacationForm(form)">
+              {{ form.title }}
+            </div>
+          </ng-container>
+
+        </ng-container>
       </mat-tab>
     </mat-tab-group>
   </form>

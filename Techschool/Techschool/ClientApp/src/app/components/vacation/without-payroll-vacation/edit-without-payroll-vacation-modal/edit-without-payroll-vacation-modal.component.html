@@ -1,0 +1,59 @@
+<form [formGroup]="formGroup" (ngSubmit)="saveVacation(formGroup.value)" class="form">
+
+  <h1 mat-dialog-title class="title"> Редагування іншого виду відпустки</h1>
+
+
+  <div mat-dialog-content>
+    <p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker1" placeholder="Дата початку" formControlName="startOfVacationDate">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls['startOfVacationDate'].invalid">
+          {{getError('startOfVacationDate')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker2" placeholder="Дата закінчення" formControlName="endOfVacationDate">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls['endOfVacationDate'].invalid">
+          {{getError('endOfVacationDate')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Номер наказу" formControlName="orderNumber">
+        <mat-error *ngIf="formGroup.controls['orderNumber'].invalid">
+          {{getError('orderNumber')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker3" placeholder="Дата наказу" formControlName="orderDate">
+        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+        <mat-datepicker #picker3></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls['orderDate'].invalid">
+          {{getError('orderDate')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Примітка" formControlName="notes">
+        <mat-error *ngIf="formGroup.controls['notes'].invalid">
+          {{getError('notes')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" type="submit" class="button" [disabled]="formGroup.invalid">Зберегти</button>
+  </div>
+
+</form>

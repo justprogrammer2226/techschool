@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Techschool.BLL.Models.Vacations
 {
-    public class AnnualVacationModel
+    public class AnnualVacationModel : VacationModel
     {
-        public string Id { get; set; }
         public DateTime StartOfVacationDate { get; set; }
         public DateTime EndOfVacationDate { get; set; }
         public string OrderNumber { get; set; }

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
-import { DisciplineService } from '@services/discipline.service';
-import { SubjectModel } from '../../../models/subject.model';
-import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { AuthService } from '@services/auth.service';
-import { AddEditSubjectModalComponent } from '../add-edit-subject-modal/add-edit-subject-modal.component';
+import { DisciplineService } from '@services/discipline.service';
 import { ModalService } from '@services/modal.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { SubjectModel } from '../../../models/subject.model';
+import { AddEditSubjectModalComponent } from '../add-edit-subject-modal/add-edit-subject-modal.component';
 
 @Component({
   templateUrl: './select-subject-modal.component.html',
@@ -42,7 +42,6 @@ export class SelectSubjectModalComponent implements OnInit {
           startWith(''),
           map(value => {
             return this.subjects.filter(option => {
-              console.log(option);
               return option.name.toLowerCase().includes(value.toLowerCase());
             });
           })
@@ -61,9 +60,11 @@ export class SelectSubjectModalComponent implements OnInit {
       this.dialog.open(AddEditSubjectModalComponent, {
         width: '400px'
       }).afterClosed().subscribe(response => {
-        this.dialogRef.close({
-          selectedSubject: response.subject
-        });
+        if (response.subject) {
+          this.dialogRef.close({
+            selectedSubject: response.subject
+          });
+        }
       });
     } else {
       this.modalService.showError('Помилка', 'Ви не маєте прав на додання предмету');

@@ -9,6 +9,7 @@ import { NotificationModalComponent } from '../../common/modals/notification-mod
 import { AddEditCycleCommissionModalComponent } from '../add-edit-cycle-commission-modal/add-edit-cycle-commission-modal.component';
 import { SelectSubjectModalComponent } from '../select-subject-modal/select-subject-modal.component';
 import { AddEditSubjectModalComponent } from '../add-edit-subject-modal/add-edit-subject-modal.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   templateUrl: './discipline.component.html',
@@ -21,22 +22,29 @@ export class DisciplineComponent implements OnInit {
   public cycleCommissions: CycleCommissionModel[] = [];
   private selectedCycleCommission: CycleCommissionModel = new CycleCommissionModel();
 
-  private subjects: SubjectModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   public subjectsDisplayedColumns: string[] = ['add-edit', 'name', 'delete'];
   public isSubjectListShowed = true;
+
+  private cycleCommissionId: string;
 
   constructor(
     private authService: AuthService,
     private disciplineService: DisciplineService,
     private modalService: ModalService,
+    private router: Router,
+    private activateRoute: ActivatedRoute,
     private dialog: MatDialog
   ) {
-
   }
 
   public ngOnInit(): void {
-    this.refreshTables();
+    this.activateRoute.params.subscribe(params => {
+      if (params['cycleCommissionId']) {
+        this.cycleCommissionId = params['cycleCommissionId'];
+      }
+      this.refreshTables();
+    });
   }
 
   public openEditSubjectModal(id: string): void {
@@ -116,24 +124,38 @@ export class DisciplineComponent implements OnInit {
   private refreshTables(): void {
     this.disciplineService.getCycleCommissions().subscribe(response => {
       this.cycleCommissions = response;
-      this.selectCycleCommission(this.cycleCommissions[0]);
+
+      if (this.cycleCommissionId) {
+        const cycleCommission = this.cycleCommissions.find(_ => _.id === this.cycleCommissionId);
+        if (!cycleCommission) {
+          if (this.cycleCommissions.length !== 0) {
+            this.router.navigateByUrl('disciplines/' + this.cycleCommissions[0].id);
+          }
+        } else {
+          this.isSubjectListShowed = false;
+          // Transition duration is 0.25s
+          setTimeout(() => {
+            this.selectedCycleCommission = cycleCommission;
+            this.subjectsDataSource.data = this.selectedCycleCommission.subjects.map(_ => {
+              return {
+                id: _.id,
+                name: _.name
+              };
+            });
+            this.isSubjectListShowed = true;
+          }, 250);
+        }
+      } else {
+        this.router.navigateByUrl('disciplines/' + this.cycleCommissions[0].id);
+      }
     });
   }
 
-  public selectCycleCommission(cycleCommission: CycleCommissionModel): void {
+  public selectCycleCommission(cycleCommission: CycleCommissionModel, changeRoute: boolean): void {
     if (!this.checkSelectCycleCommission(cycleCommission)) {
-      this.isSubjectListShowed = false;
-      // Transition duration is 0.25s
-      setTimeout(() => {
-        this.selectedCycleCommission = cycleCommission;
-        this.subjectsDataSource.data = this.selectedCycleCommission.subjects.map(_ => {
-          return {
-            id: _.id,
-            name: _.name
-          };
-        });
-        this.isSubjectListShowed = true;
-      }, 250);
+      if (changeRoute) {
+        this.router.navigateByUrl('disciplines/' + cycleCommission.id);
+      }
     }
   }
 

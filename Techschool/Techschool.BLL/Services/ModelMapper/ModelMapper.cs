@@ -21,6 +21,7 @@ namespace Techschool.BLL.Services
             var config = new MapperConfiguration(cfg =>
             {
                 CreateMap(cfg);
+                CreateMapForVacations(cfg);
             });
 
             mapper = config.CreateMapper();
@@ -62,13 +63,47 @@ namespace Techschool.BLL.Services
 
             cfg.CreateMap<Diploma, DiplomaModel>();
             cfg.CreateMap<DiplomaModel, Diploma>();
+        }
 
+        private void CreateMapForVacations(IMapperConfigurationExpression cfg)
+        {
             cfg.CreateMap<AnnualVacation, AnnualVacationModel>();
             cfg.CreateMap<AnnualVacationModel, AnnualVacation>();
 
             cfg.CreateMap<AnnualVacationForm, AnnualVacationFormModel>();
             cfg.CreateMap<AnnualVacationFormModel, AnnualVacationForm>();
+
+            cfg.CreateMap<WithoutPayrollVacation, WithoutPayrollVacationModel>();
+            cfg.CreateMap<WithoutPayrollVacationModel, WithoutPayrollVacation>();
+
+            cfg.CreateMap<WithoutPayrollVacationForm, WithoutPayrollVacationFormModel>();
+            cfg.CreateMap<WithoutPayrollVacationFormModel, WithoutPayrollVacationForm>();
+
+            cfg.CreateMap<AdditionalStudyVacation, AdditionalStudyVacationModel>();
+            cfg.CreateMap<AdditionalStudyVacationModel, AdditionalStudyVacation>();
+
+            cfg.CreateMap<AdditionalStudyVacationForm, AdditionalStudyVacationFormModel>();
+            cfg.CreateMap<AdditionalStudyVacationFormModel, AdditionalStudyVacationForm>();
+
+            cfg.CreateMap<SocialWithChildrenVacation, SocialWithChildrenVacationModel>();
+            cfg.CreateMap<SocialWithChildrenVacationModel, SocialWithChildrenVacation>();
+
+            cfg.CreateMap<SocialWithChildrenVacationForm, SocialWithChildrenVacationFormModel>();
+            cfg.CreateMap<SocialWithChildrenVacationFormModel, SocialWithChildrenVacationForm>();
+
+            cfg.CreateMap<SocialWithPregnancyOrLookVacation, SocialWithPregnancyOrLookVacationModel>();
+            cfg.CreateMap<SocialWithPregnancyOrLookVacationModel, SocialWithPregnancyOrLookVacation>();
+
+            cfg.CreateMap<SocialWithPregnancyOrLookVacationForm, SocialWithPregnancyOrLookVacationFormModel>();
+            cfg.CreateMap<SocialWithPregnancyOrLookVacationFormModel, SocialWithPregnancyOrLookVacationForm>();
+
+            cfg.CreateMap<OtherVacation, OtherVacationModel>();
+            cfg.CreateMap<OtherVacationModel, OtherVacation>();
+
+            cfg.CreateMap<OtherVacationForm, OtherVacationFormModel>();
+            cfg.CreateMap<OtherVacationFormModel, OtherVacationForm>();
         }
+
 
         private IEnumerable<SubjectModel> GetSubjectModelsByCycleComissionId(string id)
         {

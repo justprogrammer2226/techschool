@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { DisciplineService } from '@services/discipline.service';
 import { CycleCommissionModel } from '../../../models/cycle-commission.model';
+import { DisciplineService } from '@services/discipline.service';
 
 @Component({
   templateUrl: './add-edit-cycle-commission-modal.component.html',

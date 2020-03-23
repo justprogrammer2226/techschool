@@ -1,12 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Techschool.DAL.Entities.Vacations
 {
-    public class AnnualVacation
+    public class AnnualVacation : Vacation
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
         public DateTime StartOfVacationDate { get; set; }
         public DateTime EndOfVacationDate { get; set; }
         public string OrderNumber { get; set; }

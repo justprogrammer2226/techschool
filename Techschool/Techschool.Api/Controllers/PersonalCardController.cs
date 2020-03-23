@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using Techschool.BLL.Models;
-using Techschool.BLL.Models.Vacations;
 using Techschool.BLL.Services;
 
 namespace Techschool.Api
@@ -68,96 +67,6 @@ namespace Techschool.Api
             try
             {
                 PersonalCardService.Delete(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("annual-vacations/{personalCardId}")]
-        public IActionResult GetAnnualVacationByPersonalCardId(string personalCardId)
-        {
-            try
-            {
-                var annualVacations = PersonalCardService.GetAnnualVacationsByPersonalCardId(personalCardId);
-                return Ok(annualVacations);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("annual-vacation-forms/{personalCardId}")]
-        public IActionResult GetAnnualVacationFormsByPersonalCardId(string personalCardId)
-        {
-            try
-            {
-                var forms = PersonalCardService.GetAnnualVacationFormsByPersonalCardId(personalCardId);
-                return Ok(forms);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("annual-vacation-forms/{personalCardId}/{formId}")]
-        public IActionResult GetAnnualVacationForms(string personalCardId, string formId)
-        {
-            try
-            {
-                var form = PersonalCardService.GetAnnualVacationForm(personalCardId, formId);
-                return Ok(form);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("annual-vacation-forms")]
-        public IActionResult SaveAnnualVacationForm(AnnualVacationFormModel model)
-        {
-            try
-            {
-                PersonalCardService.SaveAnnualVacationForm(model);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost]
-        [Route("annual-vacations")]
-        public IActionResult Save(AnnualVacationModel model)
-        {
-            try
-            {
-                PersonalCardService.SaveAnnualVacation(model);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpDelete]
-        [Route("annual-vacations/{id}")]
-        public IActionResult DeleteAnnualVacation(string id)
-        {
-            try
-            {
-                PersonalCardService.DeleteAnnualVacation(id);
                 return Ok();
             }
             catch (Exception ex)

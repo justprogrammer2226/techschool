@@ -1,5 +1,6 @@
-export class AnnualVacationModel {
-  id: string;
+import { VacationModel } from './vacation.model';
+
+export class AnnualVacationModel extends VacationModel {
   startOfVacationDate: Date;
   endOfVacationDate: Date;
   orderNumber: string;

@@ -76,6 +76,7 @@ namespace Techschool
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IPersonalCardService, PersonalCardService>();
             services.AddTransient<IDisciplineService, DisciplineService>();
+            services.AddTransient<IVacationService, VacationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

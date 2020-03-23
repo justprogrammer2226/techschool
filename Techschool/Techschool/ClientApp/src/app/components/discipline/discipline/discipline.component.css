@@ -63,3 +63,7 @@ mat-dialog-title {
 .action-icon.hide {
   opacity: 0;
 }
+
+.block-wrapper > p:first-child {
+  margin-bottom: 20px;
+}

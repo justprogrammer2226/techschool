@@ -56,6 +56,7 @@ namespace Techschool.BLL.Services
             if (personalCard == null)
             {
                 var newPersonalCardModel = modelMapper.MapTo<PersonalCardModel, PersonalCard>(model);
+                newPersonalCardModel.CycleCommission = null;
                 var entryEntity = context.PersonalCards.Add(newPersonalCardModel);
                 model.Id = entryEntity.Entity.Id;
             }
@@ -89,77 +90,6 @@ namespace Techschool.BLL.Services
         {
             var personalCard = context.PersonalCards.SingleOrDefault(_ => _.Id == id);
             context.PersonalCards.Remove(personalCard);
-            context.SaveChanges();
-        }
-
-        public IEnumerable<AnnualVacationModel> GetAnnualVacationsByPersonalCardId(string id)
-        {
-            var annualVcations = context.AnnualVacations.AsNoTracking()
-                .Select(_ => modelMapper.MapTo<AnnualVacation, AnnualVacationModel>(_))
-                .ToList();
-            return annualVcations;
-        }
-
-        public void SaveAnnualVacation(AnnualVacationModel model)
-        {
-            var annualVcations = context.AnnualVacations.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (annualVcations == null)
-            {
-                var newAnnualVacation = modelMapper.MapTo<AnnualVacationModel, AnnualVacation>(model);
-                context.AnnualVacations.Add(newAnnualVacation);
-            }
-            else
-            {
-                var newAnnualVacation = modelMapper.MapTo<AnnualVacationModel, AnnualVacation>(model);
-                context.AnnualVacations.Update(newAnnualVacation);
-            }
-            context.SaveChanges();
-        }
-
-        public void DeleteAnnualVacation(string id)
-        {
-            var annualVacation = context.AnnualVacations.SingleOrDefault(_ => _.Id == id);
-            context.AnnualVacations.Remove(annualVacation);
-            context.SaveChanges();
-        }
-
-        public IEnumerable<AnnualVacationFormModel> GetAnnualVacationFormsByPersonalCardId(string id)
-        {
-            var forms = context.AnnualVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == id)
-                .Include(_ => _.AnnualVacations)
-                .Select(_ => modelMapper.MapTo<AnnualVacationForm, AnnualVacationFormModel>(_))
-                .ToList();
-            return forms;
-        }
-
-        public AnnualVacationFormModel GetAnnualVacationForm(string personalCardId, string formId)
-        {
-            var form = context.AnnualVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
-                .Include(_ => _.AnnualVacations)
-                .Select(_ => modelMapper.MapTo<AnnualVacationForm, AnnualVacationFormModel>(_))
-                .SingleOrDefault();
-            return form;
-        }
-
-        public void SaveAnnualVacationForm(AnnualVacationFormModel model)
-        {
-            var form = context.AnnualVacationForms.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (form == null)
-            {
-                var newAnnualVacationForm = modelMapper.MapTo<AnnualVacationFormModel, AnnualVacationForm>(model);
-                context.AnnualVacationForms.Add(newAnnualVacationForm);
-            }
-            else
-            {
-                var newAnnualVacationForm = modelMapper.MapTo<AnnualVacationFormModel, AnnualVacationForm>(model);
-                context.AnnualVacationForms.Update(newAnnualVacationForm);
-            }
             context.SaveChanges();
         }
     }

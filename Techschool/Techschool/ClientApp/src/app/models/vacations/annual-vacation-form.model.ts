@@ -1,11 +1,9 @@
 import { AnnualVacationModel } from './annual-vacation.model';
+import { VacationFormModel } from './vacation-form.model';
 
-export class AnnualVacationFormModel {
-  id: string;
-  title: string;
+export class AnnualVacationFormModel extends VacationFormModel {
   startOfWorkingYear: Date;
   endOfWorkingYear: Date;
   days: number;
   annualVacations: AnnualVacationModel[];
-  personalCardId: string;
 }

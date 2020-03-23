@@ -152,3 +152,7 @@ body {
 .mat-icon {
   box-sizing: border-box;
 }
+
+.action-icon {
+  cursor: pointer;
+}

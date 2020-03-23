@@ -18,6 +18,16 @@ namespace Techschool.DAL
         public DbSet<Diploma> Diplomas { get; set; }
         public DbSet<AnnualVacation> AnnualVacations { get; set; }
         public DbSet<AnnualVacationForm> AnnualVacationForms { get; set; }
+        public DbSet<WithoutPayrollVacation> WithoutPayrollVacations { get; set; }
+        public DbSet<WithoutPayrollVacationForm> WithoutPayrollVacationForms { get; set; }
+        public DbSet<AdditionalStudyVacation> AdditionalStudyVacations { get; set; }
+        public DbSet<AdditionalStudyVacationForm> AdditionalStudyVacationForms { get; set; }
+        public DbSet<SocialWithChildrenVacation> SocialWithChildrenVacations { get; set; }
+        public DbSet<SocialWithChildrenVacationForm> SocialWithChildrenVacationForms { get; set; }
+        public DbSet<SocialWithPregnancyOrLookVacation> SocialWithPregnancyOrLookVacations { get; set; }
+        public DbSet<SocialWithPregnancyOrLookVacationForm> SocialWithPregnancyOrLookVacationForms { get; set; }
+        public DbSet<OtherVacation> OtherVacations { get; set; }
+        public DbSet<OtherVacationForm> OtherVacationForms { get; set; }
 
         public TechschoolContext(DbContextOptions<TechschoolContext> options) : base(options)
         {

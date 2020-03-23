@@ -444,6 +444,56 @@ namespace Techschool.DAL.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacation", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdditionalStudyVacationFormId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EndOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdditionalStudyVacationFormId");
+
+                    b.ToTable("AdditionalStudyVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacationForm", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdditionalInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonalCardId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalCardId");
+
+                    b.ToTable("AdditionalStudyVacationForms");
+                });
+
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AnnualVacation", b =>
                 {
                     b.Property<string>("Id")
@@ -498,6 +548,212 @@ namespace Techschool.DAL.Migrations
                     b.HasIndex("PersonalCardId");
 
                     b.ToTable("AnnualVacationForms");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacation", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EndOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtherVacationFormId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TypeOfVacation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OtherVacationFormId");
+
+                    b.ToTable("OtherVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacationForm", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PersonalCardId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalCardId");
+
+                    b.ToTable("OtherVacationForms");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacation", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EndOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SocialWithChildrenVacationFormId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SocialWithChildrenVacationFormId");
+
+                    b.ToTable("SocialWithChildrenVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacationForm", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ChildAge")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Days")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PersonalCardId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalCardId");
+
+                    b.ToTable("SocialWithChildrenVacationForms");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacation", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EndOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SocialWithPregnancyOrLookVacationFormId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("StartOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TypeOfVacation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SocialWithPregnancyOrLookVacationFormId");
+
+                    b.ToTable("SocialWithPregnancyOrLookVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacationForm", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PersonalCardId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalCardId");
+
+                    b.ToTable("SocialWithPregnancyOrLookVacationForms");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacation", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("EndOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartOfVacationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WithoutPayrollVacationFormId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WithoutPayrollVacationFormId");
+
+                    b.ToTable("WithoutPayrollVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacationForm", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PersonalCardId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalCardId");
+
+                    b.ToTable("WithoutPayrollVacationForms");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -610,6 +866,20 @@ namespace Techschool.DAL.Migrations
                         .HasForeignKey("RoleId");
                 });
 
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacation", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.AdditionalStudyVacationForm", "AdditionalStudyVacationForm")
+                        .WithMany("AdditionalStudyVacations")
+                        .HasForeignKey("AdditionalStudyVacationFormId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacationForm", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
+                });
+
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AnnualVacation", b =>
                 {
                     b.HasOne("Techschool.DAL.Entities.Vacations.AnnualVacationForm", "AnnualVacationForm")
@@ -621,6 +891,62 @@ namespace Techschool.DAL.Migrations
                 {
                     b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
                         .WithMany("AnnualVacationForms")
+                        .HasForeignKey("PersonalCardId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacation", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.OtherVacationForm", "OtherVacationForm")
+                        .WithMany("OtherVacations")
+                        .HasForeignKey("OtherVacationFormId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacationForm", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacation", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacationForm", "SocialWithChildrenVacationForm")
+                        .WithMany("SocialWithChildrenVacations")
+                        .HasForeignKey("SocialWithChildrenVacationFormId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacationForm", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacation", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacationForm", "SocialWithPregnancyOrLookVacationForm")
+                        .WithMany("SocialWithPregnancyOrLookVacations")
+                        .HasForeignKey("SocialWithPregnancyOrLookVacationFormId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacationForm", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacation", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WithoutPayrollVacationForm", "WithoutPayrollVacationForm")
+                        .WithMany("WithoutPayrollVacations")
+                        .HasForeignKey("WithoutPayrollVacationFormId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacationForm", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
+                        .WithMany()
                         .HasForeignKey("PersonalCardId");
                 });
 #pragma warning restore 612, 618
