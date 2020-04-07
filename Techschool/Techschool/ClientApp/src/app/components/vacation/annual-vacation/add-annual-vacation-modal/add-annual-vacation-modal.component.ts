@@ -6,6 +6,9 @@ import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
 import { PersonalCardService } from '@services/personal-card.service';
+import { CustomValidator } from 'app/validators/custom.validator';
+
+const vacationDateBefore = 'vacationDateBefore';
 
 @Component({
   templateUrl: './add-annual-vacation-modal.component.html',
@@ -32,6 +35,9 @@ export class AddAnnualVacationModalComponent {
       'endOfVacationDate': ['', Validators.required],
       'orderNumber': ['', Validators.required],
       'orderDate': ['', Validators.required]
+    },
+    {
+      validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
     });
     this.formId = data.formId;
   }
@@ -47,6 +53,8 @@ export class AddAnnualVacationModalComponent {
       case 'endOfVacationDate':
         if (this.formGroup.get('endOfVacationDate').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
+        } else if (this.formGroup.get('endOfVacationDate').hasError(vacationDateBefore)) {
+          return 'Дата закінчення повинна бути після початку';
         } else {
           return 'Невідома помилка';
         }

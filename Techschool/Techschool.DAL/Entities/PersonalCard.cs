@@ -16,7 +16,7 @@ namespace Techschool.DAL.Entities
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
-        public string Photo { get; set; }
+        public byte[] Photo { get; set; }
         public bool IsEmployee { get; set; }
         public bool IsTeacher { get; set; }
         public DateTime TotalWorkExperienceOnDate { get; set; }
@@ -32,11 +32,16 @@ namespace Techschool.DAL.Entities
         public string CycleCommissionId { get; set; }
         public CycleCommission CycleCommission { get; set; }
 
-        public string TeacherQualificationId { get; set; }
-        public TeacherQualification TeacherQualification { get; set; }
+        public string TeacherQualification { get; set; }
+        public string TeacherQualificationNote { get; set; }
 
         public ICollection<PersonalCardSubject> PersonalCardSubjects { get; set; }
         public ICollection<Diploma> Diplomas { get; set; }
+        public ICollection<AdditionalStudyVacationForm> AdditionalStudyVacationForms { get; set; }
         public ICollection<AnnualVacationForm> AnnualVacationForms { get; set; }
+        public ICollection<OtherVacationForm> OtherVacationForms { get; set; }
+        public ICollection<SocialWithChildrenVacationForm> SocialWithChildrenVacationForms { get; set; }
+        public ICollection<SocialWithPregnancyOrLookVacationForm> SocialWithPregnancyOrLookVacationForms { get; set; }
+        public ICollection<WithoutPayrollVacationForm> WithoutPayrollVacationForms { get; set; }
     }
 }

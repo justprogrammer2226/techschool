@@ -1,11 +1,13 @@
-import { VacationService } from '../../../../services/vacation.service';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
-import { PersonalCardService } from '@services/personal-card.service';
+import { VacationService } from '../../../../services/vacation.service';
+import { CustomValidator } from './../../../../validators/custom.validator';
+
+const workingYearBeforErrorName = 'workingYearBefore';
 
 @Component({
   templateUrl: './add-annual-vacation-form-modal.component.html',
@@ -31,7 +33,10 @@ export class AddAnnualVacationFormModalComponent {
       'startOfWorkingYear': ['', Validators.required],
       'endOfWorkingYear': ['', Validators.required],
       'title': ['', Validators.required],
-      'days': ['', Validators.required]
+      'days': ['', [Validators.required, CustomValidator.number]],
+    },
+    {
+      validator: CustomValidator.isBefore('startOfWorkingYear', 'endOfWorkingYear', workingYearBeforErrorName)
     });
     this.personalCardId = data.personalCardId;
   }
@@ -47,6 +52,8 @@ export class AddAnnualVacationFormModalComponent {
       case 'endOfWorkingYear':
         if (this.formGroup.get('endOfWorkingYear').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
+        } else if (this.formGroup.get('endOfWorkingYear').hasError(workingYearBeforErrorName)) {
+          return 'Дата закінчення повинна бути після початку';
         } else {
           return 'Невідома помилка';
         }
@@ -59,6 +66,8 @@ export class AddAnnualVacationFormModalComponent {
       case 'days':
         if (this.formGroup.get('days').hasError('required')) {
           return 'Кількість днів обов\'язкова';
+        } else if (this.formGroup.get('days').hasError('number')) {
+          return 'Кількість днів повинна бути числом';
         } else {
           return 'Невідома помилка';
         }

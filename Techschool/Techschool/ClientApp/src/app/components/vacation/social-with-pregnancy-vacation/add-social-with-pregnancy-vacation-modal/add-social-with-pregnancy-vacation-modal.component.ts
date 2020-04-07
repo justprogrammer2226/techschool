@@ -5,6 +5,9 @@ import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
 import { SocialWithPregnancyOrLookVacationModel } from '../../../../models/vacations/social-with-pregnancy-or-look-vacation.model';
 import { VacationService } from '../../../../services/vacation.service';
+import { CustomValidator } from 'app/validators/custom.validator';
+
+const vacationDateBefore = 'vacationDateBefore';
 
 @Component({
   templateUrl: './add-social-with-pregnancy-vacation-modal.component.html',
@@ -32,6 +35,9 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
       'endOfVacationDate': ['', Validators.required],
       'orderNumber': ['', Validators.required],
       'orderDate': ['', Validators.required],
+    },
+    {
+      validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
     });
     this.formId = data.formId;
   }
@@ -53,6 +59,8 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
       case 'endOfVacationDate':
         if (this.formGroup.get('endOfVacationDate').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
+        } else if (this.formGroup.get('endOfVacationDate').hasError(vacationDateBefore)) {
+          return 'Дата закінчення повинна бути після початку';
         } else {
           return 'Невідома помилка';
         }

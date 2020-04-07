@@ -29,6 +29,8 @@ export class AddPersonalCardModalComponent {
   public diplomasDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
   public diplomasDisplayedColumns: string[] = ['add-delete', 'number', 'graduationDate', 'qualification', 'specialization'];
 
+  public profilePhoto: string;
+
   constructor(private authService: AuthService, private dialogRef: MatDialogRef<AddPersonalCardModalComponent>, private formBuilder: FormBuilder, private dialog: MatDialog,
     private personalCardService: PersonalCardService, private disciplineService: DisciplineService) {
     this.formGroup = this.formBuilder.group({
@@ -192,6 +194,7 @@ export class AddPersonalCardModalComponent {
 
   public save(formValue: any): void {
     const personalCard: PersonalCardModel = new PersonalCardModel();
+    personalCard.photo = this.profilePhoto;
     personalCard.name = formValue.name;
     personalCard.surname = formValue.surname;
     personalCard.patronymic = formValue.patronymic;
@@ -314,5 +317,9 @@ export class AddPersonalCardModalComponent {
 
   public deleteDiplomaByNumber(number: string): void {
     this.diplomasDataSource.data = this.diplomasDataSource.data.filter(_ => _.number != number);
+  }
+
+  public loadProfilePhoto(base64image: string): void {
+    this.profilePhoto = base64image;
   }
 }

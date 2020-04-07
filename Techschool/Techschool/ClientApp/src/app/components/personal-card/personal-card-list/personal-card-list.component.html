@@ -1,6 +1,6 @@
 <div class="block-wrapper">
   <h5>Особисті картки</h5>
-  <table mat-table [dataSource]="personalCards" class="mat-elevation-z8" style="width: 100%">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width: 100%">
 
     <ng-container matColumnDef="edit">
       <th mat-header-cell *matHeaderCellDef class="icon-cell">  </th>
@@ -17,9 +17,14 @@
       <td mat-cell *matCellDef="let element" class="text-cell"> {{element.surname}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="patronymic">
+      <th mat-header-cell *matHeaderCellDef class="text-cell"> По батькові </th>
+      <td mat-cell *matCellDef="let element" class="text-cell"> {{element.patronymic}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="birthday">
       <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата народження </th>
-      <td mat-cell *matCellDef="let element" class="text-cell"> {{element.birthday}} </td>
+      <td mat-cell *matCellDef="let element" class="text-cell"> {{element.birthday | date:'MM/dd/yyyy'}} </td>
     </ng-container>
 
     <ng-container matColumnDef="employmentType">
@@ -27,7 +32,14 @@
       <td mat-cell *matCellDef="let element" class="text-cell"> {{element.employmentType}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="cycleCommission">
+      <th mat-header-cell *matHeaderCellDef class="text-cell"> ЦК </th>
+      <td mat-cell *matCellDef="let element" class="text-cell"> {{element.cycleCommission.name}} </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>

@@ -31,6 +31,7 @@ namespace Techschool.BLL.Services
         public IEnumerable<PersonalCardModel> GetAll()
         {
             var personalCards = context.PersonalCards.AsNoTracking()
+                .Include(_ => _.CycleCommission)
                 .Include(_ => _.EmploymentType)
                 .Select(_ => modelMapper.MapTo<PersonalCard, PersonalCardModel>(_))
                 .ToList();
@@ -41,7 +42,6 @@ namespace Techschool.BLL.Services
         {
             var personalCardEntity = context.PersonalCards.AsNoTracking()
                 .Include(_ => _.EmploymentType)
-                .Include(_ => _.TeacherQualification)
                 .Include(_ => _.CycleCommission)
                 .Single(_ => _.Id == id);
             var personalCard = modelMapper.MapTo<PersonalCard, PersonalCardModel>(personalCardEntity);

@@ -4,11 +4,17 @@
     <mat-tab-group>
       <mat-tab [label]="'Особиста інформація (' + typeOfPersonalCard + ')'">
         <div>
+          <div id="profile-container">
+            <div *ngIf="personalCard.photo"
+                 [style.background-image]="'url(' + personalCard.photo + ')'"></div>
+            <div *ngIf="!personalCard.photo"
+                 [style.background-image]="'url(\'assets/img/no_picture.png\')'"></div>
+          </div>
           <p>
             ФІО: {{ personalCard.surname }} {{ personalCard.name }} {{ personalCard.patronymic}}
           </p>
           <p>
-            Дата народження: {{ personalCard.birthday | date:'shortDate' }}
+            Дата народження: {{ personalCard.birthday | date:'MM/dd/yyyy' }}
           </p>
           <p>
             Адреса: {{ personalCard.address }}
@@ -36,7 +42,7 @@
 
             <ng-container matColumnDef="graduationDate">
               <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата закінчення </th>
-              <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate  | date:'shortDate'}} </td>
+              <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate | date:'MM/dd/yyyy'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="qualification">

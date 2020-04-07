@@ -5,6 +5,9 @@ import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
 import { VacationService } from '../../../../services/vacation.service';
 import { WithoutPayrollVacationModel } from './../../../../models/vacations/without-payroll-vacation.model';
+import { CustomValidator } from 'app/validators/custom.validator';
+
+const vacationDateBefore = 'vacationDateBefore';
 
 @Component({
   templateUrl: './add-without-payroll-vacation-modal.component.html',
@@ -32,6 +35,9 @@ export class AddWithoutPayrollVacationModalComponent {
       'orderNumber': ['', Validators.required],
       'orderDate': ['', Validators.required],
       'notes': ['', Validators.required]
+    },
+    {
+      validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
     });
     this.formId = data.formId;
   }
@@ -47,6 +53,8 @@ export class AddWithoutPayrollVacationModalComponent {
       case 'endOfVacationDate':
         if (this.formGroup.get('endOfVacationDate').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
+        } else if (this.formGroup.get('endOfVacationDate').hasError(vacationDateBefore)) {
+          return 'Дата закінчення повинна бути після початку';
         } else {
           return 'Невідома помилка';
         }

@@ -30,6 +30,7 @@ export class EditPersonalCardModalComponent {
   public diplomasDisplayedColumns: string[] = ['add-delete', 'number', 'graduationDate', 'qualification', 'specialization'];
 
   public personalCard: PersonalCardModel = new PersonalCardModel();
+  public profilePhoto: string;
 
   constructor(
     private authService: AuthService,
@@ -158,6 +159,7 @@ export class EditPersonalCardModalComponent {
   }
 
   public save(formValue: any): void {
+    this.personalCard.photo = this.profilePhoto;
     this.personalCard.name = formValue.name;
     this.personalCard.surname = formValue.surname;
     this.personalCard.patronymic = formValue.patronymic;
@@ -379,5 +381,9 @@ export class EditPersonalCardModalComponent {
         specialization: diploma.specialization
       };
     });
+  }
+
+  public loadProfilePhoto(base64image: string): void {
+    this.profilePhoto = base64image;
   }
 }

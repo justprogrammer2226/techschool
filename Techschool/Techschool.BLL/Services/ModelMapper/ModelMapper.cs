@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Techschool.BLL.Models;
 using Techschool.BLL.Models.Vacations;
 using Techschool.DAL;
@@ -42,16 +43,14 @@ namespace Techschool.BLL.Services
                 .ForMember(destMember => destMember.Role, memberOptions => memberOptions.Ignore());
 
             cfg.CreateMap<PersonalCard, PersonalCardModel>()
+                .ForMember(destMember => destMember.Photo, memberOptions => memberOptions.MapFrom(src => Encoding.ASCII.GetString(src.Photo)))
                 .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.MapFrom(src => src.EmploymentType.Name.ToString()))
-                .ForMember(destMember => destMember.TeacherQualification, memberOptions => memberOptions.MapFrom(src => src.TeacherQualification.Name.ToString()))
-                .ForMember(destMember => destMember.TeacherQualificationNote, memberOptions => memberOptions.MapFrom(src => src.TeacherQualification.Note))
                 .ForMember(destMember => destMember.Subjects, memberOptions => memberOptions.MapFrom(_ => GetSubjectModelsByPersonalCardId(_.Id)))
                 .ForMember(destMember => destMember.Diplomas, memberOptions => memberOptions.MapFrom(_ => GetDiplomasByPersonalCardId(_.Id)));
             cfg.CreateMap<PersonalCardModel, PersonalCard>()
+                .ForMember(destMember => destMember.Photo, memberOptions => memberOptions.MapFrom(src => Encoding.ASCII.GetBytes(src.Photo)))
                 .ForMember(destMember => destMember.EmploymentTypeId, memberOptions => memberOptions.MapFrom(src => context.EmploymentTypes.SingleOrDefault(_ => _.Name == src.EmploymentType).Id))
-                .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.Ignore())
-                .ForMember(destMember => destMember.TeacherQualificationId, memberOptions => memberOptions.MapFrom(src => context.TeacherQualifications.SingleOrDefault(_ => _.Name == src.TeacherQualification).Id))
-                .ForMember(destMember => destMember.TeacherQualification, memberOptions => memberOptions.Ignore());
+                .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.Ignore());
 
             cfg.CreateMap<CycleCommission, CycleCommissionModel>()
                 .ForMember(destMember => destMember.Subjects, memberOptions => memberOptions.MapFrom(_ => GetSubjectModelsByCycleComissionId(_.Id)));

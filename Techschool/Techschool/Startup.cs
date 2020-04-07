@@ -34,6 +34,7 @@ namespace Techschool
         {
             services.AddDbContext<TechschoolContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<TechschoolContext>();
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<TechschoolContext>();
@@ -137,8 +138,6 @@ namespace Techschool
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-
-            DBSeeder.Seed(roleManager, userManager, context).Wait();
         }
     }
 }

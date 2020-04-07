@@ -4,6 +4,9 @@
 
 
   <div mat-dialog-content>
+
+    <app-upload-file (fileLoaded)="loadProfilePhoto($event)"></app-upload-file>
+
     <!--Name-->
     <p>
       <mat-form-field class="form-element">

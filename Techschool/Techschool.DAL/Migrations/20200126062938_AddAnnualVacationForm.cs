@@ -63,7 +63,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.PersonalCardId,
                         principalTable: "PersonalCards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

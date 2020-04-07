@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Techschool.DAL;
 
 namespace Techschool.DAL.Migrations
 {
     [DbContext(typeof(TechschoolContext))]
-    partial class TechschoolContextModelSnapshot : ModelSnapshot
+    [Migration("20200323170504_UpdatePhoto2")]
+    partial class UpdatePhoto2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,17 +271,11 @@ namespace Techschool.DAL.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TeacherQualification")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TeacherQualificationNote")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("TeacherQualificationId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("TeachingWorkExperienceOnDate")
                         .HasColumnType("datetime2");
@@ -296,6 +292,8 @@ namespace Techschool.DAL.Migrations
                         .HasFilter("[Email] IS NOT NULL");
 
                     b.HasIndex("EmploymentTypeId");
+
+                    b.HasIndex("TeacherQualificationId");
 
                     b.ToTable("PersonalCards");
                 });
@@ -355,6 +353,23 @@ namespace Techschool.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.TeacherQualification", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TeacherQualifications");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.User", b =>
@@ -822,6 +837,10 @@ namespace Techschool.DAL.Migrations
                     b.HasOne("Techschool.DAL.Entities.EmploymentType", "EmploymentType")
                         .WithMany()
                         .HasForeignKey("EmploymentTypeId");
+
+                    b.HasOne("Techschool.DAL.Entities.TeacherQualification", "TeacherQualification")
+                        .WithMany("PersonalCards")
+                        .HasForeignKey("TeacherQualificationId");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.PersonalCardSubject", b =>
@@ -856,9 +875,8 @@ namespace Techschool.DAL.Migrations
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacationForm", b =>
                 {
                     b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
-                        .WithMany("AdditionalStudyVacationForms")
-                        .HasForeignKey("PersonalCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AnnualVacation", b =>
@@ -872,8 +890,7 @@ namespace Techschool.DAL.Migrations
                 {
                     b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
                         .WithMany("AnnualVacationForms")
-                        .HasForeignKey("PersonalCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PersonalCardId");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacation", b =>
@@ -886,9 +903,8 @@ namespace Techschool.DAL.Migrations
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacationForm", b =>
                 {
                     b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
-                        .WithMany("OtherVacationForms")
-                        .HasForeignKey("PersonalCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacation", b =>
@@ -901,9 +917,8 @@ namespace Techschool.DAL.Migrations
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacationForm", b =>
                 {
                     b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
-                        .WithMany("SocialWithChildrenVacationForms")
-                        .HasForeignKey("PersonalCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacation", b =>
@@ -916,9 +931,8 @@ namespace Techschool.DAL.Migrations
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacationForm", b =>
                 {
                     b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
-                        .WithMany("SocialWithPregnancyOrLookVacationForms")
-                        .HasForeignKey("PersonalCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacation", b =>
@@ -931,9 +945,8 @@ namespace Techschool.DAL.Migrations
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacationForm", b =>
                 {
                     b.HasOne("Techschool.DAL.Entities.PersonalCard", "PersonalCard")
-                        .WithMany("WithoutPayrollVacationForms")
-                        .HasForeignKey("PersonalCardId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("PersonalCardId");
                 });
 #pragma warning restore 612, 618
         }

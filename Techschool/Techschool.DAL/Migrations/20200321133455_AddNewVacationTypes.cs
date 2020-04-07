@@ -24,7 +24,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.PersonalCardId,
                         principalTable: "PersonalCards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,7 +43,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.PersonalCardId,
                         principalTable: "PersonalCards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,7 +64,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.PersonalCardId,
                         principalTable: "PersonalCards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,7 +83,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.PersonalCardId,
                         principalTable: "PersonalCards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,7 +102,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.PersonalCardId,
                         principalTable: "PersonalCards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -124,7 +124,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.AdditionalStudyVacationFormId,
                         principalTable: "AdditionalStudyVacationForms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -148,7 +148,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.OtherVacationFormId,
                         principalTable: "OtherVacationForms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,7 +170,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.SocialWithChildrenVacationFormId,
                         principalTable: "SocialWithChildrenVacationForms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -193,7 +193,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.SocialWithPregnancyOrLookVacationFormId,
                         principalTable: "SocialWithPregnancyOrLookVacationForms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,7 +216,7 @@ namespace Techschool.DAL.Migrations
                         column: x => x.WithoutPayrollVacationFormId,
                         principalTable: "WithoutPayrollVacationForms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

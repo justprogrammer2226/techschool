@@ -1,3 +1,4 @@
+import { UploadFileComponent } from './components/common/upload-file/upload-file.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -107,6 +108,7 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     EditSocialWithChildrenVacationFormModalComponent,
     EditSocialWithChildrenVacationModalComponent,
     SocialWithChildrenVacationFormComponent,
+    UploadFileComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
