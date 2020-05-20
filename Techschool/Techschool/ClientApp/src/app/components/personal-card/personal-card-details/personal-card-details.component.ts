@@ -1,31 +1,34 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CycleCommissionModel } from '@models/cycle-commission.model';
-import { PersonalCardModel } from '@models/personal-card.model';
+import { PersonalCardModel, Sex } from '@models/personal-card.model';
 import { AdditionalStudyVacationFormModel } from '@models/vacations/additional-study-vacation-form.model';
 import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
 import { OtherVacationFormModel } from '@models/vacations/other-vacation-form.model';
+import { SocialWithChildrenVacationFormModel } from '@models/vacations/social-with-children-vacation-form.model';
 import { SocialWithPregnancyOrLookVacationFormModel } from '@models/vacations/social-with-pregnancy-or-look-vacation-form.model';
 import { WithoutPayrollVacationFormModel } from '@models/vacations/without-payroll-vacation-form.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
 import { PersonalCardService } from '@services/personal-card.service';
 import { AddAdditionalStudyVacationFormModalComponent } from 'app/components/vacation/additional-study-vacation/add-additional-study-vacation-form-modal/add-additional-study-vacation-form-modal.component';
+import { AddSocialWithChildrenVacationFormModalComponent } from 'app/components/vacation/social-with-children-vacation/add-social-with-children-vacation-form-modal/add-social-with-children-vacation-form-modal.component';
 import { AddWithoutPayrollVacationFormModalComponent } from 'app/components/vacation/without-payroll-vacation/add-without-payroll-vacation-form-modal/add-without-payroll-vacation-form-modal.component';
+import { saveAs } from 'file-saver';
+import { timer } from 'rxjs';
 import { DiplomaModel } from '../../../models/diploma.model';
 import { SubjectModel } from '../../../models/subject.model';
 import { NotificationModalComponent } from '../../common/modals/notification-modal/notification-modal.component';
 import { AddAnnualVacationFormModalComponent } from '../../vacation/annual-vacation/add-annual-vacation-form-modal/add-annual-vacation-form-modal.component';
 import { AddOtherVacationFormModalComponent } from '../../vacation/other-vacation/add-other-vacation-form-modal/add-other-vacation-form-modal.component';
 import { AddSocialWithPregnancyOrLookVacationFormModalComponent } from '../../vacation/social-with-pregnancy-vacation/add-social-with-pregnancy-vacation-form-modal/add-social-with-pregnancy-vacation-form-modal.component';
-import { EditPersonalCardModalComponent } from '../edit-personal-card-modal/edit-personal-card-modal.component';
-import { VacationService } from './../../../services/vacation.service';
-import { AdditionalStudyVacationFormComponent } from './../../vacation/additional-study-vacation/additional-study-vacation-form/additional-study-vacation-form.component';
-import { SocialWithChildrenVacationFormModel } from '@models/vacations/social-with-children-vacation-form.model';
-import { SocialWithChildrenVacationModel } from '@models/vacations/social-with-children-vacation.model';
-import { AddSocialWithChildrenVacationFormModalComponent } from 'app/components/vacation/social-with-children-vacation/add-social-with-children-vacation-form-modal/add-social-with-children-vacation-form-modal.component';
+import { ReportService } from '../../../services/report.service';
+import { VacationService } from '../../../services/vacation.service';
+import { SelectSubjectModalComponent } from 'app/components/discipline/select-subject-modal/select-subject-modal.component';
+import { AddDiplomaModalComponent } from '../add-diploma-modal/add-diploma-modal.component';
+import { ModalService } from '@services/modal.service';
 
 enum VacationType {
   Annual,
@@ -44,14 +47,13 @@ enum VacationType {
 })
 export class PersonalCardDetailsComponent {
 
-  public formGroup: FormGroup;
   datemask = ['(', /\d/, /\d/, /\d/, ')', ' ', /\d/, /\d/, ' ', /\d/, /\d/, /\d/, /\d/];
 
   public cycleCommissions: CycleCommissionModel[] = [];
   public subjectsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  public subjectsDisplayedColumns: string[] = ['name'];
+  public subjectsDisplayedColumns: string[] = ['add-delete', 'name'];
   public diplomasDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
-  public diplomasDisplayedColumns: string[] = ['number', 'graduationDate', 'qualification', 'specialization'];
+  public diplomasDisplayedColumns: string[] = ['add-delete', 'nameOfTheInstitution', 'faculty', 'receiptDate', 'graduationDate', 'specialization', 'number'];
 
   public personalCard: PersonalCardModel = new PersonalCardModel();
   public typeOfPersonalCard: string;
@@ -65,6 +67,9 @@ export class PersonalCardDetailsComponent {
 
   public selectedVacationType = VacationType.Annual;
   public VacationType = VacationType;
+  public showValidationError = false;
+
+  public Sex = Sex;
 
   constructor(
     private authService: AuthService,
@@ -73,20 +78,24 @@ export class PersonalCardDetailsComponent {
     private personalCardService: PersonalCardService,
     private vacationService: VacationService,
     private disciplineService: DisciplineService,
+    private modalService: ModalService,
+    private reportService: ReportService,
     private router: Router,
     private activateRoute: ActivatedRoute
   ) {
-    this.initFormGroup();
     this.activateRoute.params.subscribe(params => {
       if (params['id']) {
         this.personalCardService.getById(params['id']).subscribe(response => {
           this.personalCard = response;
+          console.log(this.personalCard);
           this.typeOfPersonalCard = this.getTypeOfPersonalCard();
-          this.subjectsDataSource.data = this.subjectsToDataSource(this.personalCard.subjects);
-          this.diplomasDataSource.data = this.diplomasToDataSource(this.personalCard.diplomas);
+          this.subjectsDataSource.data = this.personalCard.subjects;
+          this.diplomasDataSource.data = this.personalCard.diplomas;
+          this.diplomasDataSource.data.sort((a, b) => {
+            return a.receiptDate.getTime() - b.receiptDate.getTime();
+          });
           this.disciplineService.getCycleCommissions().subscribe(response => {
             this.cycleCommissions = response;
-            this.setFormGroupByPersonalCard(this.personalCard);
           });
         });
         this.vacationService.getAdditionalStudyVacationFormsByPersonalCardId(params['id']).subscribe(response => {
@@ -118,85 +127,6 @@ export class PersonalCardDetailsComponent {
     return type;
   }
 
-  private initFormGroup(): void {
-    this.formGroup = this.formBuilder.group({
-      'name': [{ value: '', disabled: true}],
-      'surname': [{ value: '', disabled: true }],
-      'patronymic': [{ value: '', disabled: true }],
-      'birthday': [{ value: '', disabled: true }],
-      'address': [{ value: '', disabled: true }],
-      'phone': [{ value: '', disabled: true }],
-      'email': [{ value: '', disabled: true }],
-      'employmentType': [{ value: '', disabled: true }],
-      'isTeacher': [{ value: false, disabled: true }],
-      'isEmployee': [{ value: false, disabled: true }],
-      'cycleCommission': [{ value: '', disabled: true }],
-    });
-  }
-
-  private setFormGroupByPersonalCard(personalCard: PersonalCardModel): void {
-    this.formGroup.controls['name'].setValue(personalCard.name);
-    this.formGroup.controls['surname'].setValue(personalCard.surname);
-    this.formGroup.controls['patronymic'].setValue(personalCard.patronymic);
-    this.formGroup.controls['birthday'].setValue(personalCard.birthday);
-    this.formGroup.controls['address'].setValue(personalCard.address);
-    this.formGroup.controls['phone'].setValue(personalCard.phoneNumber);
-    this.formGroup.controls['email'].setValue(personalCard.email);
-    this.formGroup.controls['employmentType'].setValue(personalCard.employmentType);
-    this.formGroup.controls['isTeacher'].setValue(personalCard.isTeacher);
-    this.formGroup.controls['isEmployee'].setValue(personalCard.isEmployee);
-    this.formGroup.controls['cycleCommission'].setValue(personalCard.cycleCommission ? personalCard.cycleCommission.id : null);
-  }
-
-  private subjectsToDataSource(subjects: SubjectModel[]): any {
-    return subjects.map(subject => {
-      return {
-        name: subject.name
-      };
-    });
-  }
-
-  private diplomasToDataSource(diplomas: DiplomaModel[]): any {
-    return diplomas.map(diploma => {
-      return {
-        number: diploma.number,
-        graduationDate: diploma.graduationDate,
-        qualification: diploma.qualification,
-        specialization: diploma.specialization
-      };
-    });
-  }
-
-  public openEditPersonalCardModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(EditPersonalCardModalComponent, {
-        data: {
-          personalCard: this.personalCard
-        },
-        width: '500px'
-      }).afterClosed().subscribe(response => {
-        this.personalCardService.getById(this.personalCard.id).subscribe(response => {
-          this.personalCard = response;
-          this.typeOfPersonalCard = this.getTypeOfPersonalCard();
-          this.subjectsDataSource.data = this.subjectsToDataSource(this.personalCard.subjects);
-          this.disciplineService.getCycleCommissions().subscribe(response => {
-            this.cycleCommissions = response;
-            this.setFormGroupByPersonalCard(this.personalCard);
-          });
-        });
-      });
-    } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на редагування предмету',
-          isError: true
-        }
-      });
-    }
-  }
-
   public openAddAdditionalStudyVacationFormModal(): void {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(AddAdditionalStudyVacationFormModalComponent, {
@@ -210,14 +140,7 @@ export class PersonalCardDetailsComponent {
         });
       });
     } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання форми відпустки',
-          isError: true
-        }
-      });
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
     }
   }
 
@@ -234,14 +157,7 @@ export class PersonalCardDetailsComponent {
         });
       });
     } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання форми відпустки',
-          isError: true
-        }
-      });
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
     }
   }
 
@@ -258,14 +174,7 @@ export class PersonalCardDetailsComponent {
         });
       });
     } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання форми відпустки',
-          isError: true
-        }
-      });
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
     }
   }
 
@@ -282,14 +191,7 @@ export class PersonalCardDetailsComponent {
         });
       });
     } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання форми відпустки',
-          isError: true
-        }
-      });
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
     }
   }
 
@@ -306,14 +208,7 @@ export class PersonalCardDetailsComponent {
         });
       });
     } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання форми відпустки',
-          isError: true
-        }
-      });
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
     }
   }
 
@@ -330,14 +225,7 @@ export class PersonalCardDetailsComponent {
         });
       });
     } else {
-      this.dialog.open(NotificationModalComponent, {
-        width: '300px',
-        data: {
-          title: 'Помилка',
-          message: 'Ви не маєте прав на додання форми відпустки',
-          isError: true
-        }
-      });
+      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
     }
   }
 
@@ -430,5 +318,104 @@ export class PersonalCardDetailsComponent {
       return vacationDays;
     }
     return 0;
+  }
+
+
+
+
+  public loadProfilePhoto(base64image: string): void {
+    this.personalCard.photo = base64image;
+  }
+  
+  public save(): void {
+    //this.showValidationError = true;
+    //timer(2000).subscribe(_ => {
+    //  this.showValidationError = false;
+    //});
+    this.personalCardService.save(this.personalCard).subscribe(response => {
+      this.dialog.open(NotificationModalComponent, {
+        width: '300px',
+        data: {
+          title: 'Особистка картка',
+          message: 'Збереження особистої картки пройшло успішно.'
+        }
+      });
+    }, error => {
+        this.dialog.open(NotificationModalComponent, {
+          width: '300px',
+          data: {
+            title: 'Помилка',
+            message: 'Невідома помилка при збереженні',
+            isError: true
+          }
+        });
+    });
+  }
+
+  public download(): void {
+    this.reportService.getPersonalCardReport(this.personalCard.id).subscribe(response => {
+      saveAs(response, 'personal_card.docx');
+    });
+  }
+
+  public openSelectSubjectModal(): void {
+    this.dialog.open(SelectSubjectModalComponent, {
+      width: '350px'
+    }).afterClosed().subscribe(data => {
+      if (data && data.selectedSubject) {
+        const isExist = this.subjectsDataSource.data.find(_ => _.id == data.selectedSubject.id);
+        if (!isExist) {
+          this.subjectsDataSource.data.push(data.selectedSubject);
+          // Refresh data source
+          this.subjectsDataSource.data = this.subjectsDataSource.data;
+        } else {
+          this.dialog.open(NotificationModalComponent, {
+            width: '300px',
+            data: {
+              title: 'Помилка',
+              message: 'Данний предмет вже добавлений',
+              isError: true
+            }
+          });
+        }
+      }
+    });
+  }
+
+  public openAddDiplomaModal(): void {
+    this.dialog.open(AddDiplomaModalComponent, {
+      data: {
+        existingDiplomas: this.diplomasDataSource.data
+      },
+      width: '350px'
+    }).afterClosed().subscribe(data => {
+      if (data && data.diploma) {
+        this.diplomasDataSource.data.push(data.diploma);
+        this.diplomasDataSource.data.sort((a, b) => {
+          return a.receiptDate.getTime() - b.receiptDate.getTime();
+        });
+        // Refresh data source
+        this.diplomasDataSource.data = this.diplomasDataSource.data;
+      }
+    });
+  }
+
+  public deleteSubject(id: string): void {
+    this.subjectsDataSource.data = this.subjectsDataSource.data.filter(_ => _.id != id);
+  }
+
+  public deleteDiplomaByNumber(number: string): void {
+    this.personalCard.diplomas = this.personalCard.diplomas.filter(_ => _.number != number);
+    this.diplomasDataSource.data = this.personalCard.diplomas;
+  }
+
+  public delete(): void {
+    if (window.confirm('Ви дійсно хочете видалити персональну картку?')) {
+      this.personalCardService.delete(this.personalCard.id).subscribe(_ => {
+        this.router.navigateByUrl('/personal-cards');
+      }, error => {
+        this.modalService.showError('Помилка', 'Невідома помилка.');
+      });
+    }
   }
 }

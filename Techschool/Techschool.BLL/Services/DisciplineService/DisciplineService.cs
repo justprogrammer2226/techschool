@@ -23,8 +23,10 @@ namespace Techschool.BLL.Services
         {
             var subjects = context.Subjects.AsNoTracking()
                 .Include(_ => _.CycleCommissionSubjects)
+                .OrderBy(_ => _.Name)
                 .Select(_ => modelMapper.MapTo<Subject, SubjectModel>(_))
                 .ToList();
+            subjects.ForEach(_ => _.CycleCommissions = _.CycleCommissions.OrderBy(cc => cc.Name).AsEnumerable());
             return subjects;
         }
 
@@ -38,10 +40,14 @@ namespace Techschool.BLL.Services
             return subject;
         }
 
-        public SubjectModel SaveSubject(SubjectModel model)
+        public SavingResult<SubjectModel> SaveSubject(SubjectModel model)
         {
             var subject = context.Subjects.AsNoTracking()
                 .SingleOrDefault(_ => _.Id == model.Id);
+
+            var subjectWithSameName = context.Subjects.AsNoTracking()
+                .FirstOrDefault(_ => _.Name.ToLower() == model.Name.ToLower() && _.Id != model.Id);
+            if (subjectWithSameName != null) return new SavingResult<SubjectModel>(isExist: true);
 
             if (subject == null)
             {
@@ -60,7 +66,7 @@ namespace Techschool.BLL.Services
                 context.Entry(subject).State = EntityState.Detached;
             }
 
-            return modelMapper.MapTo<Subject, SubjectModel>(subject);
+            return new SavingResult<SubjectModel>(modelMapper.MapTo<Subject, SubjectModel>(subject));
         }
 
         public void DeleteSubjectById(string id)
@@ -75,8 +81,10 @@ namespace Techschool.BLL.Services
         {
             var cycleCommissions = context.CycleCommissions.AsNoTracking()
                 .Include(_ => _.CycleCommissionSubjects)
+                .OrderBy(_ => _.Name)
                 .Select(_ => modelMapper.MapTo<CycleCommission, CycleCommissionModel>(_))
                 .ToList();
+            cycleCommissions.ForEach(_ => _.Subjects = _.Subjects.OrderBy(cc => cc.Name).AsEnumerable());
             return cycleCommissions;
         }
 
@@ -90,10 +98,14 @@ namespace Techschool.BLL.Services
             return cycleCommission;
         }
 
-        public CycleCommissionModel SaveCycleCommission(CycleCommissionModel model)
+        public SavingResult<CycleCommissionModel> SaveCycleCommission(CycleCommissionModel model)
         {
             var cycleCommission = context.CycleCommissions.AsNoTracking()
                 .SingleOrDefault(_ => _.Id == model.Id);
+
+            var cycleCommissionWithSameName = context.CycleCommissions.AsNoTracking()
+               .FirstOrDefault(_ => _.Name.ToLower() == model.Name.ToLower() && _.Id != model.Id);
+            if (cycleCommissionWithSameName != null) return new SavingResult<CycleCommissionModel>(isExist: true);
 
             if (cycleCommission == null)
             {
@@ -149,7 +161,7 @@ namespace Techschool.BLL.Services
                 context.SaveChanges();
             }
 
-            return modelMapper.MapTo<CycleCommission, CycleCommissionModel>(cycleCommission);
+            return new SavingResult<CycleCommissionModel>(modelMapper.MapTo<CycleCommission, CycleCommissionModel>(cycleCommission));
         }
 
         public void DeleteCycleCommissionById(string id)
@@ -180,7 +192,7 @@ namespace Techschool.BLL.Services
 
             // Deletes subject if no one refers to it
             var subject = context.Subjects.Include(_ => _.CycleCommissionSubjects).SingleOrDefault(_ => _.Id == subjectId);
-            if (subject.CycleCommissionSubjects.Count == 0)
+            if (!subject.CycleCommissionSubjects.Any())
             {
                 context.Subjects.Remove(subject);
                 context.SaveChanges();

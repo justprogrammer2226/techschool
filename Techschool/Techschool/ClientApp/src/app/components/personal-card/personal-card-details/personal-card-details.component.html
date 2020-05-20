@@ -1,189 +1,432 @@
 <div class="block-wrapper">
-  <form [formGroup]="formGroup" class="form">
-    <!--<h1 mat-dialog-title class="title">Перегляд особистої картки ({{ typeOfPersonalCard }})</h1>-->
-    <mat-tab-group>
-      <mat-tab [label]="'Особиста інформація (' + typeOfPersonalCard + ')'">
-        <div>
+
+  <mat-tab-group>
+    <mat-tab label="Особиста інформація">
+      
+      <div class="marging-bottom-15"></div>
+      <div class="row">
+
+        <div class="col-5">
+          <div class="row">
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input type="text" matInput placeholder="Ім'я"
+                [(ngModel)]="personalCard.name">
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input type="text" matInput placeholder="Прізвище"
+                [(ngModel)]="personalCard.surname">
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input type="text" matInput placeholder="По батькові"
+                [(ngModel)]="personalCard.patronymic">
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input matInput [matDatepicker]="birthday" placeholder="Дата народження"
+                [(ngModel)]="personalCard.birthday">
+                <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
+                <mat-datepicker #birthday></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <mat-label>Стать</mat-label>
+                <mat-select
+                [(ngModel)]="personalCard.sex">
+                  <mat-option [value]="Sex.Male">Чоловіча</mat-option>
+                  <mat-option [value]="Sex.Female">Жіноча</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input type="text" matInput [textMask]="{mask: datemask}" placeholder="Телефон"
+                [(ngModel)]="personalCard.phone">
+              </mat-form-field>
+            </div>
+          </div>
+    
+          <div class="marging-bottom-15"></div>
+    
+          <div class="row">
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input type="text" matInput placeholder="Місце народженя"
+                [(ngModel)]="personalCard.birthdayAddress">
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input type="text" matInput placeholder="Адреса"
+                [(ngModel)]="personalCard.address">
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input type="email" matInput placeholder="Електронна пошта"
+                [(ngModel)]="personalCard.email">
+              </mat-form-field>
+            </div>
+          </div>
+    
+          <div class="marging-bottom-15"></div>
+    
+          <div class="row">
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <mat-label>Вид працевлаштування</mat-label>
+                <mat-select
+                [(ngModel)]="personalCard.employmentType">
+                  <mat-option value="Сумісник">Сумісник</mat-option>
+                  <mat-option value="Штатний">Штатний</mat-option>
+                  <mat-option value="Контракт">Контракт</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input matInput [matDatepicker]="hireDate" placeholder="Дата приняття на роботу"
+                [(ngModel)]="personalCard.fireDate">
+                <mat-datepicker-toggle matSuffix [for]="hireDate"></mat-datepicker-toggle>
+                <mat-datepicker #hireDate></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-form-field class="mat-no-padding">
+                <input matInput [matDatepicker]="fireDate" placeholder="Дата звільнення"
+                [(ngModel)]="personalCard.hireDate">
+                <mat-datepicker-toggle matSuffix [for]="fireDate"></mat-datepicker-toggle>
+                <mat-datepicker #fireDate></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-1">
+              <mat-checkbox color="primary"
+              [(ngModel)]="personalCard.isTeacher">Викладач</mat-checkbox>
+              <mat-checkbox color="primary"
+              [(ngModel)]="personalCard.isEmployee">Працівник</mat-checkbox>
+            </div>
+          </div>
+        </div>
+       
+        <div class="col-1">
           <div id="profile-container">
             <div *ngIf="personalCard.photo"
                  [style.background-image]="'url(' + personalCard.photo + ')'"></div>
             <div *ngIf="!personalCard.photo"
                  [style.background-image]="'url(\'assets/img/no_picture.png\')'"></div>
           </div>
-          <p>
-            ФІО: {{ personalCard.surname }} {{ personalCard.name }} {{ personalCard.patronymic}}
-          </p>
-          <p>
-            Дата народження: {{ personalCard.birthday | date:'MM/dd/yyyy' }}
-          </p>
-          <p>
-            Адреса: {{ personalCard.address }}
-          </p>
-          <p>
-            Телефон: {{ personalCard.phoneNumber }}
-          </p>
-          <p>
-            Пошта: {{ personalCard.email }}
-          </p>
-          <p>
-            Вид працевлаштування: {{ personalCard.employmentType }}
-          </p>
-
-          <!--Diplomas-->
-          <p>
-            Освіта
-          </p>
-          <table mat-table [dataSource]="diplomasDataSource" class="mat-elevation-z8" style="width: 100%">
-
-            <ng-container matColumnDef="number">
-              <th mat-header-cell *matHeaderCellDef class="text-cell"> Номер </th>
-              <td mat-cell *matCellDef="let element" class="text-cell"> {{element.number}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="graduationDate">
-              <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата закінчення </th>
-              <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate | date:'MM/dd/yyyy'}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="qualification">
-              <th mat-header-cell *matHeaderCellDef class="text-cell"> Кваліфікація </th>
-              <td mat-cell *matCellDef="let element" class="text-cell"> {{element.qualification}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="specialization">
-              <th mat-header-cell *matHeaderCellDef class="text-cell"> Спеціалізація </th>
-              <td mat-cell *matCellDef="let element" class="text-cell"> {{element.specialization}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="diplomasDisplayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: diplomasDisplayedColumns;"></tr>
-
-          </table>
-
-          <p *ngIf="formGroup.value.isTeacher">
-            Категорія: {{ personalCard.teacherQualification }}
-          </p>
-          <p *ngIf="formGroup.value.isTeacher">
-            Нотатки до категорії: {{ personalCard.teacherQualificationNote }}
-          </p>
-          <p *ngIf="formGroup.value.isTeacher">
-            Циклова комісія: {{ personalCard.cycleCommission.name }}
-          </p>
-          <p *ngIf="formGroup.value.isTeacher">
-            Предмети:
-          </p>
-          <table mat-table [dataSource]="subjectsDataSource" class="mat-elevation-z8" style="width: 100%" *ngIf="formGroup.value.isTeacher">
-
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef class="text-cell"> Назва </th>
-              <td mat-cell *matCellDef="let element" class="text-cell"> {{element.name}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="subjectsDisplayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: subjectsDisplayedColumns;"></tr>
-
-          </table>
+          <app-upload-file (fileLoaded)="loadProfilePhoto($event)"></app-upload-file>
         </div>
-        <div>
-          <button mat-raised-button color="primary" type="submit" class="button" (click)="openEditPersonalCardModal()">Редагувати</button>
-        </div>
-      </mat-tab>
-      <mat-tab label="Відпустки">
-        <div>
-          <mat-form-field class="form-element">
-            <mat-label>Тип відпустки</mat-label>
-            <mat-select [(ngModel)]="selectedVacationType" [ngModelOptions]="{standalone: true}">
-              <mat-option [value]="VacationType.Annual">Щорічна основна + передбачена договором</mat-option>
-              <mat-option [value]="VacationType.WithoutPayroll">Без збереження з/п</mat-option>
-              <mat-option [value]="VacationType.AdditionalStudy">Додаткова у зв'язку з навчанням</mat-option>
-              <mat-option [value]="VacationType.SocialWithChildren">Соціальна відпустка працівникам, що мають дітей</mat-option>
-              <mat-option [value]="VacationType.SocialWithPregnancyOrLook">Соціальна відпустка у зв'язку з вагітністю та пологами; Соціальна відпустка для догляду</mat-option>
-              <mat-option [value]="VacationType.Other">Інші види відпусток</mat-option>
-            </mat-select>
+    
+      </div>
+    
+      <mat-divider></mat-divider>
+      <div class="marging-bottom-15"></div>
+    
+      <div class="row">
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Освіта"
+            [(ngModel)]="personalCard.education">
           </mat-form-field>
         </div>
-        <ng-container [ngSwitch]="selectedVacationType">
-
-          <ng-container *ngSwitchCase="VacationType.AdditionalStudy">
-            <div>
-              <mat-icon (click)="openAddAdditionalStudyVacationFormModal()">add</mat-icon>
-              <span (click)="openAddAdditionalStudyVacationFormModal()">Додати відпустку для навчання</span>
-            </div>
-            <div class="block-wrapper vacation" *ngFor="let form of additionalStudyVacationForms" (click)="navigateToAdditionalStudyVacationForm(form)">
-              {{ form.title }}
-            </div>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="VacationType.Annual">
-            <div>
-              <mat-icon (click)="openAddAnnualVacationFormModal()">add</mat-icon>
-              <span (click)="openAddAnnualVacationFormModal()">Додати щорічну відпустку</span>
-            </div>
-            <div>
-              Всього положено днів: {{getDaysOfAnnualVacationForm()}} 
-            </div>
-            <div class="block-wrapper vacation" *ngFor="let form of annualVacationForms" (click)="navigateToAnnualVacationForm(form)">
-              {{ form.title }}
-            </div>
-            <div>
-              Всього днів: {{getVacationDaysOfAnnualVacationForm()}} 
-            </div>
-            <div>
-              Залишок днів: {{getLeftDaysOfAnnualVacationForm()}} 
-            </div>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="VacationType.WithoutPayroll">
-            <div>
-              <mat-icon (click)="openAddWithoutPayrollVacationFormModal()">add</mat-icon>
-              <span (click)="openAddWithoutPayrollVacationFormModal()">Додати відпустку без збереження з/п</span>
-            </div>
-            <div class="block-wrapper vacation" *ngFor="let form of withoutPayrollVacationForms" (click)="navigateToWithoutPayrollVacationForm(form)">
-              {{ form.title }}
-            </div>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="VacationType.SocialWithChildren">
-            <div>
-              <mat-icon (click)="openAddSocialWithChildrenVacationFormModal()">add</mat-icon>
-              <span (click)="openAddSocialWithChildrenVacationFormModal()">Додати соціальну відпустку</span>
-            </div>
-            <div>
-              Всього положено днів: {{getDaysOfSocialWithChildrenVacationForm()}} 
-            </div>
-            <div class="block-wrapper vacation" *ngFor="let form of socialWithChildrenVacationForms" (click)="navigateToSocialWithChildrenVacationForm(form)">
-              {{ form.title }}
-            </div>
-            <div>
-              Всього днів: {{getVacationDaysOfSocialWithChildrenVacationForm()}} 
-            </div>
-            <div>
-              Залишок днів: {{getLeftDaysOfSocialWithChildrenVacationForm()}} 
-            </div>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="VacationType.SocialWithPregnancyOrLook">
-            <div>
-              <mat-icon (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">add</mat-icon>
-              <span (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">Додати соціальну відпустку</span>
-            </div>
-            <div class="block-wrapper vacation" *ngFor="let form of socialWithPregnancyOrLookVacationForms" (click)="navigateToSocialWithPregnancyOrLookVacationForm(form)">
-              {{ form.title }}
-            </div>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="VacationType.Other">
-            <div>
-              <mat-icon (click)="openAddOtherVacationFormModal()">add</mat-icon>
-              <span (click)="openAddOtherVacationFormModal()">Додати відпустку іншого виду</span>
-            </div>
-            <div class="block-wrapper vacation" *ngFor="let form of otherVacationForms" (click)="navigateToOtherVacationForm(form)">
-              {{ form.title }}
-            </div>
-          </ng-container>
-
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Академічний ступінь"
+            [(ngModel)]="personalCard.academicDegree">
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Якими мовами володіїте"
+            [(ngModel)]="personalCard.languages">
+          </mat-form-field>
+        </div>
+        <div class="col-4"></div>
+      </div>
+    
+      <div class="marging-bottom-15"></div>
+    
+      <!--Diplomas-->
+      <table mat-table [dataSource]="diplomasDataSource" class="mat-elevation-z8" style="width: 100%">
+    
+        <ng-container matColumnDef="add-delete">
+          <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openAddDiplomaModal()" class="icon-cell"> <mat-icon style="color: #1db954">add</mat-icon> </th>
+          <td mat-cell *matCellDef="let element" (click)="deleteDiplomaByNumber(element.number)" class="icon-cell"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
         </ng-container>
-      </mat-tab>
-    </mat-tab-group>
-  </form>
+    
+        <ng-container matColumnDef="nameOfTheInstitution">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Назва учбового закладу </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.nameOfTheInstitution}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="faculty">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Факультет </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.faculty}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="receiptDate">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата вступу </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.receiptDate | date:'MM/dd/yyyy'}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="graduationDate">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата закінчення </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate | date:'MM/dd/yyyy'}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="specialization">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Спеціальність </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.specialization}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="number">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Номер </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.number}} </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="diplomasDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: diplomasDisplayedColumns;"></tr>
+    
+      </table>
+    
+      <mat-divider></mat-divider>
+      <div class="marging-bottom-15"></div>
+    
+      <!--Work Experience-->
+      <p>
+        Стаж роботи
+      </p>
+      <p>
+        Загальний стаж роботи
+      </p>
+      <div class="row">
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input matInput [matDatepicker]="totalWorkExperienceOnDatePicker" placeholder="Станом на"
+            [(ngModel)]="personalCard.totalWorkExperienceOnDate">
+            <mat-datepicker-toggle matSuffix [for]="totalWorkExperienceOnDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #totalWorkExperienceOnDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Років"
+            [(ngModel)]="personalCard.numberOfYearsOfTotalWorkExperience">
+          </mat-form-field>
+        </div>
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Місяців"
+            [(ngModel)]="personalCard.numberOfMonthsOfTotalWorkExperience">
+          </mat-form-field>
+        </div>
+      </div>
+    
+      <div class="marging-bottom-15"></div>
+     
+      <p *ngIf="personalCard.isTeacher">
+        Педагогічний стаж роботи
+      </p>
+      <div class="row" *ngIf="personalCard.isTeacher">
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input matInput [matDatepicker]="teachingWorkExperienceOnDatePicker" placeholder="Станом на"
+            [(ngModel)]="personalCard.teachingWorkExperienceOnDate">
+            <mat-datepicker-toggle matSuffix [for]="teachingWorkExperienceOnDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #teachingWorkExperienceOnDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Років"
+            [(ngModel)]="personalCard.numberOfYearsOfTeachingWorkExperience">
+          </mat-form-field>
+        </div>
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Місяців"
+            [(ngModel)]="personalCard.numberOfMonthsOfTeachingWorkExperience">
+          </mat-form-field>
+        </div>
+      </div>
+    
+      <!--Teacher Category-->
+      <p *ngIf="personalCard.isTeacher">
+        <mat-form-field class="mat-no-padding">
+          <mat-label>Категорія</mat-label>
+          <mat-select
+          [(ngModel)]="personalCard.teacherQualification">
+            <mat-option value="Спеціалист">Спеціалист</mat-option>
+            <mat-option value="2 категорія">2 категорія</mat-option>
+            <mat-option value="1 категорія">1 категорія</mat-option>
+            <mat-option value="Вища">Вища</mat-option>
+            <mat-option value="Викладач-методист">Викладач-методист</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+    
+      <!--Teacher Category Note-->
+      <p *ngIf="personalCard.isTeacher">
+        <mat-form-field class="mat-no-padding">
+          <input type="text" matInput placeholder="Поле для нотатків про кваліфікацію"
+          [(ngModel)]="personalCard.teacherQualificationNote">
+        </mat-form-field>
+      </p>
+    
+      <!--Cycle Commission-->
+      <p *ngIf="personalCard.isTeacher">
+        <mat-form-field class="mat-no-padding">
+          <mat-label>Циклова коміссія</mat-label>
+          <mat-select placeholder="Тест"
+          [(ngModel)]="personalCard.cycleCommissionId">
+            <mat-option *ngFor="let cycleCommission of cycleCommissions" [value]="cycleCommission.id"> {{ cycleCommission.name }} </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+    
+      <!--Subjects-->
+      <table mat-table [dataSource]="subjectsDataSource" class="mat-elevation-z8" style="width: 100%" *ngIf="personalCard.isTeacher">
+    
+        <ng-container matColumnDef="add-delete">
+          <th mat-header-cell *matHeaderCellDef style="width: 48px" (click)="openSelectSubjectModal()" class="icon-cell"> <mat-icon style="color: #1db954">add</mat-icon> </th>
+          <td mat-cell *matCellDef="let element" (click)="deleteSubject(element.id)" class="icon-cell"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Назва </th>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.name}} </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="subjectsDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: subjectsDisplayedColumns;"></tr>
+    
+      </table>
+    
+      <div class="row">
+        <div class="col-1">
+          <button mat-raised-button color="primary" type="submit" class="button" (click)="save()">Зберегти</button>
+        </div>
+        <div class="col-1" *ngIf="personalCard.id">
+          <button mat-raised-button color="primary" type="submit" class="button" (click)="download()">Завантажити звіт</button>
+        </div>
+        <div class="col-1" *ngIf="personalCard.id">
+          <button mat-raised-button color="primary" type="submit" class="button" (click)="delete()">Видалити</button>
+        </div>
+      </div>
+
+    </mat-tab>
+    <mat-tab label="Відпустки">
+
+      <div class="marging-bottom-15"></div>
+      <div>
+        <mat-form-field class="form-element">
+          <mat-label>Тип відпустки</mat-label>
+          <mat-select [(ngModel)]="selectedVacationType" [ngModelOptions]="{standalone: true}">
+            <mat-option [value]="VacationType.Annual">Щорічна основна + передбачена договором</mat-option>
+            <mat-option [value]="VacationType.WithoutPayroll">Без збереження з/п</mat-option>
+            <mat-option [value]="VacationType.AdditionalStudy">Додаткова у зв'язку з навчанням</mat-option>
+            <mat-option [value]="VacationType.SocialWithChildren">Соціальна відпустка працівникам, що мають дітей</mat-option>
+            <mat-option [value]="VacationType.SocialWithPregnancyOrLook">Соціальна відпустка у зв'язку з вагітністю та пологами; Соціальна відпустка для догляду</mat-option>
+            <mat-option [value]="VacationType.Other">Інші види відпусток</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <ng-container [ngSwitch]="selectedVacationType">
+
+        <ng-container *ngSwitchCase="VacationType.AdditionalStudy">
+          <div>
+            <mat-icon (click)="openAddAdditionalStudyVacationFormModal()">add</mat-icon>
+            <span (click)="openAddAdditionalStudyVacationFormModal()">Додати відпустку для навчання</span>
+          </div>
+          <div class="block-wrapper vacation" *ngFor="let form of additionalStudyVacationForms" (click)="navigateToAdditionalStudyVacationForm(form)">
+            {{ form.title }}
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="VacationType.Annual">
+          <div>
+            <mat-icon (click)="openAddAnnualVacationFormModal()">add</mat-icon>
+            <span (click)="openAddAnnualVacationFormModal()">Додати щорічну відпустку</span>
+          </div>
+          <div>
+            Всього положено днів: {{getDaysOfAnnualVacationForm()}} 
+          </div>
+          <div class="block-wrapper vacation" *ngFor="let form of annualVacationForms" (click)="navigateToAnnualVacationForm(form)">
+            {{ form.title }}
+          </div>
+          <div>
+            Всього днів: {{getVacationDaysOfAnnualVacationForm()}} 
+          </div>
+          <div>
+            Залишок днів: {{getLeftDaysOfAnnualVacationForm()}} 
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="VacationType.WithoutPayroll">
+          <div>
+            <mat-icon (click)="openAddWithoutPayrollVacationFormModal()">add</mat-icon>
+            <span (click)="openAddWithoutPayrollVacationFormModal()">Додати відпустку без збереження з/п</span>
+          </div>
+          <div class="block-wrapper vacation" *ngFor="let form of withoutPayrollVacationForms" (click)="navigateToWithoutPayrollVacationForm(form)">
+            {{ form.title }}
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="VacationType.SocialWithChildren">
+          <div>
+            <mat-icon (click)="openAddSocialWithChildrenVacationFormModal()">add</mat-icon>
+            <span (click)="openAddSocialWithChildrenVacationFormModal()">Додати соціальну відпустку</span>
+          </div>
+          <div>
+            Всього положено днів: {{getDaysOfSocialWithChildrenVacationForm()}} 
+          </div>
+          <div class="block-wrapper vacation" *ngFor="let form of socialWithChildrenVacationForms" (click)="navigateToSocialWithChildrenVacationForm(form)">
+            {{ form.title }}
+          </div>
+          <div>
+            Всього днів: {{getVacationDaysOfSocialWithChildrenVacationForm()}} 
+          </div>
+          <div>
+            Залишок днів: {{getLeftDaysOfSocialWithChildrenVacationForm()}} 
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="VacationType.SocialWithPregnancyOrLook">
+          <div>
+            <mat-icon (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">add</mat-icon>
+            <span (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">Додати соціальну відпустку</span>
+          </div>
+          <div class="block-wrapper vacation" *ngFor="let form of socialWithPregnancyOrLookVacationForms" (click)="navigateToSocialWithPregnancyOrLookVacationForm(form)">
+            {{ form.title }}
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="VacationType.Other">
+          <div>
+            <mat-icon (click)="openAddOtherVacationFormModal()">add</mat-icon>
+            <span (click)="openAddOtherVacationFormModal()">Додати відпустку іншого виду</span>
+          </div>
+          <div class="block-wrapper vacation" *ngFor="let form of otherVacationForms" (click)="navigateToOtherVacationForm(form)">
+            {{ form.title }}
+          </div>
+        </ng-container>
+
+      </ng-container>
+
+    </mat-tab>
+  </mat-tab-group>
+
+  
+
+</div>
+
+<div class="modal-notif failure active" [class.active]="showValidationError">
+  <i class="ic"></i><span class="description">Якесь поле поломалося</span>
 </div>

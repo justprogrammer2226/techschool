@@ -1,8 +1,10 @@
 
 export class DiplomaModel {
   id: string;
-  number: string;
+  nameOfTheInstitution: string;
+  faculty: string;
+  receiptDate: Date;
   graduationDate: Date;
-  qualification: string;
   specialization: string;
+  number: string;
 }

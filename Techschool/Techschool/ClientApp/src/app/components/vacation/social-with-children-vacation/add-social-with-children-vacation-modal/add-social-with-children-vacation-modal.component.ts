@@ -4,8 +4,9 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SocialWithChildrenVacationModel } from '@models/vacations/social-with-children-vacation.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
-import { VacationService } from '../../../../services/vacation.service';
 import { CustomValidator } from 'app/validators/custom.validator';
+import { VacationService } from '../../../../services/vacation.service';
+import { ModalService } from '@services/modal.service';
 
 const vacationDateBefore = 'vacationDateBefore';
 
@@ -19,12 +20,14 @@ export class AddSocialWithChildrenVacationModalComponent {
 
   public formGroup: FormGroup;
   private formId: string;
+  private existingVacations: SocialWithChildrenVacationModel[] = [];
 
   constructor(
     private authService: AuthService,
     private dialogRef: MatDialogRef<AddSocialWithChildrenVacationModalComponent>,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private modalService: ModalService,
     private vacationService: VacationService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -39,6 +42,7 @@ export class AddSocialWithChildrenVacationModalComponent {
       validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
     });
     this.formId = data.formId;
+    this.existingVacations = data.existingVacations;
   }
 
   public getError(controlElementName): string {
@@ -81,6 +85,11 @@ export class AddSocialWithChildrenVacationModalComponent {
     vacation.orderNumber = formValue.orderNumber;
     vacation.orderDate = formValue.orderDate;
     vacation.socialWithChildrenVacationFormId = this.formId;
+    const isExist = this.existingVacations.find(_ => _.startOfVacationDate < vacation.endOfVacationDate && vacation.startOfVacationDate < _.endOfVacationDate);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
     this.vacationService.saveSocialWithChildrenVacation(vacation).subscribe(_ => {
       this.dialogRef.close();
     });

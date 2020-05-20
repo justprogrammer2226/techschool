@@ -5,7 +5,7 @@
 
 body {
   min-height: 100vh;
-  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .block-wrapper {
@@ -155,4 +155,106 @@ body {
 
 .action-icon {
   cursor: pointer;
+}
+
+.mat-form-field.mat-no-padding > .mat-form-field-wrapper {
+  margin-bottom: -1.25em;
+}
+
+
+
+
+
+
+
+
+
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col-1 {
+  flex: 1;
+  margin-right: 15px;
+}
+
+.col-1:last-child {
+  margin-right: 0px;
+}
+
+.col-2 {
+  flex: 2;
+  margin-right: 15px;
+}
+
+.col-2:last-child {
+  margin-right: 0px;
+}
+
+.col-3 {
+  flex: 3;
+  margin-right: 15px;
+}
+
+.col-3:last-child {
+  margin-right: 0px;
+}
+
+.col-4 {
+  flex: 4;
+  margin-right: 15px;
+}
+
+.col-4:last-child {
+  margin-right: 0px;
+}
+
+.col-5 {
+  flex: 5;
+  margin-right: 15px;
+}
+
+.col-5:last-child {
+  margin-right: 0px;
+}
+
+
+
+
+
+
+
+.modal-notif {
+  position: fixed;
+  display: block;
+  padding: 14px 37px;
+  z-index: 3;
+  bottom: 45px;
+  right: -100%;
+  opacity: 0;
+  background-color: #fff;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  box-shadow: 0 4px 30px rgba(204, 204, 204, 0.6);
+  transition: all 0.28s ease-in-out;
+  -webkit-transition: all 0.28s ease-in-out;
+}
+
+.modal-notif.active {
+  right: -1px;
+  opacity: 1;
+}
+
+.modal-notif .description {
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+.modal-notif.failure .description {
+  color: #c0392b;
 }

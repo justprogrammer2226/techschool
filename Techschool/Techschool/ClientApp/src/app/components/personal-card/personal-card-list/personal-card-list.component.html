@@ -1,24 +1,130 @@
+<div class="block-wrapper" id="search-block">
+
+  <div class="row black-border-2">
+    <div class="col-1">
+      <mat-form-field class="mat-no-padding">
+        <input type="text" matInput placeholder="Ім'я"
+               [(ngModel)]="filter.nameContains" (ngModelChange)="loadPersonalCards()">
+      </mat-form-field>
+    </div>
+    <div class="col-1">
+      <mat-form-field class="mat-no-padding">
+        <input type="text" matInput placeholder="Прізвище"
+               [(ngModel)]="filter.surnameContains" (ngModelChange)="loadPersonalCards()">
+      </mat-form-field>
+    </div>
+    <div class="col-1">
+      <mat-form-field class="mat-no-padding">
+        <input type="text" matInput placeholder="По батькові"
+               [(ngModel)]="filter.patronymicContains" (ngModelChange)="loadPersonalCards()">
+      </mat-form-field>
+    </div>
+    <div class="col-1">
+      <mat-form-field class="mat-no-padding">
+        <mat-label>Вид працевлаштування</mat-label>
+        <mat-select [(ngModel)]="filter.employmentType" (ngModelChange)="loadPersonalCards()">
+          <mat-option [value]="null">Будь-який</mat-option>
+          <mat-option value="Сумісник">Сумісник</mat-option>
+          <mat-option value="Штатний">Штатний</mat-option>
+          <mat-option value="Контракт">Контракт</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-1">
+      <mat-form-field class="mat-no-padding">
+        <mat-label>Циклова коміссія</mat-label>
+        <mat-select [(ngModel)]="filter.cycleCommission" (ngModelChange)="loadPersonalCards()">
+          <mat-option [value]="null">Будь-яка</mat-option>
+          <mat-option *ngFor="let cycleCommission of cycleCommissions" [value]="cycleCommission"> {{ cycleCommission.name }} </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+   
+  </div>
+
+  <div class="marging-bottom-15"></div>
+
+  <div class="row">
+
+    <div class="col-1">
+      <div class="row black-border-2">
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <mat-label>Операція</mat-label>
+            <mat-select [(ngModel)]="filter.totalWorkExperienceOperator" (ngModelChange)="loadPersonalCards()">
+              <mat-option [value]="MathOperators.Equal">Дорівнює</mat-option>
+              <mat-option [value]="MathOperators.Less">Менше</mat-option>
+              <mat-option [value]="MathOperators.LessOrEqual">Менше або дорівнює</mat-option>
+              <mat-option [value]="MathOperators.Greater">Більше</mat-option>
+              <mat-option [value]="MathOperators.GreaterOrEqual">Більше або дорівнює</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Загальний стаж роботи"
+                    [(ngModel)]="filter.totalWorkExperience" (ngModelChange)="loadPersonalCards()">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-1">
+      <div class="row black-border-2">
+        <div class="col-1">
+          <mat-form-field class="mat-no-padding">
+            <mat-label>Операція</mat-label>
+            <mat-select [(ngModel)]="filter.teachingWorkExperienceOperator" (ngModelChange)="loadPersonalCards()">
+              <mat-option [value]="MathOperators.Equal">Дорівнює</mat-option>
+              <mat-option [value]="MathOperators.Less">Менше</mat-option>
+              <mat-option [value]="MathOperators.LessOrEqual">Менше або дорівнює</mat-option>
+              <mat-option [value]="MathOperators.Greater">Більше</mat-option>
+              <mat-option [value]="MathOperators.GreaterOrEqual">Більше або дорівнює</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field class="mat-no-padding">
+            <input type="text" matInput placeholder="Педагогічний стаж роботи"
+                    [(ngModel)]="filter.teachingWorkExperience" (ngModelChange)="loadPersonalCards()">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  </div>
+
+<div class="marging-bottom-15"></div>
+
 <div class="block-wrapper">
   <h5>Особисті картки</h5>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="width: 100%">
 
     <ng-container matColumnDef="edit">
       <th mat-header-cell *matHeaderCellDef class="icon-cell">  </th>
-      <td mat-cell *matCellDef="let element" class="icon-cell" (click)="openEditPersonalCardModal(element)"> <mat-icon>remove_red_eye</mat-icon> </td>
+      <td mat-cell *matCellDef="let element" class="icon-cell" (click)="navigateToPersonalCardDetails(element)"> <mat-icon>remove_red_eye</mat-icon> </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef class="text-cell"> Ім'я </th>
+      <th mat-header-cell *matHeaderCellDef class="text-cell" style="cursor: pointer;" (click)="changeFiltrationByName()">
+        Ім'я <span class="text-details">({{ getTitleByOrder(filter.nameOrderBy) }})</span>
+      </th>
       <td mat-cell *matCellDef="let element" class="text-cell"> {{element.name}} </td>
     </ng-container>
 
     <ng-container matColumnDef="surname">
-      <th mat-header-cell *matHeaderCellDef class="text-cell"> Прізвище </th>
+      <th mat-header-cell *matHeaderCellDef class="text-cell" style="cursor: pointer;" (click)="changeFiltrationBySurname()">
+        Прізвище <span class="text-details">({{ getTitleByOrder(filter.surnameOrderBy) }})</span>
+      </th>
       <td mat-cell *matCellDef="let element" class="text-cell"> {{element.surname}} </td>
     </ng-container>
 
     <ng-container matColumnDef="patronymic">
-      <th mat-header-cell *matHeaderCellDef class="text-cell"> По батькові </th>
+      <th mat-header-cell *matHeaderCellDef class="text-cell" style="cursor: pointer;" (click)="changeFiltrationByPatronymic()">
+        По батькові <span class="text-details">({{ getTitleByOrder(filter.patronymicOrderBy) }})</span>
+      </th>
       <td mat-cell *matCellDef="let element" class="text-cell"> {{element.patronymic}} </td>
     </ng-container>
 
@@ -30,11 +136,6 @@
     <ng-container matColumnDef="employmentType">
       <th mat-header-cell *matHeaderCellDef class="text-cell"> Працевлаштування </th>
       <td mat-cell *matCellDef="let element" class="text-cell"> {{element.employmentType}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="cycleCommission">
-      <th mat-header-cell *matHeaderCellDef class="text-cell"> ЦК </th>
-      <td mat-cell *matCellDef="let element" class="text-cell"> {{element.cycleCommission.name}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

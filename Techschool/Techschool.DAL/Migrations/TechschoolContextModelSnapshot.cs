@@ -185,8 +185,14 @@ namespace Techschool.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Faculty")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("GraduationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("NameOfTheInstitution")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
@@ -194,8 +200,8 @@ namespace Techschool.DAL.Migrations
                     b.Property<string>("PersonalCardId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Qualification")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("ReceiptDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Specialization")
                         .HasColumnType("nvarchar(max)");
@@ -227,14 +233,23 @@ namespace Techschool.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AcademicDegree")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("BirthdayAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CycleCommissionId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Education")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(450)");
@@ -242,26 +257,35 @@ namespace Techschool.DAL.Migrations
                     b.Property<string>("EmploymentTypeId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime?>("FireDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("HireDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsEmployee")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsTeacher")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Languages")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NumberOfMonthsOfTeachingWorkExperience")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NumberOfMonthsOfTeachingWorkExperience")
+                        .HasColumnType("int");
 
-                    b.Property<string>("NumberOfMonthsOfTotalWorkExperience")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NumberOfMonthsOfTotalWorkExperience")
+                        .HasColumnType("int");
 
-                    b.Property<string>("NumberOfYearsOfTeachingWorkExperience")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NumberOfYearsOfTeachingWorkExperience")
+                        .HasColumnType("int");
 
-                    b.Property<string>("NumberOfYearsOfTotalWorkExperience")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NumberOfYearsOfTotalWorkExperience")
+                        .HasColumnType("int");
 
                     b.Property<string>("Patronymic")
                         .HasColumnType("nvarchar(max)");
@@ -271,6 +295,9 @@ namespace Techschool.DAL.Migrations
 
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("Sex")
+                        .HasColumnType("int");
 
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");

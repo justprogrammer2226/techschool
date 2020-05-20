@@ -50,7 +50,8 @@ export class OtherVacationFormComponent {
       this.dialog.open(AddOtherVacationModalComponent, {
         width: '500px',
         data: {
-          formId: this.vacationForm.id
+          formId: this.vacationForm.id,
+          existingVacations: this.vacationForm.otherVacations,
         }
       }).afterClosed().subscribe(response => {
         this.vacationService.getOtherVacationForm(this.personalCardId, this.formId).subscribe(response => {
@@ -73,7 +74,8 @@ export class OtherVacationFormComponent {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditOtherVacationModalComponent, {
         data: {
-          vacation: vacation
+          vacation: vacation,
+          existingVacations: this.vacationForm.otherVacations,
         },
         width: '500px'
       }).afterClosed().subscribe(response => {

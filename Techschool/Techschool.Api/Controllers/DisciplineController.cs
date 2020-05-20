@@ -36,7 +36,16 @@ namespace Techschool.Api.Controllers
         [Route("subjects")]
         public IActionResult SaveSubject(SubjectModel model)
         {
-            return Ok(disciplines.SaveSubject(model));
+            var result = disciplines.SaveSubject(model);
+            if (result.Successed)
+            {
+                return Ok(result.Saved);
+            }
+            else
+            {
+                if (result.IsExist) return BadRequest("Предмет з такою назвою вже існує.");
+                return BadRequest();
+            }
         }
 
         [HttpDelete]
@@ -67,7 +76,16 @@ namespace Techschool.Api.Controllers
         [Route("cycle-commissions")]
         public IActionResult SaveCycleCommission(CycleCommissionModel model)
         {
-            return Ok(disciplines.SaveCycleCommission(model));
+            var result = disciplines.SaveCycleCommission(model);
+            if (result.Successed)
+            {
+                return Ok(result.Saved);
+            }
+            else
+            {
+                if (result.IsExist) return BadRequest("ЦК з такою назвою вже існує.");
+                return BadRequest();
+            }
         }
 
         [HttpDelete]

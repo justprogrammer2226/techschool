@@ -40,3 +40,27 @@ table {
   background-position: center center;
   background-size: cover;
 }
+
+
+.mat-divider {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.mat-checkbox {
+  line-height: 45px;
+}
+
+.mat-checkbox + .mat-checkbox{
+  margin-left: 15px;
+}
+
+.block-wrapper {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+::ng-deep .mat-tab-body-content {
+  padding-left: 15px;
+  padding-right: 15px;
+}

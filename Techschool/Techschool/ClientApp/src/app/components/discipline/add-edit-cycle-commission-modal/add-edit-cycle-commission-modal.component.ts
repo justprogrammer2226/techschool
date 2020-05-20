@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CycleCommissionModel } from '../../../models/cycle-commission.model';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   templateUrl: './add-edit-cycle-commission-modal.component.html',
@@ -17,6 +18,7 @@ export class AddEditCycleCommissionModalComponent {
   constructor(
     private dialogRef: MatDialogRef<AddEditCycleCommissionModalComponent>,
     private dialog: MatDialog,
+    private modalService: ModalService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { 
@@ -33,6 +35,8 @@ export class AddEditCycleCommissionModalComponent {
   public save(): void {
     this.disciplineService.saveCycleCommission(this.cycleCommission).subscribe(response => {
       this.dialogRef.close();
+    }, error => {
+      this.modalService.showError('Помилка', error.error);
     });
   }
 }

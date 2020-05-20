@@ -1,12 +1,12 @@
-import { VacationService } from '../../../../services/vacation.service';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
-import { PersonalCardService } from '@services/personal-card.service';
+import { ModalService } from '@services/modal.service';
 import { NotificationModalComponent } from 'app/components/common/modals/notification-modal/notification-modal.component';
+import { VacationService } from '../../../../services/vacation.service';
 
 @Component({
   templateUrl: './edit-annual-vacation-modal.component.html',
@@ -18,11 +18,13 @@ export class EditAnnualVacationModalComponent {
 
   public formGroup: FormGroup;
   public vacation: AnnualVacationModel = new AnnualVacationModel();
+  private existingVacations: AnnualVacationModel[] = [];
 
   constructor(
     private authService: AuthService,
     private dialogRef: MatDialogRef<EditAnnualVacationModalComponent>,
     private formBuilder: FormBuilder,
+    private modalService: ModalService,
     private dialog: MatDialog,
     private vacationService: VacationService,
     private disciplineService: DisciplineService,
@@ -38,6 +40,7 @@ export class EditAnnualVacationModalComponent {
       this.vacation = data.annualVacation;
       this.setFormGroupByVacation(this.vacation);
     }
+    this.existingVacations = data.existingVacations;
   }
 
   public getError(controlElementName): string {
@@ -76,6 +79,11 @@ export class EditAnnualVacationModalComponent {
     this.vacation.endOfVacationDate = formValue.endOfVacationDate;
     this.vacation.orderNumber = formValue.orderNumber;
     this.vacation.orderDate = formValue.orderDate;
+    const isExist = this.existingVacations.find(_ => _.startOfVacationDate < this.vacation.endOfVacationDate && this.vacation.startOfVacationDate < _.endOfVacationDate && _.id != this.vacation.id);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
     this.vacationService.saveAnnualVacation(this.vacation).subscribe(response => {
       this.dialog.open(NotificationModalComponent, {
         width: '300px',

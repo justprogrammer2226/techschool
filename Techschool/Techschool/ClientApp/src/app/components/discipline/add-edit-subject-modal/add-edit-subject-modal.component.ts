@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SubjectModel } from '@models/subject.model';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   templateUrl: './add-edit-subject-modal.component.html',
@@ -17,6 +18,7 @@ export class AddEditSubjectModalComponent {
   constructor(
     private dialogRef: MatDialogRef<AddEditSubjectModalComponent>,
     private dialog: MatDialog,
+    private modalService: ModalService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     if (data && data.subjectId) {
@@ -31,6 +33,8 @@ export class AddEditSubjectModalComponent {
   public save(): void {
     this.disciplineService.saveSubject(this.subject).subscribe(response => {
       this.dialogRef.close({ subject: response });
+    }, error => {
+      this.modalService.showError('Помилка', error.error);
     });
   }
 }

@@ -1,12 +1,12 @@
-import { OtherVacationModel } from '../../../../models/vacations/other-vacation.model';
-import { VacationService } from '../../../../services/vacation.service';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
-import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
+import { ModalService } from '@services/modal.service';
 import { CustomValidator } from 'app/validators/custom.validator';
+import { OtherVacationModel } from '../../../../models/vacations/other-vacation.model';
+import { VacationService } from '../../../../services/vacation.service';
 
 const vacationDateBefore = 'vacationDateBefore';
 
@@ -20,12 +20,14 @@ export class AddOtherVacationModalComponent {
 
   public formGroup: FormGroup;
   private formId: string;
+  private existingVacations: OtherVacationModel[] = [];
 
   constructor(
     private authService: AuthService,
     private dialogRef: MatDialogRef<AddOtherVacationModalComponent>,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private modalService: ModalService,
     private vacationService: VacationService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -42,6 +44,7 @@ export class AddOtherVacationModalComponent {
       validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
     });
     this.formId = data.formId;
+    this.existingVacations = data.existingVacations;
   }
 
   public getError(controlElementName): string {
@@ -98,6 +101,11 @@ export class AddOtherVacationModalComponent {
     vacation.orderDate = formValue.orderDate;
     vacation.notes = formValue.notes;
     vacation.otherVacationFormId = this.formId;
+    const isExist = this.existingVacations.find(_ => _.startOfVacationDate < vacation.endOfVacationDate && vacation.startOfVacationDate < _.endOfVacationDate);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
     this.vacationService.saveOtherVacation(vacation).subscribe(_ => {
       this.dialogRef.close();
     });

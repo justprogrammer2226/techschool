@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,12 +44,12 @@ namespace Techschool.BLL.Services
                 .ForMember(destMember => destMember.Role, memberOptions => memberOptions.Ignore());
 
             cfg.CreateMap<PersonalCard, PersonalCardModel>()
-                .ForMember(destMember => destMember.Photo, memberOptions => memberOptions.MapFrom(src => Encoding.ASCII.GetString(src.Photo)))
+                .ForMember(destMember => destMember.Photo, memberOptions => memberOptions.MapFrom(src => Convert.ToBase64String(src.Photo)))
                 .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.MapFrom(src => src.EmploymentType.Name.ToString()))
                 .ForMember(destMember => destMember.Subjects, memberOptions => memberOptions.MapFrom(_ => GetSubjectModelsByPersonalCardId(_.Id)))
                 .ForMember(destMember => destMember.Diplomas, memberOptions => memberOptions.MapFrom(_ => GetDiplomasByPersonalCardId(_.Id)));
             cfg.CreateMap<PersonalCardModel, PersonalCard>()
-                .ForMember(destMember => destMember.Photo, memberOptions => memberOptions.MapFrom(src => Encoding.ASCII.GetBytes(src.Photo)))
+                .ForMember(destMember => destMember.Photo, memberOptions => memberOptions.MapFrom(src => Convert.FromBase64String(src.Photo)))
                 .ForMember(destMember => destMember.EmploymentTypeId, memberOptions => memberOptions.MapFrom(src => context.EmploymentTypes.SingleOrDefault(_ => _.Name == src.EmploymentType).Id))
                 .ForMember(destMember => destMember.EmploymentType, memberOptions => memberOptions.Ignore());
 
@@ -137,10 +138,12 @@ namespace Techschool.BLL.Services
             var diplomas = diplomaEntities.Select(_ =>  new DiplomaModel()
                 {
                     Id = _.Id,
-                    Number = _.Number,
+                    NameOfTheInstitution = _.NameOfTheInstitution,
+                    Faculty = _.Faculty,
+                    ReceiptDate = _.ReceiptDate,
                     GraduationDate = _.GraduationDate,
-                    Qualification = _.Qualification,
-                    Specialization = _.Specialization
+                    Specialization = _.Specialization,
+                    Number = _.Number,
                 })
                 .ToList();
 

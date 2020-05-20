@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
 import { NotificationModalComponent } from 'app/components/common/modals/notification-modal/notification-modal.component';
 import { VacationService } from '../../../../services/vacation.service';
 import { WithoutPayrollVacationModel } from './../../../../models/vacations/without-payroll-vacation.model';
@@ -17,6 +18,7 @@ export class EditWithoutPayrollVacationModalComponent {
 
   public formGroup: FormGroup;
   public vacation: WithoutPayrollVacationModel = new WithoutPayrollVacationModel();
+  private existingVacations: WithoutPayrollVacationModel[] = [];
 
   constructor(
     private authService: AuthService,
@@ -24,6 +26,7 @@ export class EditWithoutPayrollVacationModalComponent {
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private vacationService: VacationService,
+    private modalService: ModalService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -38,6 +41,7 @@ export class EditWithoutPayrollVacationModalComponent {
       this.vacation = data.vacation;
       this.setFormGroupByVacation(this.vacation);
     }
+    this.existingVacations = data.existingVacations;
   }
 
   public getError(controlElementName): string {
@@ -83,6 +87,11 @@ export class EditWithoutPayrollVacationModalComponent {
     this.vacation.orderNumber = formValue.orderNumber;
     this.vacation.orderDate = formValue.orderDate;
     this.vacation.notes = formValue.notes;
+    const isExist = this.existingVacations.find(_ => _.startOfVacationDate < this.vacation.endOfVacationDate && this.vacation.startOfVacationDate < _.endOfVacationDate && _.id != this.vacation.id);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
     this.vacationService.saveWithoutPayrollVacation(this.vacation).subscribe(response => {
       this.dialog.open(NotificationModalComponent, {
         width: '300px',

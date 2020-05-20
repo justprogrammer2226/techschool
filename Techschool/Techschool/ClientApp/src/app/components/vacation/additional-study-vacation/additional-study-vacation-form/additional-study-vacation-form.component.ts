@@ -52,7 +52,8 @@ export class AdditionalStudyVacationFormComponent {
       this.dialog.open(AddAdditionalStudyVacationModalComponent, {
         width: '500px',
         data: {
-          formId: this.vacationForm.id
+          formId: this.vacationForm.id,
+          existingVacations: this.vacationForm.additionalStudyVacations,
         }
       }).afterClosed().subscribe(response => {
         this.vacationService.getAdditionalStudyVacationForm(this.personalCardId, this.formId).subscribe(response => {
@@ -75,7 +76,8 @@ export class AdditionalStudyVacationFormComponent {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditAdditionalStudyVacationModalComponent, {
         data: {
-          vacation: vacation
+          vacation: vacation,
+          existingVacations: this.vacationForm.additionalStudyVacations,
         },
         width: '500px'
       }).afterClosed().subscribe(response => {

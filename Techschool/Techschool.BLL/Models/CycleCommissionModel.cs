@@ -7,6 +7,6 @@ namespace Techschool.BLL.Models
         public string Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<SubjectModel> Subjects { get; set; }
+        public IEnumerable<SubjectModel> Subjects { get; set; }
     }
 }

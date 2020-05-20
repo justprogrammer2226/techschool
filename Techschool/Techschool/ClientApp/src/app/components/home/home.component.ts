@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
 import { LoginModel } from '../../models/login.model';
 import { RegistrationRequestModel } from '../../models/registration-request.model';
 import { AuthService } from '../../services/auth.service';
 import { LoginFormModalComponent } from '../common/modals/login-form-modal/login-form-modal.component';
 import { NotificationModalComponent } from '../common/modals/notification-modal/notification-modal.component';
-import { AddPersonalCardModalComponent } from '../personal-card/add-personal-card-modal/add-personal-card-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +22,10 @@ export class HomeComponent implements OnInit {
   public userName: string;
   public isAuthentificated: boolean = false;
 
-  constructor(private authService: AuthService, private dialog: MatDialog) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private dialog: MatDialog) { }
 
   public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'role', 'approve'];
   public dataSource: RegistrationRequestModel[] = [];
@@ -71,7 +74,7 @@ export class HomeComponent implements OnInit {
     window.location.reload();
   }
 
-  public openAddPersonalCardModal() {
+  public navigateToAddingPersonalCard() {
     if (!this.authService.isAuthentificated()) {
       this.dialog.open(NotificationModalComponent, {
         width: '300px',
@@ -82,9 +85,7 @@ export class HomeComponent implements OnInit {
         }
       });
     } else {
-      this.dialog.open(AddPersonalCardModalComponent, {
-        width: '600px'
-      });
+      this.router.navigate(['/personal-cards/details']);
     }
   }
 

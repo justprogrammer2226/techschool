@@ -8,6 +8,7 @@ import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
 import { PersonalCardService } from '@services/personal-card.service';
 import { NotificationModalComponent } from 'app/components/common/modals/notification-modal/notification-modal.component';
+import { ModalService } from '@services/modal.service';
 
 @Component({
   templateUrl: './edit-additional-study-vacation-modal.component.html',
@@ -19,12 +20,14 @@ export class EditAdditionalStudyVacationModalComponent {
 
   public formGroup: FormGroup;
   public vacation: AdditionalStudyVacationModel = new AdditionalStudyVacationModel();
+  private existingVacations: AdditionalStudyVacationModel[] = [];
 
   constructor(
     private authService: AuthService,
     private dialogRef: MatDialogRef<EditAdditionalStudyVacationModalComponent>,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private modalService: ModalService,
     private vacationService: VacationService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -39,6 +42,7 @@ export class EditAdditionalStudyVacationModalComponent {
       this.vacation = data.vacation;
       this.setFormGroupByVacation(this.vacation);
     }
+    this.existingVacations = data.existingVacations;
   }
 
   public getError(controlElementName): string {
@@ -77,6 +81,11 @@ export class EditAdditionalStudyVacationModalComponent {
     this.vacation.endOfVacationDate = formValue.endOfVacationDate;
     this.vacation.orderNumber = formValue.orderNumber;
     this.vacation.orderDate = formValue.orderDate;
+    const isExist = this.existingVacations.find(_ => _.startOfVacationDate < this.vacation.endOfVacationDate && this.vacation.startOfVacationDate < _.endOfVacationDate && _.id != this.vacation.id);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
     this.vacationService.saveAdditionalStudyVacation(this.vacation).subscribe(response => {
       this.dialog.open(NotificationModalComponent, {
         width: '300px',

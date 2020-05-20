@@ -9,7 +9,7 @@ namespace Techschool.DAL.Entities
         public string Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<CycleCommissionSubject> CycleCommissionSubjects { get; set; }
-        public ICollection<PersonalCardSubject> PersonalCardsSubject { get; set; }
+        public IEnumerable<CycleCommissionSubject> CycleCommissionSubjects { get; set; }
+        public IEnumerable<PersonalCardSubject> PersonalCardsSubject { get; set; }
     }
 }

@@ -19,9 +19,6 @@ import { SelectSubjectModalComponent } from './components/discipline/select-subj
 import { SelectSubjectComponent } from './components/discipline/select-subject/select-subject.component';
 import { HomeComponent } from './components/home/home.component';
 import { AddDiplomaModalComponent } from './components/personal-card/add-diploma-modal/add-diploma-modal.component';
-import { AddPersonalCardModalComponent } from './components/personal-card/add-personal-card-modal/add-personal-card-modal.component';
-import { EditPersonalCardModalComponent } from './components/personal-card/edit-personal-card-modal/edit-personal-card-modal.component';
-import { PersonalCardDetailsComponent } from './components/personal-card/personal-card-details/personal-card-details.component';
 import { PersonalCardListComponent } from './components/personal-card/personal-card-list/personal-card-list.component';
 import { RegistrationRequestListComponent } from './components/registration-request-list/registration-request-list.component';
 import { AddAdditionalStudyVacationFormModalComponent } from './components/vacation/additional-study-vacation/add-additional-study-vacation-form-modal/add-additional-study-vacation-form-modal.component';
@@ -57,6 +54,7 @@ import { WithoutPayrollVacationFormComponent } from './components/vacation/witho
 import { RoleDirective } from './directives/role.directive';
 import { CanActiveAdministrator } from './services/administrator.guard';
 import { TechschoolInterceptor } from './services/techschool.interceptor';
+import { PersonalCardDetailsComponent } from './components/personal-card/personal-card-details/personal-card-details.component';
 
 @NgModule({
   declarations: [
@@ -66,13 +64,10 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     LoginFormModalComponent,
     NotificationModalComponent,
     RegistrationFormModalComponent,
-    AddPersonalCardModalComponent,
     PersonalCardListComponent,
     RegistrationRequestListComponent,
     DisciplineComponent,
     SelectSubjectModalComponent,
-    PersonalCardDetailsComponent,
-    EditPersonalCardModalComponent,
     AddDiplomaModalComponent,
     AddAnnualVacationModalComponent,
     EditAnnualVacationModalComponent,
@@ -108,7 +103,8 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     EditSocialWithChildrenVacationFormModalComponent,
     EditSocialWithChildrenVacationModalComponent,
     SocialWithChildrenVacationFormComponent,
-    UploadFileComponent
+    UploadFileComponent,
+    PersonalCardDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -133,9 +129,7 @@ import { TechschoolInterceptor } from './services/techschool.interceptor';
     LoginFormModalComponent,
     NotificationModalComponent,
     RegistrationFormModalComponent,
-    AddPersonalCardModalComponent,
     SelectSubjectModalComponent,
-    EditPersonalCardModalComponent,
     AddDiplomaModalComponent,
     AddAnnualVacationModalComponent,
     EditAnnualVacationModalComponent,

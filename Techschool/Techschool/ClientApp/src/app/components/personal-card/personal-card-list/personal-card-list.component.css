@@ -19,3 +19,27 @@ h5 {
   margin-bottom: 1rem;
 }
 
+#search-block {
+  
+}
+
+#row-5 {
+  display: grid;
+  grid-column-gap: 15px;
+  grid-template-columns: repeat(5, 1fr);
+  padding-top: 7px;
+}
+
+
+
+.black-border-2 {
+  border: 1px solid #eee;
+  border-radius: 7px;
+  padding: 7px;
+  box-shadow: 0 4px 10px rgba(204,204,204,.45);
+}
+
+.text-details {
+  opacity: 0.75;
+  font-size: 12px;
+}

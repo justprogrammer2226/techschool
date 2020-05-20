@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Net;
 using System.Text;
 using Techschool.Api;
 using Techschool.BLL.Services;
-using Techschool.BLL.ViewModels;
 using Techschool.DAL;
 using Techschool.DAL.Entities;
 
@@ -88,24 +84,24 @@ namespace Techschool
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseExceptionHandler(appError =>
-            {
-                appError.Run(async context =>
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.ContentType = "application/json";
+            //app.UseExceptionHandler(appError =>
+            //{
+            //    appError.Run(async context =>
+            //    {
+            //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            //        context.Response.ContentType = "application/json";
 
-                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    if (contextFeature != null)
-                    {
-                        await context.Response.WriteAsync(new ErrorDetails()
-                        {
-                            StatusCode = context.Response.StatusCode,
-                            Message = "Internal Server Error."
-                        }.ToString());
-                    }
-                });
-            });
+            //        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+            //        if (contextFeature != null)
+            //        {
+            //            await context.Response.WriteAsync(new ErrorDetails()
+            //            {
+            //                StatusCode = context.Response.StatusCode,
+            //                Message = "Internal Server Error."
+            //            }.ToString());
+            //        }
+            //    });
+            //});
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

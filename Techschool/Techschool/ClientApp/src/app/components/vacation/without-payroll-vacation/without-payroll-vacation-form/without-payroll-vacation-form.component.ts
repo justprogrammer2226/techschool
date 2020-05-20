@@ -50,7 +50,8 @@ export class WithoutPayrollVacationFormComponent {
       this.dialog.open(AddWithoutPayrollVacationModalComponent, {
         width: '500px',
         data: {
-          formId: this.vacationForm.id
+          formId: this.vacationForm.id,
+          existingVacations: this.vacationForm.withoutPayrollVacations,
         }
       }).afterClosed().subscribe(response => {
         this.vacationService.getWithoutPayrollVacationForm(this.personalCardId, this.formId).subscribe(response => {
@@ -73,7 +74,8 @@ export class WithoutPayrollVacationFormComponent {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditWithoutPayrollVacationModalComponent, {
         data: {
-          vacation: vacation
+          vacation: vacation,
+          existingVacations: this.vacationForm.withoutPayrollVacations,
         },
         width: '500px'
       }).afterClosed().subscribe(response => {

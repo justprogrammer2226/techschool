@@ -7,6 +7,6 @@ namespace Techschool.BLL.Models
         public string Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<CycleCommissionModel> CycleCommissions { get; set; }
+        public IEnumerable<CycleCommissionModel> CycleCommissions { get; set; }
     }
 }

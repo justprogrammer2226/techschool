@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using Techschool.BLL.Models;
+using Techschool.BLL.Models.Filters;
 using Techschool.BLL.Services;
 
 namespace Techschool.Api
@@ -16,12 +17,12 @@ namespace Techschool.Api
             PersonalCardService = personalCardService;
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        [HttpPost("filter")]
+        public IActionResult GetAll(FilterPersonalCards filter)
         {
             try
             {
-                var personalCards = PersonalCardService.GetAll();
+                var personalCards = PersonalCardService.GetAll(filter);
                 return Ok(personalCards);
             }
             catch (Exception ex)
@@ -72,6 +73,21 @@ namespace Techschool.Api
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("canSaveDiploma")]
+        public IActionResult HasDiplomaExistingNumber(DiplomaModel model)
+        {
+            var result = PersonalCardService.CanSaveDiploma(model);
+            if (result.Successed)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
             }
         }
     }

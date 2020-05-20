@@ -50,7 +50,8 @@ export class SocialWithChildrenVacationFormComponent {
       this.dialog.open(AddSocialWithChildrenVacationModalComponent, {
         width: '500px',
         data: {
-          formId: this.vacationForm.id
+          formId: this.vacationForm.id,
+          existingVacations: this.vacationForm.socialWithChildrenVacations,
         }
       }).afterClosed().subscribe(response => {
         this.vacationService.getSocialWithChildrenVacationForm(this.personalCardId, this.formId).subscribe(response => {
@@ -73,7 +74,8 @@ export class SocialWithChildrenVacationFormComponent {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditSocialWithChildrenVacationModalComponent, {
         data: {
-          vacation: vacation
+          vacation: vacation,
+          existingVacations: this.vacationForm.socialWithChildrenVacations
         },
         width: '500px'
       }).afterClosed().subscribe(response => {

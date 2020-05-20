@@ -51,7 +51,8 @@ export class AnnualVacationFormComponent {
       this.dialog.open(AddAnnualVacationModalComponent, {
         width: '500px',
         data: {
-          formId: this.vacationForm.id
+          formId: this.vacationForm.id,
+          existingVacations: this.vacationForm.annualVacations,
         }
       }).afterClosed().subscribe(response => {
         this.vacationService.getAnnualVacationForm(this.personalCardId, this.formId).subscribe(response => {
@@ -74,7 +75,8 @@ export class AnnualVacationFormComponent {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditAnnualVacationModalComponent, {
         data: {
-          annualVacation: annualVacation
+          annualVacation: annualVacation,
+          existingVacations: this.vacationForm.annualVacations,
         },
         width: '500px'
       }).afterClosed().subscribe(response => {

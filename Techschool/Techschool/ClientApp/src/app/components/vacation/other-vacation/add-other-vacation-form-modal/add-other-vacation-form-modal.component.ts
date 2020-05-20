@@ -1,12 +1,10 @@
-import { OtherVacationFormModel } from '../../../../models/vacations/other-vacation-form.model';
-import { VacationService } from '../../../../services/vacation.service';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
-import { PersonalCardService } from '@services/personal-card.service';
+import { OtherVacationFormModel } from '../../../../models/vacations/other-vacation-form.model';
+import { VacationService } from '../../../../services/vacation.service';
 
 @Component({
   templateUrl: './add-other-vacation-form-modal.component.html',

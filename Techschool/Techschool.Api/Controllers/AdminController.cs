@@ -305,19 +305,19 @@ namespace Techschool.Api
             personalCard.Birthday = DateTime.UtcNow.AddYears(-18 - rnd.Next(20));
             //public byte[] Photo { get; set; } - RND
             personalCard.IsEmployee = rnd.Next(0, 2) > 0;
-            personalCard.IsTeacher = rnd.Next(0, 2) > 0;
+            personalCard.IsTeacher = personalCard.IsEmployee ? rnd.Next(0, 2) > 0 : true;
             personalCard.TotalWorkExperienceOnDate = DateTime.UtcNow.AddYears(-rnd.Next(3));
-            personalCard.NumberOfYearsOfTotalWorkExperience = rnd.Next(0, 5).ToString();
-            personalCard.NumberOfMonthsOfTotalWorkExperience = rnd.Next(0, 12).ToString();
+            personalCard.NumberOfYearsOfTotalWorkExperience = rnd.Next(0, 5);
+            personalCard.NumberOfMonthsOfTotalWorkExperience = rnd.Next(0, 12);
             if (personalCard.IsTeacher)
             {
                 personalCard.TeachingWorkExperienceOnDate = DateTime.UtcNow.AddYears(-rnd.Next(3));
-                personalCard.NumberOfYearsOfTeachingWorkExperience = rnd.Next(0, 5).ToString();
-                personalCard.NumberOfMonthsOfTeachingWorkExperience = rnd.Next(0, 12).ToString();
+                personalCard.NumberOfYearsOfTeachingWorkExperience = rnd.Next(0, 5);
+                personalCard.NumberOfMonthsOfTeachingWorkExperience = rnd.Next(0, 12);
+                personalCard.CycleCommissionId = (await GetRandomCycleCommission()).Id;
             }
             int employmentType = rnd.Next(3);
             personalCard.EmploymentTypeId = employmentType == 0 ? "095c8a7e-a9cc-474c-85f7-fed864254f51" : employmentType == 1 ? "4da69bfa-3c07-4520-a21f-ab47d36be36f" : "3861a99d-d1aa-4a1d-88e3-c705a82848c9";
-            personalCard.CycleCommissionId = (await GetRandomCycleCommission()).Id;
             // We dont seed Teacher Qualification here
             Context.PersonalCards.Add(personalCard);
             await Context.SaveChangesAsync();
@@ -336,10 +336,12 @@ namespace Techschool.Api
             {
                 var diploma = new Diploma();
                 diploma.PersonalCardId = personalCard.Id;
-                diploma.Number = rnd.Next(100_000, 1_000_000).ToString();
+                diploma.NameOfTheInstitution = "ДТЗЕ";
+                diploma.Faculty = "РПЗ";
                 diploma.GraduationDate = DateTime.UtcNow.AddYears(-rnd.Next(1, 10));
-                diploma.Qualification = rnd.Next(0, 2) > 0 ? "Бакалавр" : "Магистр";
+                diploma.ReceiptDate = diploma.GraduationDate.AddYears(-4);
                 diploma.Specialization = Specializations[rnd.Next(Specializations.Count)];
+                diploma.Number = rnd.Next(100_000, 1_000_000).ToString();
                 Context.Diplomas.Add(diploma);
             }
             await Context.SaveChangesAsync();

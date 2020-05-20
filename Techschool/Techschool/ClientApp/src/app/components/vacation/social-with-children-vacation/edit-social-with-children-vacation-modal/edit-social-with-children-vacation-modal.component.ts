@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
 import { NotificationModalComponent } from 'app/components/common/modals/notification-modal/notification-modal.component';
 import { VacationService } from '../../../../services/vacation.service';
 import { SocialWithChildrenVacationModel } from './../../../../models/vacations/social-with-children-vacation.model';
@@ -17,12 +18,14 @@ export class EditSocialWithChildrenVacationModalComponent {
 
   public formGroup: FormGroup;
   public vacation: SocialWithChildrenVacationModel = new SocialWithChildrenVacationModel();
+  private existingVacations: SocialWithChildrenVacationModel[] = [];
 
   constructor(
     private authService: AuthService,
     private dialogRef: MatDialogRef<EditSocialWithChildrenVacationModalComponent>,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private modalService: ModalService,
     private vacationService: VacationService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -37,6 +40,7 @@ export class EditSocialWithChildrenVacationModalComponent {
       this.vacation = data.vacation;
       this.setFormGroupByVacation(this.vacation);
     }
+    this.existingVacations = data.existingVacations;
   }
 
   public getError(controlElementName): string {
@@ -75,6 +79,11 @@ export class EditSocialWithChildrenVacationModalComponent {
     this.vacation.endOfVacationDate = formValue.endOfVacationDate;
     this.vacation.orderNumber = formValue.orderNumber;
     this.vacation.orderDate = formValue.orderDate;
+    const isExist = this.existingVacations.find(_ => _.startOfVacationDate < this.vacation.endOfVacationDate && this.vacation.startOfVacationDate < _.endOfVacationDate && _.id != this.vacation.id);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
     this.vacationService.saveSocialWithChildrenVacation(this.vacation).subscribe(response => {
       this.dialog.open(NotificationModalComponent, {
         width: '300px',

@@ -50,7 +50,8 @@ export class SocialWithPregnancyOrLookVacationFormComponent {
       this.dialog.open(AddSocialWithPregnancyOrLookVacationModalComponent, {
         width: '500px',
         data: {
-          formId: this.vacationForm.id
+          formId: this.vacationForm.id,
+          existingVacations: this.vacationForm.socialWithPregnancyOrLookVacations,
         }
       }).afterClosed().subscribe(response => {
         this.vacationService.getSocialWithPregnancyOrLookVacationForm(this.personalCardId, this.formId).subscribe(response => {
@@ -73,7 +74,8 @@ export class SocialWithPregnancyOrLookVacationFormComponent {
     if (this.authService.isAuthentificated()) {
       this.dialog.open(EditSocialWithPregnancyOrLookVacationModalComponent, {
         data: {
-          vacation: vacation
+          vacation: vacation,
+          existingVacations: this.vacationForm.socialWithPregnancyOrLookVacations,
         },
         width: '500px'
       }).afterClosed().subscribe(response => {

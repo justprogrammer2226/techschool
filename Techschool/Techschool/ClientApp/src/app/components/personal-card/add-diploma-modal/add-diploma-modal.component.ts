@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
 import { PersonalCardService } from '@services/personal-card.service';
-import { DiplomaModel } from '../../../models/diploma.model';
+import { CustomValidator } from 'app/validators/custom.validator';
+import { DiplomaModel } from './../../../models/diploma.model';
 
 @Component({
   templateUrl: './add-diploma-modal.component.html',
@@ -15,41 +17,69 @@ import { DiplomaModel } from '../../../models/diploma.model';
 export class AddDiplomaModalComponent {
 
   public formGroup: FormGroup;
+  private existingDiplomas: DiplomaModel[] = [];
 
-  constructor(private authService: AuthService, private dialogRef: MatDialogRef<AddDiplomaModalComponent>, private formBuilder: FormBuilder, private dialog: MatDialog,
-    private personalCardService: PersonalCardService, private disciplineService: DisciplineService) {
+  constructor(
+    private authService: AuthService,
+    private dialogRef: MatDialogRef<AddDiplomaModalComponent>,
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private modalService: ModalService,
+    private personalCardService: PersonalCardService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private disciplineService: DisciplineService) {
+    this.existingDiplomas = data.existingDiplomas;
     this.formGroup = this.formBuilder.group({
-      'number': ['', Validators.required],
+      'nameOfTheInstitution': ['', Validators.required],
+      'faculty': ['', Validators.required],
+      'receiptDate': ['', Validators.required],
       'graduationDate': ['', Validators.required],
-      'qualification': ['', Validators.required],
-      'specialization': ['', Validators.required]
+      'specialization': ['', Validators.required],
+      'number': ['', Validators.required]
+    },
+    {
+      validator: CustomValidator.isBefore('receiptDate', 'graduationDate', 'graduationDateBefore')
     });
   }
 
   public getError(controlElementName): string {
     console.log(this.formGroup);
     switch (controlElementName) {
-      case 'number':
-        if (this.formGroup.get('number').hasError('required')) {
-          return 'номер диплому обов\'язковий';
+      case 'nameOfTheInstitution':
+        if (this.formGroup.get('nameOfTheInstitution').hasError('required')) {
+          return 'Навчальний заклад обов\'язковий';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'faculty':
+        if (this.formGroup.get('faculty').hasError('required')) {
+          return 'Факультет обов\'язковий';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'receiptDate':
+        if (this.formGroup.get('receiptDate').hasError('required')) {
+          return 'Дата вступу обов\'язкова';
         } else {
           return 'Невідома помилка';
         }
       case 'graduationDate':
         if (this.formGroup.get('graduationDate').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
-        } else {
-          return 'Невідома помилка';
-        }
-      case 'qualification':
-        if (this.formGroup.get('qualification').hasError('required')) {
-          return 'Кваліфікація обов\'язкова';
+        } else if (this.formGroup.get('graduationDate').hasError('graduationDateBefore')) {
+          return 'Дата закінчення повинна бути після початку';
         } else {
           return 'Невідома помилка';
         }
       case 'specialization':
         if (this.formGroup.get('specialization').hasError('required')) {
-          return 'Спеціалізація обов\'язкова';
+          return 'Спеціальність обов\'язкова';
+        } else {
+          return 'Невідома помилка';
+        }
+      case 'number':
+        if (this.formGroup.get('number').hasError('required')) {
+          return 'Номер диплому обов\'язковий';
         } else {
           return 'Невідома помилка';
         }
@@ -58,14 +88,37 @@ export class AddDiplomaModalComponent {
     }
   }
 
-  public select(formValue: any): void {
+  public add(formValue: any): void {
+
     const diploma: DiplomaModel = new DiplomaModel();
-    diploma.number = formValue.number;
+    diploma.nameOfTheInstitution = formValue.nameOfTheInstitution;
+    diploma.faculty = formValue.faculty;
+    diploma.receiptDate = formValue.receiptDate;
     diploma.graduationDate = formValue.graduationDate;
-    diploma.qualification = formValue.qualification;
     diploma.specialization = formValue.specialization;
-    this.dialogRef.close({
-      diploma: diploma
+    diploma.number = formValue.number;
+    
+    let isExist = this.existingDiplomas.find(_ => _.number == diploma.number);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Данний диплом вже добавлений до цього працівника');
+      return;
+    }
+
+    isExist = this.existingDiplomas.find(_ => _.receiptDate < diploma.graduationDate && diploma.receiptDate < _.graduationDate);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон навчання вказаний невірно');
+      return;
+    }
+
+    this.personalCardService.canSaveDiploma(diploma).subscribe(_ => {
+      this.dialogRef.close({
+        diploma: diploma
+      });
+    }, error => {
+      if (error.error.isSameNumberExist) {
+        this.modalService.showError('Помилка', 'Диплом з вказаним номером вже існує');
+      }
     });
+    
   }
 }

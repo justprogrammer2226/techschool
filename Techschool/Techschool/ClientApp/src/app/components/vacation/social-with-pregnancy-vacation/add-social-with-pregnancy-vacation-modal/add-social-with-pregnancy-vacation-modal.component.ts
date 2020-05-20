@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
+import { CustomValidator } from 'app/validators/custom.validator';
 import { SocialWithPregnancyOrLookVacationModel } from '../../../../models/vacations/social-with-pregnancy-or-look-vacation.model';
 import { VacationService } from '../../../../services/vacation.service';
-import { CustomValidator } from 'app/validators/custom.validator';
 
 const vacationDateBefore = 'vacationDateBefore';
 
@@ -19,12 +20,14 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
 
   public formGroup: FormGroup;
   private formId: string;
+  private existingVacations: SocialWithPregnancyOrLookVacationModel[] = [];
 
   constructor(
     private authService: AuthService,
     private dialogRef: MatDialogRef<AddSocialWithPregnancyOrLookVacationModalComponent>,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private modalService: ModalService,
     private vacationService: VacationService,
     private disciplineService: DisciplineService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -40,6 +43,7 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
       validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
     });
     this.formId = data.formId;
+    this.existingVacations = data.existingVacations;
   }
 
   public getError(controlElementName): string {
@@ -89,6 +93,11 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
     vacation.orderNumber = formValue.orderNumber;
     vacation.orderDate = formValue.orderDate;
     vacation.socialWithPregnancyOrLookVacationFormId = this.formId;
+    const isExist = this.existingVacations.find(_ => _.startOfVacationDate < vacation.endOfVacationDate && vacation.startOfVacationDate < _.endOfVacationDate);
+    if (isExist) {
+      this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
     this.vacationService.saveSocialWithPregnancyOrLookVacation(vacation).subscribe(_ => {
       this.dialogRef.close();
     });

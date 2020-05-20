@@ -7,12 +7,12 @@ namespace Techschool.BLL.Services
     {
         IEnumerable<SubjectModel> GetSubjects();
         SubjectModel GetSubjectById(string id);
-        SubjectModel SaveSubject(SubjectModel model);
+        SavingResult<SubjectModel> SaveSubject(SubjectModel model);
         void DeleteSubjectById(string id);
 
         IEnumerable<CycleCommissionModel> GetCycleCommissions();
         CycleCommissionModel GetGetCycleCommissionById(string id);
-        CycleCommissionModel SaveCycleCommission(CycleCommissionModel model);
+        SavingResult<CycleCommissionModel> SaveCycleCommission(CycleCommissionModel model);
         void DeleteCycleCommissionById(string id);
 
         void AddSubjectToCycleCommission(string subjectId, string cycleCommissionId);
