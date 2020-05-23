@@ -59,15 +59,21 @@ export class PersonalCardListComponent implements OnInit, AfterViewInit {
 
   public changeFiltrationByName(): void {
     this.filter.nameOrderBy = this.nextOrder(this.filter.nameOrderBy);
+    this.filter.surnameOrderBy = Order.Random;
+    this.filter.patronymicOrderBy = Order.Random;
     this.loadPersonalCards();
   }
 
   public changeFiltrationBySurname(): void {
+    this.filter.nameOrderBy = Order.Random;
     this.filter.surnameOrderBy = this.nextOrder(this.filter.surnameOrderBy);
+    this.filter.patronymicOrderBy = Order.Random;
     this.loadPersonalCards();
   }
 
   public changeFiltrationByPatronymic(): void {
+    this.filter.nameOrderBy = Order.Random;
+    this.filter.surnameOrderBy = Order.Random;
     this.filter.patronymicOrderBy = this.nextOrder(this.filter.patronymicOrderBy);
     this.loadPersonalCards();
   }

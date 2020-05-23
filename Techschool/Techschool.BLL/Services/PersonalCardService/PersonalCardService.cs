@@ -15,49 +15,6 @@ using Techschool.DAL.Entities.Vacations;
 
 namespace Techschool.BLL.Services
 {
-    public static class Extensions
-    {
-        public static IOrderedQueryable<PersonalCard> CustomOrder(this IQueryable<PersonalCard> personalCards, Expression<Func<PersonalCard, string>> expression, Order order)
-        {
-            if (order == Order.Random)
-            {
-                return personalCards.OrderBy(_ => true);
-            }
-            else if (order == Order.Asc)
-            {
-                return personalCards.OrderBy(expression);
-            }
-            else if (order == Order.Desc)
-            {
-                return personalCards.OrderByDescending(expression);
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-
-        public static IOrderedQueryable<PersonalCard> ThenCustomOrder(this IOrderedQueryable<PersonalCard> personalCards, Expression<Func<PersonalCard, string>> expression, Order order)
-        {
-            if (order == Order.Random)
-            {
-                return personalCards.ThenBy(_ => true);
-            }
-            else if (order == Order.Asc)
-            {
-                return personalCards.ThenBy(expression);
-            }
-            else if (order == Order.Desc)
-            {
-                return personalCards.ThenByDescending(expression);
-            }
-            else
-            {
-                throw new Exception();
-            }
-        }
-    }
-
     public class PersonalCardService : IPersonalCardService
     {
         private readonly TechschoolContext context;
@@ -153,9 +110,41 @@ namespace Techschool.BLL.Services
                 }
             }
 
-            personalCards = personalCards.CustomOrder(_ => _.Name, filter.NameOrderBy)
-                .ThenCustomOrder(_ => _.Surname, filter.SurnameOrderBy)
-                .ThenCustomOrder(_ => _.Patronymic, filter.PatronymicOrderBy);
+            if (filter.NameOrderBy != Order.Random)
+            {
+                if (filter.NameOrderBy == Order.Asc)
+                {
+                    personalCards = personalCards.OrderBy(_ => _.Name);
+                }
+                else if (filter.NameOrderBy == Order.Desc)
+                {
+                    personalCards = personalCards.OrderByDescending(_ => _.Name);
+                }
+            }
+
+            if (filter.SurnameOrderBy != Order.Random)
+            {
+                if (filter.SurnameOrderBy == Order.Asc)
+                {
+                    personalCards = personalCards.OrderBy(_ => _.Surname);
+                }
+                else if (filter.SurnameOrderBy == Order.Desc)
+                {
+                    personalCards = personalCards.OrderByDescending(_ => _.Surname);
+                }
+            }
+
+            if (filter.PatronymicOrderBy != Order.Random)
+            {
+                if (filter.PatronymicOrderBy == Order.Asc)
+                {
+                    personalCards = personalCards.OrderBy(_ => _.Patronymic);
+                }
+                else if (filter.PatronymicOrderBy == Order.Desc)
+                {
+                    personalCards = personalCards.OrderByDescending(_ => _.Patronymic);
+                }
+            }
 
             return personalCards.ToList().Select(_ => modelMapper.MapTo<PersonalCard, PersonalCardModel>(_));
         }

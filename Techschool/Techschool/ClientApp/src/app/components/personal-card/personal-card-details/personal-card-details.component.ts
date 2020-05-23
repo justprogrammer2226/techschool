@@ -71,6 +71,39 @@ export class PersonalCardDetailsComponent {
 
   public Sex = Sex;
 
+  public errorMessage: string;
+
+  public validator = {
+    name: {
+      isValid: () => this.personalCard.name != null && this.personalCard.name.length !== 0,
+      errorMessage: 'Ім\'я обов\'язкове.',
+    },
+    surname: {
+      isValid: () => this.personalCard.surname != null && this.personalCard.surname.length !== 0,
+      errorMessage: 'Прізвище обов\'язкове.',
+    },
+    patronymic: {
+      isValid: () => this.personalCard.patronymic != null && this.personalCard.patronymic.length !== 0,
+      errorMessage: 'По батькові обов\'язкове.',
+    },
+    diploma: {
+      isValid: () => this.personalCard.diplomas != null && this.personalCard.diplomas.length !== 0,
+      errorMessage: 'Повинен бути мінімум 1 диплом.',
+    },
+    birthday: {
+      isValid: () => this.personalCard.birthday != null && this.personalCard.birthday < new Date(),
+      errorMessage: 'Дата народження обов\'язкова та повинна бути у минулому.',
+    },
+    email: {
+      isValid: () => this.personalCard.email != null && this.personalCard.email.length !== 0,
+      errorMessage: 'Пошта обов\'язкова.',
+    },
+    phone: {
+      isValid: () => this.personalCard.phoneNumber != null && this.personalCard.phoneNumber.length !== 0,
+      errorMessage: 'Телефон обов\'язковий.',
+    },
+  };
+
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
@@ -116,6 +149,8 @@ export class PersonalCardDetailsComponent {
         this.vacationService.getOtherVacationFormsByPersonalCardId(params['id']).subscribe(response => {
           this.otherVacationForms = response;
         });
+      } else {
+        console.log(this.personalCard);
       }
     });
   }
@@ -326,12 +361,19 @@ export class PersonalCardDetailsComponent {
   public loadProfilePhoto(base64image: string): void {
     this.personalCard.photo = base64image;
   }
-  
+
   public save(): void {
-    //this.showValidationError = true;
-    //timer(2000).subscribe(_ => {
-    //  this.showValidationError = false;
-    //});
+    for (const key of Object.keys(this.validator)) {
+      if (!this.validator[key].isValid()) {
+        this.errorMessage = this.validator[key].errorMessage;
+        this.showValidationError = true;
+        timer(5000).subscribe(_ => {
+          this.showValidationError = false;
+        });
+        return;
+      }
+    }
+
     this.personalCardService.save(this.personalCard).subscribe(response => {
       this.dialog.open(NotificationModalComponent, {
         width: '300px',
