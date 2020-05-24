@@ -1,12 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { PersonalCardModel } from '@models/personal-card.model';
-import { map } from 'rxjs/operators';
-import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
-import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
-import { AnnualVacationFormComponent } from 'app/components/vacation/annual-vacation/annual-vacation-form/annual-vacation-form.component';
-import { FilterPersonalCards } from '@models/filters/filter-personal-card.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',

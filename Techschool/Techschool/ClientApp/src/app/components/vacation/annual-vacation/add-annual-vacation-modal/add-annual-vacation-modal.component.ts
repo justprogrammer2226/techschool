@@ -7,8 +7,10 @@ import { DisciplineService } from '@services/discipline.service';
 import { ModalService } from '@services/modal.service';
 import { CustomValidator } from 'app/validators/custom.validator';
 import { VacationService } from '../../../../services/vacation.service';
+import { WorkingYearModel } from '@models/vacations/working-year.model';
 
 const vacationDateBefore = 'vacationDateBefore';
+const orderDateAfter = 'orderDateAfter';
 
 @Component({
   templateUrl: './add-annual-vacation-modal.component.html',
@@ -19,9 +21,11 @@ const vacationDateBefore = 'vacationDateBefore';
 export class AddAnnualVacationModalComponent {
 
   public formGroup: FormGroup;
-  private formId: string;
+  
+  private workingYear: WorkingYearModel;
   private existingVacations: AnnualVacationModel[] = [];
-
+  private leftDaysFromPreviousYearsWorkingYears: number;
+  
   constructor(
     private authService: AuthService,
     private dialogRef: MatDialogRef<AddAnnualVacationModalComponent>,
@@ -39,10 +43,14 @@ export class AddAnnualVacationModalComponent {
       'orderDate': ['', Validators.required]
     },
     {
-      validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
+      validator: [
+        CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore),
+        CustomValidator.isAfter('startOfVacationDate', 'orderDate', orderDateAfter)
+      ]
     });
-    this.formId = data.formId;
+    this.workingYear = data.workingYear;
     this.existingVacations = data.existingVacations;
+    this.leftDaysFromPreviousYearsWorkingYears = data.leftDaysFromPreviousYearsWorkingYears;
   }
 
   public getError(controlElementName): string {
@@ -70,6 +78,8 @@ export class AddAnnualVacationModalComponent {
       case 'orderDate':
         if (this.formGroup.get('orderDate').hasError('required')) {
           return 'Дата наказу обов\'язкова';
+        } else if (this.formGroup.get('orderDate').hasError(orderDateAfter)) {
+          return 'Дата наказу повинна бути до дати початку';
         } else {
           return 'Невідома помилка';
         }
@@ -84,14 +94,36 @@ export class AddAnnualVacationModalComponent {
     vacation.endOfVacationDate = formValue.endOfVacationDate;
     vacation.orderNumber = formValue.orderNumber;
     vacation.orderDate = formValue.orderDate;
-    vacation.annualVacationFormId = this.formId;
+    vacation.workingYearId = this.workingYear.id;
     const isExist = this.existingVacations.find(_ => _.startOfVacationDate < vacation.endOfVacationDate && vacation.startOfVacationDate < _.endOfVacationDate);
     if (isExist) {
       this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
       return;
     }
+    if (!(this.workingYear.startOfWorkingYear <= vacation.startOfVacationDate && vacation.endOfVacationDate <= this.workingYear.endOfWorkingYear)) {
+      this.modalService.showError('Помилка', 'Діапазон дат виходить за діапазон робочого року');
+      return;
+    }
+    if (this.getExistingVacationDays() + this.getDaysBetweenDates(vacation.startOfVacationDate, vacation.endOfVacationDate) > this.workingYear.annualVacationDays + this.leftDaysFromPreviousYearsWorkingYears) {
+      this.modalService.showError('Помилка', 'Кількість днів більше положеного');
+      return;
+    }
     this.vacationService.saveAnnualVacation(vacation).subscribe(_ => {
       this.dialogRef.close();
     });
+  }
+
+  // Except current vacation
+  private getExistingVacationDays(currentId: string = null): number {
+    let vacationDays = 0;
+    vacationDays += this.existingVacations.filter(_ => _.id !== currentId).reduce((sum, current) => {
+      return sum + this.getDaysBetweenDates(current.startOfVacationDate, current.endOfVacationDate);
+    }, 0);
+    return vacationDays;
+  }
+
+  private getDaysBetweenDates(date1: Date, date2: Date): number {
+    const days = Math.ceil(Math.abs(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
+    return days;
   }
 }

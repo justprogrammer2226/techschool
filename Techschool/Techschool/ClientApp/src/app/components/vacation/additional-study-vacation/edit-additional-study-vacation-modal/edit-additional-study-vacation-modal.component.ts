@@ -9,6 +9,11 @@ import { DisciplineService } from '@services/discipline.service';
 import { PersonalCardService } from '@services/personal-card.service';
 import { NotificationModalComponent } from 'app/components/common/modals/notification-modal/notification-modal.component';
 import { ModalService } from '@services/modal.service';
+import { CustomValidator } from 'app/validators/custom.validator';
+import { WorkingYearModel } from '@models/vacations/working-year.model';
+
+const vacationDateBefore = 'vacationDateBefore';
+const orderDateAfter = 'orderDateAfter';
 
 @Component({
   templateUrl: './edit-additional-study-vacation-modal.component.html',
@@ -20,6 +25,7 @@ export class EditAdditionalStudyVacationModalComponent {
 
   public formGroup: FormGroup;
   public vacation: AdditionalStudyVacationModel = new AdditionalStudyVacationModel();
+  private workingYear: WorkingYearModel;
   private existingVacations: AdditionalStudyVacationModel[] = [];
 
   constructor(
@@ -37,12 +43,20 @@ export class EditAdditionalStudyVacationModalComponent {
       'endOfVacationDate': ['', Validators.required],
       'orderNumber': ['', Validators.required],
       'orderDate': ['', Validators.required]
-    });
+    },
+    {
+      validator: [
+        CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore),
+        CustomValidator.isAfter('startOfVacationDate', 'orderDate', orderDateAfter)
+      ]
+    }
+    );
     if (data.vacation) {
       this.vacation = data.vacation;
       this.setFormGroupByVacation(this.vacation);
     }
     this.existingVacations = data.existingVacations;
+    this.workingYear = data.workingYear;
   }
 
   public getError(controlElementName): string {
@@ -56,6 +70,8 @@ export class EditAdditionalStudyVacationModalComponent {
       case 'endOfVacationDate':
         if (this.formGroup.get('endOfVacationDate').hasError('required')) {
           return 'Дата закінчення обов\'язкова';
+        } else if (this.formGroup.get('endOfVacationDate').hasError(vacationDateBefore)) {
+          return 'Дата закінчення повинна бути після початку';
         } else {
           return 'Невідома помилка';
         }
@@ -68,6 +84,8 @@ export class EditAdditionalStudyVacationModalComponent {
       case 'orderDate':
         if (this.formGroup.get('orderDate').hasError('required')) {
           return 'Дата наказу обов\'язкова';
+        } else if (this.formGroup.get('orderDate').hasError(orderDateAfter)) {
+          return 'Дата наказу повинна бути до дати початку';
         } else {
           return 'Невідома помилка';
         }
@@ -84,6 +102,10 @@ export class EditAdditionalStudyVacationModalComponent {
     const isExist = this.existingVacations.find(_ => _.startOfVacationDate < this.vacation.endOfVacationDate && this.vacation.startOfVacationDate < _.endOfVacationDate && _.id != this.vacation.id);
     if (isExist) {
       this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
+    if (!(this.workingYear.startOfWorkingYear <= this.vacation.startOfVacationDate && this.vacation.endOfVacationDate <= this.workingYear.endOfWorkingYear)) {
+      this.modalService.showError('Помилка', 'Діапазон дат виходить за діапазон робочого року');
       return;
     }
     this.vacationService.saveAdditionalStudyVacation(this.vacation).subscribe(response => {

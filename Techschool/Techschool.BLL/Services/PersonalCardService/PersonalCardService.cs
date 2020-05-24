@@ -154,9 +154,35 @@ namespace Techschool.BLL.Services
             var personalCardEntity = context.PersonalCards.AsNoTracking()
                 .Include(_ => _.EmploymentType)
                 .Include(_ => _.CycleCommission)
+                .Include(_ =>_.Diplomas)
+                .Include(_ => _.WorkingYears)
+                    .ThenInclude(_ => _.AdditionalStudyVacations)
+                .Include(_ => _.WorkingYears)
+                    .ThenInclude(_ => _.AnnualVacations)
+                .Include(_ => _.WorkingYears)
+                    .ThenInclude(_ => _.OtherVacations)
+                .Include(_ => _.WorkingYears)
+                    .ThenInclude(_ => _.SocialWithChildrenVacations)
+                .Include(_ => _.WorkingYears)
+                    .ThenInclude(_ => _.SocialWithPregnancyOrLookVacations)
+                .Include(_ => _.WorkingYears)
+                    .ThenInclude(_ => _.WithoutPayrollVacations)
                 .Single(_ => _.Id == id);
             var personalCard = modelMapper.MapTo<PersonalCard, PersonalCardModel>(personalCardEntity);
             personalCard.Diplomas = personalCard.Diplomas.OrderBy(_ => _.ReceiptDate).ToList();
+            if (personalCard.WorkingYears.Any())
+            {
+                personalCard.WorkingYears = personalCard.WorkingYears.OrderBy(_ => _.StartOfWorkingYear).ToList();
+                foreach (var workingYear in personalCard.WorkingYears)
+                {
+                    workingYear.AdditionalStudyVacations = workingYear.AdditionalStudyVacations.OrderBy(_ => _.StartOfVacationDate).ToList();
+                    workingYear.AnnualVacations = workingYear.AnnualVacations.OrderBy(_ => _.StartOfVacationDate).ToList();
+                    workingYear.OtherVacations = workingYear.OtherVacations.OrderBy(_ => _.StartOfVacationDate).ToList();
+                    workingYear.SocialWithChildrenVacations = workingYear.SocialWithChildrenVacations.OrderBy(_ => _.StartOfVacationDate).ToList();
+                    workingYear.SocialWithPregnancyOrLookVacations = workingYear.SocialWithPregnancyOrLookVacations.OrderBy(_ => _.StartOfVacationDate).ToList();
+                    workingYear.WithoutPayrollVacations = workingYear.WithoutPayrollVacations.OrderBy(_ => _.StartOfVacationDate).ToList();
+                }
+            }
             return personalCard;
         }
 

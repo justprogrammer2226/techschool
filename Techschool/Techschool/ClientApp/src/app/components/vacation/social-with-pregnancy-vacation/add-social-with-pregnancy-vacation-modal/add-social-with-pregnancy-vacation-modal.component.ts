@@ -7,8 +7,10 @@ import { ModalService } from '@services/modal.service';
 import { CustomValidator } from 'app/validators/custom.validator';
 import { SocialWithPregnancyOrLookVacationModel } from '../../../../models/vacations/social-with-pregnancy-or-look-vacation.model';
 import { VacationService } from '../../../../services/vacation.service';
+import { WorkingYearModel } from '@models/vacations/working-year.model';
 
 const vacationDateBefore = 'vacationDateBefore';
+const orderDateAfter = 'orderDateAfter';
 
 @Component({
   templateUrl: './add-social-with-pregnancy-vacation-modal.component.html',
@@ -19,7 +21,8 @@ const vacationDateBefore = 'vacationDateBefore';
 export class AddSocialWithPregnancyOrLookVacationModalComponent {
 
   public formGroup: FormGroup;
-  private formId: string;
+  
+  private workingYear: WorkingYearModel;
   private existingVacations: SocialWithPregnancyOrLookVacationModel[] = [];
 
   constructor(
@@ -40,9 +43,12 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
       'orderDate': ['', Validators.required],
     },
     {
-      validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
+      validator: [
+        CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore),
+        CustomValidator.isAfter('startOfVacationDate', 'orderDate', orderDateAfter)
+      ]
     });
-    this.formId = data.formId;
+    this.workingYear = data.workingYear;
     this.existingVacations = data.existingVacations;
   }
 
@@ -77,6 +83,8 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
       case 'orderDate':
         if (this.formGroup.get('orderDate').hasError('required')) {
           return 'Дата наказу обов\'язкова';
+        } else if (this.formGroup.get('orderDate').hasError(orderDateAfter)) {
+          return 'Дата наказу повинна бути до дати початку';
         } else {
           return 'Невідома помилка';
         }
@@ -92,10 +100,14 @@ export class AddSocialWithPregnancyOrLookVacationModalComponent {
     vacation.endOfVacationDate = formValue.endOfVacationDate;
     vacation.orderNumber = formValue.orderNumber;
     vacation.orderDate = formValue.orderDate;
-    vacation.socialWithPregnancyOrLookVacationFormId = this.formId;
+    vacation.workingYearId = this.workingYear.id;
     const isExist = this.existingVacations.find(_ => _.startOfVacationDate < vacation.endOfVacationDate && vacation.startOfVacationDate < _.endOfVacationDate);
     if (isExist) {
       this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
+    if (!(this.workingYear.startOfWorkingYear <= vacation.startOfVacationDate && vacation.endOfVacationDate <= this.workingYear.endOfWorkingYear)) {
+      this.modalService.showError('Помилка', 'Діапазон дат виходить за діапазон робочого року');
       return;
     }
     this.vacationService.saveSocialWithPregnancyOrLookVacation(vacation).subscribe(_ => {

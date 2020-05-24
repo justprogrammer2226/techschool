@@ -1,34 +1,40 @@
+import { EditSocialWithChildrenVacationModalComponent } from './../../vacation/social-with-children-vacation/edit-social-with-children-vacation-modal/edit-social-with-children-vacation-modal.component';
+import { AddSocialWithPregnancyOrLookVacationModalComponent } from './../../vacation/social-with-pregnancy-vacation/add-social-with-pregnancy-vacation-modal/add-social-with-pregnancy-vacation-modal.component';
+import { OtherVacationModel } from './../../../models/vacations/other-vacation.model';
+import { EditOtherVacationModalComponent } from './../../vacation/other-vacation/edit-other-vacation-modal/edit-other-vacation-modal.component';
+import { AddOtherVacationModalComponent } from './../../vacation/other-vacation/add-other-vacation-modal/add-other-vacation-modal.component';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CycleCommissionModel } from '@models/cycle-commission.model';
 import { PersonalCardModel, Sex } from '@models/personal-card.model';
-import { AdditionalStudyVacationFormModel } from '@models/vacations/additional-study-vacation-form.model';
-import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
-import { OtherVacationFormModel } from '@models/vacations/other-vacation-form.model';
-import { SocialWithChildrenVacationFormModel } from '@models/vacations/social-with-children-vacation-form.model';
-import { SocialWithPregnancyOrLookVacationFormModel } from '@models/vacations/social-with-pregnancy-or-look-vacation-form.model';
-import { WithoutPayrollVacationFormModel } from '@models/vacations/without-payroll-vacation-form.model';
 import { AuthService } from '@services/auth.service';
 import { DisciplineService } from '@services/discipline.service';
+import { ModalService } from '@services/modal.service';
 import { PersonalCardService } from '@services/personal-card.service';
-import { AddAdditionalStudyVacationFormModalComponent } from 'app/components/vacation/additional-study-vacation/add-additional-study-vacation-form-modal/add-additional-study-vacation-form-modal.component';
-import { AddSocialWithChildrenVacationFormModalComponent } from 'app/components/vacation/social-with-children-vacation/add-social-with-children-vacation-form-modal/add-social-with-children-vacation-form-modal.component';
-import { AddWithoutPayrollVacationFormModalComponent } from 'app/components/vacation/without-payroll-vacation/add-without-payroll-vacation-form-modal/add-without-payroll-vacation-form-modal.component';
+import { SelectSubjectModalComponent } from 'app/components/discipline/select-subject-modal/select-subject-modal.component';
+import { AddEditWorkingYearModalComponent } from 'app/components/vacation/add-edit-working-year-modal/add-edit-working-year-modal.component';
 import { saveAs } from 'file-saver';
 import { timer } from 'rxjs';
-import { DiplomaModel } from '../../../models/diploma.model';
-import { SubjectModel } from '../../../models/subject.model';
-import { NotificationModalComponent } from '../../common/modals/notification-modal/notification-modal.component';
-import { AddAnnualVacationFormModalComponent } from '../../vacation/annual-vacation/add-annual-vacation-form-modal/add-annual-vacation-form-modal.component';
-import { AddOtherVacationFormModalComponent } from '../../vacation/other-vacation/add-other-vacation-form-modal/add-other-vacation-form-modal.component';
-import { AddSocialWithPregnancyOrLookVacationFormModalComponent } from '../../vacation/social-with-pregnancy-vacation/add-social-with-pregnancy-vacation-form-modal/add-social-with-pregnancy-vacation-form-modal.component';
 import { ReportService } from '../../../services/report.service';
 import { VacationService } from '../../../services/vacation.service';
-import { SelectSubjectModalComponent } from 'app/components/discipline/select-subject-modal/select-subject-modal.component';
+import { NotificationModalComponent } from '../../common/modals/notification-modal/notification-modal.component';
 import { AddDiplomaModalComponent } from '../add-diploma-modal/add-diploma-modal.component';
-import { ModalService } from '@services/modal.service';
+import { WorkingYearModel } from './../../../models/vacations/working-year.model';
+import { AddAnnualVacationModalComponent } from './../../vacation/annual-vacation/add-annual-vacation-modal/add-annual-vacation-modal.component';
+import { EditAnnualVacationModalComponent } from './../../vacation/annual-vacation/edit-annual-vacation-modal/edit-annual-vacation-modal.component';
+import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
+import { SocialWithChildrenVacationModel } from '@models/vacations/social-with-children-vacation.model';
+import { EditSocialWithPregnancyOrLookVacationModalComponent } from 'app/components/vacation/social-with-pregnancy-vacation/edit-social-with-pregnancy-vacation-modal/edit-social-with-pregnancy-vacation-modal.component';
+import { SocialWithPregnancyOrLookVacationModel } from '@models/vacations/social-with-pregnancy-or-look-vacation.model';
+import { AddSocialWithChildrenVacationModalComponent } from 'app/components/vacation/social-with-children-vacation/add-social-with-children-vacation-modal/add-social-with-children-vacation-modal.component';
+import { AddWithoutPayrollVacationModalComponent } from 'app/components/vacation/without-payroll-vacation/add-without-payroll-vacation-modal/add-without-payroll-vacation-modal.component';
+import { EditWithoutPayrollVacationModalComponent } from 'app/components/vacation/without-payroll-vacation/edit-without-payroll-vacation-modal/edit-without-payroll-vacation-modal.component';
+import { WithoutPayrollVacationModel } from '@models/vacations/without-payroll-vacation.model';
+import { AddAdditionalStudyVacationModalComponent } from 'app/components/vacation/additional-study-vacation/add-additional-study-vacation-modal/add-additional-study-vacation-modal.component';
+import { EditAdditionalStudyVacationModalComponent } from 'app/components/vacation/additional-study-vacation/edit-additional-study-vacation-modal/edit-additional-study-vacation-modal.component';
+import { AdditionalStudyVacationModel } from '@models/vacations/additional-study-vacation.model';
 
 enum VacationType {
   Annual,
@@ -58,20 +64,26 @@ export class PersonalCardDetailsComponent {
   public personalCard: PersonalCardModel = new PersonalCardModel();
   public typeOfPersonalCard: string;
 
-  public additionalStudyVacationForms: AdditionalStudyVacationFormModel[] = [];
-  public annualVacationForms: AnnualVacationFormModel[] = [];
-  public otherVacationForms: OtherVacationFormModel[] = [];
-  public socialWithChildrenVacationForms: SocialWithChildrenVacationFormModel[] = [];
-  public socialWithPregnancyOrLookVacationForms: SocialWithPregnancyOrLookVacationFormModel[] = [];
-  public withoutPayrollVacationForms: WithoutPayrollVacationFormModel[] = [];
-
   public selectedVacationType = VacationType.Annual;
+  public selectedWorkingYear: WorkingYearModel;
+  public workingYearsDataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
+  public workingYearColumns: string[] = ['add-edit', 'startOfWorkingYear', 'endOfWorkingYear', 'delete'];
   public VacationType = VacationType;
   public showValidationError = false;
+
+  public additionalStudyVacationsDisplayedColumns: string[] = ['add-edit', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'delete'];
+  public annualVacationsDisplayedColumns: string[] = ['add-edit', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'delete'];
+  public otherVacationsDisplayedColumns: string[] = ['add-edit', 'typeOfVacation', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'notes', 'delete'];
+  public socialWithChildrenVacationsDisplayedColumns: string[] = ['add-edit', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'delete'];
+  public socialWithPregnancyOrLookVacationsDisplayedColumns: string[] = ['add-edit', 'typeOfVacation', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'delete'];
+  public withoutPayrollVacationsDisplayedColumns: string[] = ['add-edit', 'dateDiapason', 'days', 'orderNumber', 'orderDate', 'notes', 'delete'];
+
 
   public Sex = Sex;
 
   public errorMessage: string;
+
+  private personalCardId: string;
 
   public validator = {
     name: {
@@ -118,39 +130,30 @@ export class PersonalCardDetailsComponent {
   ) {
     this.activateRoute.params.subscribe(params => {
       if (params['id']) {
-        this.personalCardService.getById(params['id']).subscribe(response => {
-          this.personalCard = response;
-          console.log(this.personalCard);
-          this.typeOfPersonalCard = this.getTypeOfPersonalCard();
-          this.subjectsDataSource.data = this.personalCard.subjects;
-          this.diplomasDataSource.data = this.personalCard.diplomas;
-          this.diplomasDataSource.data.sort((a, b) => {
-            return a.receiptDate.getTime() - b.receiptDate.getTime();
-          });
-          this.disciplineService.getCycleCommissions().subscribe(response => {
-            this.cycleCommissions = response;
-          });
-        });
-        this.vacationService.getAdditionalStudyVacationFormsByPersonalCardId(params['id']).subscribe(response => {
-          this.additionalStudyVacationForms = response;
-        });
-        this.vacationService.getAnnualVacationFormsByPersonalCardId(params['id']).subscribe(response => {
-          this.annualVacationForms = response;
-        });
-        this.vacationService.getWithoutPayrollVacationFormsByPersonalCardId(params['id']).subscribe(response => {
-          this.withoutPayrollVacationForms = response;
-        });
-        this.vacationService.getSocialWithChildrenVacationFormsByPersonalCardId(params['id']).subscribe(response => {
-          this.socialWithChildrenVacationForms = response;
-        });
-        this.vacationService.getSocialWithPregnancyOrLookVacationFormsByPersonalCardId(params['id']).subscribe(response => {
-          this.socialWithPregnancyOrLookVacationForms = response;
-        });
-        this.vacationService.getOtherVacationFormsByPersonalCardId(params['id']).subscribe(response => {
-          this.otherVacationForms = response;
-        });
+        this.personalCardId = params['id'];
+        this.loadPersonalCard();
       } else {
         console.log(this.personalCard);
+      }
+    });
+  }
+
+  private loadPersonalCard(): void {
+    this.personalCardService.getById(this.personalCardId).subscribe(response => {
+      this.personalCard = response;
+      console.log(this.personalCard);
+      this.typeOfPersonalCard = this.getTypeOfPersonalCard();
+      this.subjectsDataSource.data = this.personalCard.subjects;
+      this.diplomasDataSource.data = this.personalCard.diplomas;
+      this.diplomasDataSource.data.sort((a, b) => {
+        return a.receiptDate.getTime() - b.receiptDate.getTime();
+      });
+      this.disciplineService.getCycleCommissions().subscribe(response => {
+        this.cycleCommissions = response;
+      });
+      this.workingYearsDataSource.data = this.personalCard.workingYears;
+      if (this.selectedWorkingYear) {
+        this.selectedWorkingYear = this.personalCard.workingYears.find(_ => _.id == this.selectedWorkingYear.id);
       }
     });
   }
@@ -162,198 +165,78 @@ export class PersonalCardDetailsComponent {
     return type;
   }
 
-  public openAddAdditionalStudyVacationFormModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddAdditionalStudyVacationFormModalComponent, {
-        width: '500px',
-        data: {
-          personalCardId: this.personalCard.id
-        }
-      }).afterClosed().subscribe(response => {
-        this.vacationService.getAdditionalStudyVacationFormsByPersonalCardId(this.personalCard.id).subscribe(response => {
-          this.additionalStudyVacationForms = response;
-        });
-      });
-    } else {
-      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
-    }
-  }
+  
 
-  public openAddAnnualVacationFormModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddAnnualVacationFormModalComponent, {
-        width: '500px',
-        data: {
-          personalCardId: this.personalCard.id
-        }
-      }).afterClosed().subscribe(response => {
-        this.vacationService.getAnnualVacationFormsByPersonalCardId(this.personalCard.id).subscribe(response => {
-          this.annualVacationForms = response;
-        });
-      });
-    } else {
-      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
-    }
-  }
+ 
 
-  public openAddWithoutPayrollVacationFormModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddWithoutPayrollVacationFormModalComponent, {
-        width: '500px',
-        data: {
-          personalCardId: this.personalCard.id
-        }
-      }).afterClosed().subscribe(response => {
-        this.vacationService.getWithoutPayrollVacationFormsByPersonalCardId(this.personalCard.id).subscribe(response => {
-          this.withoutPayrollVacationForms = response;
-        });
-      });
-    } else {
-      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
-    }
-  }
 
-  public openAddSocialWithChildrenVacationFormModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddSocialWithChildrenVacationFormModalComponent, {
-        width: '500px',
-        data: {
-          personalCardId: this.personalCard.id
-        }
-      }).afterClosed().subscribe(response => {
-        this.vacationService.getSocialWithChildrenVacationFormsByPersonalCardId(this.personalCard.id).subscribe(response => {
-          this.socialWithChildrenVacationForms = response;
-        });
-      });
-    } else {
-      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
-    }
-  }
-
-  public openAddSocialWithPregnancyOrLookVacationFormModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddSocialWithPregnancyOrLookVacationFormModalComponent, {
-        width: '500px',
-        data: {
-          personalCardId: this.personalCard.id
-        }
-      }).afterClosed().subscribe(response => {
-        this.vacationService.getSocialWithPregnancyOrLookVacationFormsByPersonalCardId(this.personalCard.id).subscribe(response => {
-          this.socialWithPregnancyOrLookVacationForms = response;
-        });
-      });
-    } else {
-      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
-    }
-  }
-
-  public openAddOtherVacationFormModal(): void {
-    if (this.authService.isAuthentificated()) {
-      this.dialog.open(AddOtherVacationFormModalComponent, {
-        width: '500px',
-        data: {
-          personalCardId: this.personalCard.id
-        }
-      }).afterClosed().subscribe(response => {
-        this.vacationService.getOtherVacationFormsByPersonalCardId(this.personalCard.id).subscribe(response => {
-          this.otherVacationForms = response;
-        });
-      });
-    } else {
-      this.modalService.showError('Помилка', 'Ви не маєте прав на додання форми відпустки');
-    }
-  }
-
-  public navigateToAdditionalStudyVacationForm(form: AdditionalStudyVacationFormModel): void {
-    this.router.navigateByUrl('personal-cards/' + this.personalCard.id + '/additional-study-vacations/' + form.id);
-  }
-
-  public navigateToAnnualVacationForm(form: AnnualVacationFormModel): void {
-    this.router.navigateByUrl('personal-cards/' + this.personalCard.id + '/annual-vacations/' + form.id);
-  }
-
-  public navigateToWithoutPayrollVacationForm(form: WithoutPayrollVacationFormModel): void {
-    this.router.navigateByUrl('personal-cards/' + this.personalCard.id + '/without-payroll-vacations/' + form.id);
-  }
-
-  public navigateToSocialWithChildrenVacationForm(form: SocialWithChildrenVacationFormModel): void {
-    this.router.navigateByUrl('personal-cards/' + this.personalCard.id + '/social-with-children-vacations/' + form.id);
-  }
-
-  public navigateToSocialWithPregnancyOrLookVacationForm(form: SocialWithPregnancyOrLookVacationFormModel): void {
-    this.router.navigateByUrl('personal-cards/' + this.personalCard.id + '/social-with-pregnancy-or-look-vacations/' + form.id);
-  }
-
-  public navigateToOtherVacationForm(form: OtherVacationFormModel): void {
-    this.router.navigateByUrl('personal-cards/' + this.personalCard.id + '/other-vacations/' + form.id);
-  }
 
   public getDaysBetweenDates(date1: Date, date2: Date): number {
     const days = Math.ceil(Math.abs(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24));
     return days;
   }
 
-  public getDaysOfAnnualVacationForm(): number {
-    if (this.annualVacationForms) {
-      let days = 0;
-      days += this.annualVacationForms.reduce((sum, current) => {
-        return sum + current.days;
-      }, 0);
-      return days;
-    }
-    return 0;
-  }
+  // public getDaysOfAnnualVacationForm(): number {
+  //   if (this.annualVacationForms) {
+  //     let days = 0;
+  //     days += this.annualVacationForms.reduce((sum, current) => {
+  //       return sum + current.days;
+  //     }, 0);
+  //     return days;
+  //   }
+  //   return 0;
+  // }
 
-  public getLeftDaysOfAnnualVacationForm(): number {
-    if (this.annualVacationForms) {
-      return this.getDaysOfAnnualVacationForm() - this.getVacationDaysOfAnnualVacationForm();
-    }
-    return 0;
-  }
+  // public getLeftDaysOfAnnualVacationForm(): number {
+  //   if (this.annualVacationForms) {
+  //     return this.getDaysOfAnnualVacationForm() - this.getVacationDaysOfAnnualVacationForm();
+  //   }
+  //   return 0;
+  // }
 
-  public getVacationDaysOfAnnualVacationForm(): number {
-    if (this.annualVacationForms) {
-      let vacationDays = 0;
-      this.annualVacationForms.forEach(form => {
-        vacationDays += form.annualVacations.reduce((sum, current) => {
-          return sum + this.getDaysBetweenDates(current.startOfVacationDate, current.endOfVacationDate);
-        }, 0)
-      });
-      return vacationDays;
-    }
-    return 0;
-  }
+  // public getVacationDaysOfAnnualVacationForm(): number {
+  //   if (this.annualVacationForms) {
+  //     let vacationDays = 0;
+  //     this.annualVacationForms.forEach(form => {
+  //       vacationDays += form.annualVacations.reduce((sum, current) => {
+  //         return sum + this.getDaysBetweenDates(current.startOfVacationDate, current.endOfVacationDate);
+  //       }, 0)
+  //     });
+  //     return vacationDays;
+  //   }
+  //   return 0;
+  // }
 
-  public getDaysOfSocialWithChildrenVacationForm(): number {
-    if (this.socialWithChildrenVacationForms) {
-      let days = 0;
-      days += this.socialWithChildrenVacationForms.reduce((sum, current) => {
-        return sum + current.days;
-      }, 0);
-      return days;
-    }
-    return 0;
-  }
+  // public getDaysOfSocialWithChildrenVacationForm(): number {
+  //   if (this.socialWithChildrenVacationForms) {
+  //     let days = 0;
+  //     days += this.socialWithChildrenVacationForms.reduce((sum, current) => {
+  //       return sum + current.days;
+  //     }, 0);
+  //     return days;
+  //   }
+  //   return 0;
+  // }
 
-  public getLeftDaysOfSocialWithChildrenVacationForm(): number {
-    if (this.socialWithChildrenVacationForms) {
-      return this.getDaysOfSocialWithChildrenVacationForm() - this.getVacationDaysOfSocialWithChildrenVacationForm();
-    }
-    return 0;
-  }
+  // public getLeftDaysOfSocialWithChildrenVacationForm(): number {
+  //   if (this.socialWithChildrenVacationForms) {
+  //     return this.getDaysOfSocialWithChildrenVacationForm() - this.getVacationDaysOfSocialWithChildrenVacationForm();
+  //   }
+  //   return 0;
+  // }
 
-  public getVacationDaysOfSocialWithChildrenVacationForm(): number {
-    if (this.socialWithChildrenVacationForms) {
-      let vacationDays = 0;
-      this.socialWithChildrenVacationForms.forEach(form => {
-        vacationDays += form.socialWithChildrenVacations.reduce((sum, current) => {
-          return sum + this.getDaysBetweenDates(current.startOfVacationDate, current.endOfVacationDate);
-        }, 0)
-      });
-      return vacationDays;
-    }
-    return 0;
-  }
+  // public getVacationDaysOfSocialWithChildrenVacationForm(): number {
+  //   if (this.socialWithChildrenVacationForms) {
+  //     let vacationDays = 0;
+  //     this.socialWithChildrenVacationForms.forEach(form => {
+  //       vacationDays += form.socialWithChildrenVacations.reduce((sum, current) => {
+  //         return sum + this.getDaysBetweenDates(current.startOfVacationDate, current.endOfVacationDate);
+  //       }, 0)
+  //     });
+  //     return vacationDays;
+  //   }
+  //   return 0;
+  // }
 
 
 
@@ -460,4 +343,265 @@ export class PersonalCardDetailsComponent {
       });
     }
   }
+
+  public selectWorkingYear(workingYear: WorkingYearModel): void {
+    this.selectedWorkingYear = workingYear;
+    console.log('this.selectedWorkingYear', this.selectedWorkingYear);
+  }
+
+  public isSelectedWorkingYear(id: string): boolean {
+    if (!this.selectedWorkingYear) return false;
+    return id === this.selectedWorkingYear.id;
+  }
+
+  public openAddWorkingYearModal(): void {
+    this.dialog.open(AddEditWorkingYearModalComponent, {
+      width: '500px',
+      data: {
+        personalCardId: this.personalCard.id,
+        existingWorkingYears: this.personalCard.workingYears
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openEditWorkingYearModal(workingYear: WorkingYearModel): void {
+    this.dialog.open(AddEditWorkingYearModalComponent, {
+      width: '500px',
+      data: {
+        workingYear: workingYear,
+        existingWorkingYears: this.personalCard.workingYears
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public deleteWorkingYear(id: string): void {
+    this.vacationService.deleteWorkingYear(id).subscribe(_ => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openAddAdditionalStudyVacationModal(): void {
+    this.dialog.open(AddAdditionalStudyVacationModalComponent, {
+      width: '500px',
+      data: {
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.additionalStudyVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openEditAdditionalStudyVacationModal(vacation: AdditionalStudyVacationModel): void {
+    this.dialog.open(EditAdditionalStudyVacationModalComponent, {
+      width: '500px',
+      data: {
+        vacation: vacation,
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.additionalStudyVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public deleteAdditionalStudyVacation(id: string): void {
+    this.vacationService.deleteAdditionalStudyVacation(id).subscribe(_ => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openAddAnnualVacationModal(): void {
+    if (this.selectedWorkingYear.annualVacationDays <= 0) {
+      this.modalService.showError('Помилка', 'Вкажіть кількість положених днів для обраного робочого року.');
+      return;
+    }
+    this.dialog.open(AddAnnualVacationModalComponent, {
+      width: '500px',
+      data: {
+        leftDaysFromPreviousYearsWorkingYears: this.getAnnualLeftDaysFromPreviousYearsWorkingYears(),
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.annualVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openEditAnnualVacationModal(vacation: AnnualVacationModel): void {
+    if (this.selectedWorkingYear.annualVacationDays <= 0) {
+      this.modalService.showError('Помилка', 'Вкажіть кількість положених днів для обраного робочого року.');
+      return;
+    }
+    this.dialog.open(EditAnnualVacationModalComponent, {
+      width: '500px',
+      data: {
+        leftDaysFromPreviousYearsWorkingYears: this.getAnnualLeftDaysFromPreviousYearsWorkingYears(),
+        vacation: vacation,
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.annualVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public deleteAnnualVacation(id: string): void {
+    this.vacationService.deleteAnnualVacation(id).subscribe(_ => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openAddWithoutPayrollVacationModal(): void {
+    this.dialog.open(AddWithoutPayrollVacationModalComponent, {
+      width: '500px',
+      data: {
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.withoutPayrollVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openEditWithoutPayrollVacationModal(vacation: WithoutPayrollVacationModel): void {
+    this.dialog.open(EditWithoutPayrollVacationModalComponent, {
+      width: '500px',
+      data: {
+        vacation: vacation,
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.withoutPayrollVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public deleteWithoutPayrollVacation(id: string): void {
+    this.vacationService.deleteWithoutPayrollVacation(id).subscribe(_ => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openAddSocialWithChildrenVacationModal(): void {
+    if (this.selectedWorkingYear.socialWithChildrenVacationDays <= 0) {
+      this.modalService.showError('Помилка', 'Вкажіть кількість положених днів для обраного робочого року.');
+      return;
+    }
+    this.dialog.open(AddSocialWithChildrenVacationModalComponent, {
+      width: '500px',
+      data: {
+        leftDaysFromPreviousYearsWorkingYears: this.getSocialWithChildrenLeftDaysFromPreviousYearsWorkingYears(),
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.socialWithChildrenVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openEditSocialWithChildrenVacationModal(vacation: SocialWithChildrenVacationModel): void {
+    if (this.selectedWorkingYear.socialWithChildrenVacationDays <= 0) {
+      this.modalService.showError('Помилка', 'Вкажіть кількість положених днів для обраного робочого року.');
+      return;
+    }
+    this.dialog.open(EditSocialWithChildrenVacationModalComponent, {
+      width: '500px',
+      data: {
+        leftDaysFromPreviousYearsWorkingYears: this.getSocialWithChildrenLeftDaysFromPreviousYearsWorkingYears(),
+        vacation: vacation,
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.socialWithChildrenVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public deleteSocialWithChildrenVacation(id: string): void {
+    this.vacationService.deleteSocialWithChildrenVacation(id).subscribe(_ => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openAddSocialWithPregnancyOrLookVacationModal(): void {
+    this.dialog.open(AddSocialWithPregnancyOrLookVacationModalComponent, {
+      width: '500px',
+      data: {
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.socialWithPregnancyOrLookVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openEditSocialWithPregnancyOrLookVacationModal(vacation: SocialWithPregnancyOrLookVacationModel): void {
+    this.dialog.open(EditSocialWithPregnancyOrLookVacationModalComponent, {
+      width: '500px',
+      data: {
+        vacation: vacation,
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.socialWithPregnancyOrLookVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public deleteSocialWithPregnancyOrLookVacation(id: string): void {
+    this.vacationService.deleteSocialWithPregnancyOrLookVacation(id).subscribe(_ => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openAddOtherVacationModal(): void {
+    this.dialog.open(AddOtherVacationModalComponent, {
+      width: '500px',
+      data: {
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.otherVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public openEditOtherVacationModal(vacation: OtherVacationModel): void {
+    this.dialog.open(EditOtherVacationModalComponent, {
+      width: '500px',
+      data: {
+        vacation: vacation,
+        workingYear: this.selectedWorkingYear,
+        existingVacations: this.selectedWorkingYear.otherVacations
+      }
+    }).afterClosed().subscribe(response => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public deleteOtherVacation(id: string): void {
+    this.vacationService.deleteOtherVacation(id).subscribe(_ => {
+      this.loadPersonalCard();
+    });
+  }
+
+  public getAnnualLeftDaysFromPreviousYearsWorkingYears(): number {
+    const previousWorkingYears = this.personalCard.workingYears.filter(_ => _.startOfWorkingYear < this.selectedWorkingYear.startOfWorkingYear);
+    return previousWorkingYears.reduce((sum, current) => {
+      return sum + current.annualVacationDays;
+    }, 0);
+  }
+
+  public getSocialWithChildrenLeftDaysFromPreviousYearsWorkingYears(): number {
+    const previousWorkingYears = this.personalCard.workingYears.filter(_ => _.startOfWorkingYear < this.selectedWorkingYear.startOfWorkingYear);
+    return previousWorkingYears.reduce((sum, current) => {
+      return sum + current.socialWithChildrenVacationDays;
+    }, 0);
+  }
+
 }

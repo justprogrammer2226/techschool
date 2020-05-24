@@ -71,6 +71,11 @@ body {
   border-left: 1px solid #eee;
 }
 
+.text-cell.mat-header-cell.active, .text-cell.mat-cell.active, .text-cell.mat-footer-cell.active {
+  font-weight: 800;
+  color: rgba(12, 61, 5, 0.75);
+}
+
 .icon-cell.mat-header-cell, .icon-cell.mat-cell, .icon-cell.mat-footer-cell {
   border-left: 1px solid #eee;
 }

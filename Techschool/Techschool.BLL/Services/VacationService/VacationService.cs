@@ -28,6 +28,31 @@ namespace Techschool.BLL.Services
             this.modelMapper = modelMapper;
         }
 
+        public void SaveWorkingYear(WorkingYearModel model)
+        {
+            var workingYear = context.WorkingYears.AsNoTracking()
+                .SingleOrDefault(_ => _.Id == model.Id);
+
+            if (workingYear == null)
+            {
+                var newWorkingYear = modelMapper.MapTo<WorkingYearModel, WorkingYear>(model);
+                context.WorkingYears.Add(newWorkingYear);
+            }
+            else
+            {
+                var newWorkingYear = modelMapper.MapTo<WorkingYearModel, WorkingYear>(model);
+                context.WorkingYears.Update(newWorkingYear);
+            }
+            context.SaveChanges();
+        }
+
+        public void DeleteWorkingYear(string id)
+        {
+            var workingYears = context.WorkingYears.SingleOrDefault(_ => _.Id == id);
+            context.WorkingYears.Remove(workingYears);
+            context.SaveChanges();
+        }
+
         #region Annual Vacation
 
         public void SaveAnnualVacation(AnnualVacationModel model)
@@ -52,44 +77,6 @@ namespace Techschool.BLL.Services
         {
             var vacation = context.AnnualVacations.SingleOrDefault(_ => _.Id == id);
             context.AnnualVacations.Remove(vacation);
-            context.SaveChanges();
-        }
-
-        public IEnumerable<AnnualVacationFormModel> GetAnnualVacationFormsByPersonalCardId(string id)
-        {
-            var forms = context.AnnualVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == id)
-                .Include(_ => _.AnnualVacations)
-                .Select(_ => modelMapper.MapTo<AnnualVacationForm, AnnualVacationFormModel>(_))
-                .ToList();
-            return forms;
-        }
-
-        public AnnualVacationFormModel GetAnnualVacationForm(string personalCardId, string formId)
-        {
-            var form = context.AnnualVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
-                .Include(_ => _.AnnualVacations)
-                .Select(_ => modelMapper.MapTo<AnnualVacationForm, AnnualVacationFormModel>(_))
-                .SingleOrDefault();
-            return form;
-        }
-
-        public void SaveAnnualVacationForm(AnnualVacationFormModel model)
-        {
-            var form = context.AnnualVacationForms.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (form == null)
-            {
-                var newAnnualVacationForm = modelMapper.MapTo<AnnualVacationFormModel, AnnualVacationForm>(model);
-                context.AnnualVacationForms.Add(newAnnualVacationForm);
-            }
-            else
-            {
-                var newAnnualVacationForm = modelMapper.MapTo<AnnualVacationFormModel, AnnualVacationForm>(model);
-                context.AnnualVacationForms.Update(newAnnualVacationForm);
-            }
             context.SaveChanges();
         }
 
@@ -122,44 +109,6 @@ namespace Techschool.BLL.Services
             context.SaveChanges();
         }
 
-        public IEnumerable<WithoutPayrollVacationFormModel> GetWithoutPayrollVacationFormsByPersonalCardId(string id)
-        {
-            var forms = context.WithoutPayrollVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == id)
-                .Include(_ => _.WithoutPayrollVacations)
-                .Select(_ => modelMapper.MapTo<WithoutPayrollVacationForm, WithoutPayrollVacationFormModel>(_))
-                .ToList();
-            return forms;
-        }
-
-        public WithoutPayrollVacationFormModel GetWithoutPayrollVacationForm(string personalCardId, string formId)
-        {
-            var form = context.WithoutPayrollVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
-                .Include(_ => _.WithoutPayrollVacations)
-                .Select(_ => modelMapper.MapTo<WithoutPayrollVacationForm, WithoutPayrollVacationFormModel>(_))
-                .SingleOrDefault();
-            return form;
-        }
-
-        public void SaveWithoutPayrollVacationForm(WithoutPayrollVacationFormModel model)
-        {
-            var form = context.WithoutPayrollVacationForms.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (form == null)
-            {
-                var newWithoutPayrollVacationForm = modelMapper.MapTo<WithoutPayrollVacationFormModel, WithoutPayrollVacationForm>(model);
-                context.WithoutPayrollVacationForms.Add(newWithoutPayrollVacationForm);
-            }
-            else
-            {
-                var newWithoutPayrollVacationForm = modelMapper.MapTo<WithoutPayrollVacationFormModel, WithoutPayrollVacationForm>(model);
-                context.WithoutPayrollVacationForms.Update(newWithoutPayrollVacationForm);
-            }
-            context.SaveChanges();
-        }
-
         #endregion
 
         #region Additional Study Vacation
@@ -186,44 +135,6 @@ namespace Techschool.BLL.Services
         {
             var vacation = context.AdditionalStudyVacations.SingleOrDefault(_ => _.Id == id);
             context.AdditionalStudyVacations.Remove(vacation);
-            context.SaveChanges();
-        }
-
-        public IEnumerable<AdditionalStudyVacationFormModel> GetAdditionalStudyVacationFormsByPersonalCardId(string id)
-        {
-            var forms = context.AdditionalStudyVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == id)
-                .Include(_ => _.AdditionalStudyVacations)
-                .Select(_ => modelMapper.MapTo<AdditionalStudyVacationForm, AdditionalStudyVacationFormModel>(_))
-                .ToList();
-            return forms;
-        }
-
-        public AdditionalStudyVacationFormModel GetAdditionalStudyVacationForm(string personalCardId, string formId)
-        {
-            var form = context.AdditionalStudyVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
-                .Include(_ => _.AdditionalStudyVacations)
-                .Select(_ => modelMapper.MapTo<AdditionalStudyVacationForm, AdditionalStudyVacationFormModel>(_))
-                .SingleOrDefault();
-            return form;
-        }
-
-        public void SaveAdditionalStudyVacationForm(AdditionalStudyVacationFormModel model)
-        {
-            var form = context.AdditionalStudyVacationForms.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (form == null)
-            {
-                var newAdditionalStudyVacationForm = modelMapper.MapTo<AdditionalStudyVacationFormModel, AdditionalStudyVacationForm>(model);
-                context.AdditionalStudyVacationForms.Add(newAdditionalStudyVacationForm);
-            }
-            else
-            {
-                var newAdditionalStudyVacationForm = modelMapper.MapTo<AdditionalStudyVacationFormModel, AdditionalStudyVacationForm>(model);
-                context.AdditionalStudyVacationForms.Update(newAdditionalStudyVacationForm);
-            }
             context.SaveChanges();
         }
 
@@ -256,44 +167,6 @@ namespace Techschool.BLL.Services
             context.SaveChanges();
         }
 
-        public IEnumerable<SocialWithChildrenVacationFormModel> GetSocialWithChildrenVacationFormsByPersonalCardId(string id)
-        {
-            var forms = context.SocialWithChildrenVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == id)
-                .Include(_ => _.SocialWithChildrenVacations)
-                .Select(_ => modelMapper.MapTo<SocialWithChildrenVacationForm, SocialWithChildrenVacationFormModel>(_))
-                .ToList();
-            return forms;
-        }
-
-        public SocialWithChildrenVacationFormModel GetSocialWithChildrenVacationForm(string personalCardId, string formId)
-        {
-            var form = context.SocialWithChildrenVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
-                .Include(_ => _.SocialWithChildrenVacations)
-                .Select(_ => modelMapper.MapTo<SocialWithChildrenVacationForm, SocialWithChildrenVacationFormModel>(_))
-                .SingleOrDefault();
-            return form;
-        }
-
-        public void SaveSocialWithChildrenVacationForm(SocialWithChildrenVacationFormModel model)
-        {
-            var form = context.SocialWithChildrenVacationForms.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (form == null)
-            {
-                var newSocialWithChildrenVacationForm = modelMapper.MapTo<SocialWithChildrenVacationFormModel, SocialWithChildrenVacationForm>(model);
-                context.SocialWithChildrenVacationForms.Add(newSocialWithChildrenVacationForm);
-            }
-            else
-            {
-                var newSocialWithChildrenVacationForm = modelMapper.MapTo<SocialWithChildrenVacationFormModel, SocialWithChildrenVacationForm>(model);
-                context.SocialWithChildrenVacationForms.Update(newSocialWithChildrenVacationForm);
-            }
-            context.SaveChanges();
-        }
-
         #endregion
 
         #region Social With Pregnancy Or Look Vacation
@@ -322,45 +195,7 @@ namespace Techschool.BLL.Services
             context.SocialWithPregnancyOrLookVacations.Remove(vacation);
             context.SaveChanges();
         }
-
-        public IEnumerable<SocialWithPregnancyOrLookVacationFormModel> GetSocialWithPregnancyOrLookVacationFormsByPersonalCardId(string id)
-        {
-            var forms = context.SocialWithPregnancyOrLookVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == id)
-                .Include(_ => _.SocialWithPregnancyOrLookVacations)
-                .Select(_ => modelMapper.MapTo<SocialWithPregnancyOrLookVacationForm, SocialWithPregnancyOrLookVacationFormModel>(_))
-                .ToList();
-            return forms;
-        }
-
-        public SocialWithPregnancyOrLookVacationFormModel GetSocialWithPregnancyOrLookVacationForm(string personalCardId, string formId)
-        {
-            var form = context.SocialWithPregnancyOrLookVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
-                .Include(_ => _.SocialWithPregnancyOrLookVacations)
-                .Select(_ => modelMapper.MapTo<SocialWithPregnancyOrLookVacationForm, SocialWithPregnancyOrLookVacationFormModel>(_))
-                .SingleOrDefault();
-            return form;
-        }
-
-        public void SaveSocialWithPregnancyOrLookVacationForm(SocialWithPregnancyOrLookVacationFormModel model)
-        {
-            var form = context.SocialWithPregnancyOrLookVacationForms.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (form == null)
-            {
-                var newSocialWithPregnancyOrLookVacationForm = modelMapper.MapTo<SocialWithPregnancyOrLookVacationFormModel, SocialWithPregnancyOrLookVacationForm>(model);
-                context.SocialWithPregnancyOrLookVacationForms.Add(newSocialWithPregnancyOrLookVacationForm);
-            }
-            else
-            {
-                var newSocialWithPregnancyOrLookVacationForm = modelMapper.MapTo<SocialWithPregnancyOrLookVacationFormModel, SocialWithPregnancyOrLookVacationForm>(model);
-                context.SocialWithPregnancyOrLookVacationForms.Update(newSocialWithPregnancyOrLookVacationForm);
-            }
-            context.SaveChanges();
-        }
-
+      
         #endregion
 
         #region Other Vacation
@@ -387,44 +222,6 @@ namespace Techschool.BLL.Services
         {
             var vacation = context.OtherVacations.SingleOrDefault(_ => _.Id == id);
             context.OtherVacations.Remove(vacation);
-            context.SaveChanges();
-        }
-
-        public IEnumerable<OtherVacationFormModel> GetOtherVacationFormsByPersonalCardId(string id)
-        {
-            var forms = context.OtherVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == id)
-                .Include(_ => _.OtherVacations)
-                .Select(_ => modelMapper.MapTo<OtherVacationForm, OtherVacationFormModel>(_))
-                .ToList();
-            return forms;
-        }
-
-        public OtherVacationFormModel GetOtherVacationForm(string personalCardId, string formId)
-        {
-            var form = context.OtherVacationForms.AsNoTracking()
-                .Where(_ => _.PersonalCardId == personalCardId && _.Id == formId)
-                .Include(_ => _.OtherVacations)
-                .Select(_ => modelMapper.MapTo<OtherVacationForm, OtherVacationFormModel>(_))
-                .SingleOrDefault();
-            return form;
-        }
-
-        public void SaveOtherVacationForm(OtherVacationFormModel model)
-        {
-            var form = context.OtherVacationForms.AsNoTracking()
-                .SingleOrDefault(_ => _.Id == model.Id);
-
-            if (form == null)
-            {
-                var newOtherVacationForm = modelMapper.MapTo<OtherVacationFormModel, OtherVacationForm>(model);
-                context.OtherVacationForms.Add(newOtherVacationForm);
-            }
-            else
-            {
-                var newOtherVacationForm = modelMapper.MapTo<OtherVacationFormModel, OtherVacationForm>(model);
-                context.OtherVacationForms.Update(newOtherVacationForm);
-            }
             context.SaveChanges();
         }
 

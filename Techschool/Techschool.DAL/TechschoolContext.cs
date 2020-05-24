@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using Techschool.DAL.Entities;
 using Techschool.DAL.Entities.Vacations;
 
@@ -16,17 +17,12 @@ namespace Techschool.DAL
         public DbSet<PersonalCardSubject> PersonalCardsSubjects { get; set; }
         public DbSet<Diploma> Diplomas { get; set; }
         public DbSet<AnnualVacation> AnnualVacations { get; set; }
-        public DbSet<AnnualVacationForm> AnnualVacationForms { get; set; }
         public DbSet<WithoutPayrollVacation> WithoutPayrollVacations { get; set; }
-        public DbSet<WithoutPayrollVacationForm> WithoutPayrollVacationForms { get; set; }
         public DbSet<AdditionalStudyVacation> AdditionalStudyVacations { get; set; }
-        public DbSet<AdditionalStudyVacationForm> AdditionalStudyVacationForms { get; set; }
         public DbSet<SocialWithChildrenVacation> SocialWithChildrenVacations { get; set; }
-        public DbSet<SocialWithChildrenVacationForm> SocialWithChildrenVacationForms { get; set; }
         public DbSet<SocialWithPregnancyOrLookVacation> SocialWithPregnancyOrLookVacations { get; set; }
-        public DbSet<SocialWithPregnancyOrLookVacationForm> SocialWithPregnancyOrLookVacationForms { get; set; }
         public DbSet<OtherVacation> OtherVacations { get; set; }
-        public DbSet<OtherVacationForm> OtherVacationForms { get; set; }
+        public DbSet<WorkingYear> WorkingYears { get; set; }
 
         public TechschoolContext(DbContextOptions<TechschoolContext> options) : base(options)
         {
@@ -46,35 +42,63 @@ namespace Techschool.DAL
             modelBuilder.Entity<PersonalCardSubject>()
                 .HasKey(_ => new { _.PersonalCardId, _.SubjectId });
 
-            modelBuilder.Entity<AdditionalStudyVacationForm>()
+            modelBuilder.Entity<WorkingYear>()
                 .HasOne(_ => _.PersonalCard)
-                .WithMany(_ => _.AdditionalStudyVacationForms)
+                .WithMany(_ => _.WorkingYears)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<AnnualVacationForm>()
-               .HasOne(_ => _.PersonalCard)
-               .WithMany(_ => _.AnnualVacationForms)
+            modelBuilder.Entity<AdditionalStudyVacation>()
+                .HasOne(_ => _.WorkingYear)
+                .WithMany(_ => _.AdditionalStudyVacations)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<AnnualVacation>()
+               .HasOne(_ => _.WorkingYear)
+               .WithMany(_ => _.AnnualVacations)
                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<OtherVacationForm>()
-               .HasOne(_ => _.PersonalCard)
-               .WithMany(_ => _.OtherVacationForms)
+            modelBuilder.Entity<OtherVacation>()
+               .HasOne(_ => _.WorkingYear)
+               .WithMany(_ => _.OtherVacations)
                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SocialWithChildrenVacationForm>()
-               .HasOne(_ => _.PersonalCard)
-               .WithMany(_ => _.SocialWithChildrenVacationForms)
+            modelBuilder.Entity<SocialWithChildrenVacation>()
+               .HasOne(_ => _.WorkingYear)
+               .WithMany(_ => _.SocialWithChildrenVacations)
                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SocialWithPregnancyOrLookVacationForm>()
-               .HasOne(_ => _.PersonalCard)
-               .WithMany(_ => _.SocialWithPregnancyOrLookVacationForms)
+            modelBuilder.Entity<SocialWithPregnancyOrLookVacation>()
+               .HasOne(_ => _.WorkingYear)
+               .WithMany(_ => _.SocialWithPregnancyOrLookVacations)
                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<WithoutPayrollVacationForm>()
-               .HasOne(_ => _.PersonalCard)
-               .WithMany(_ => _.WithoutPayrollVacationForms)
+            modelBuilder.Entity<WithoutPayrollVacation>()
+               .HasOne(_ => _.WorkingYear)
+               .WithMany(_ => _.WithoutPayrollVacations)
                .OnDelete(DeleteBehavior.Cascade);
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        modelBuilder.Entity(entityType.ClrType)
+                         .Property<DateTime>(property.Name)
+                         .HasConversion(
+                          v => v.ToUniversalTime(),
+                          v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+                    }
+                    else if (property.ClrType == typeof(DateTime?))
+                    {
+                        modelBuilder.Entity(entityType.ClrType)
+                         .Property<DateTime?>(property.Name)
+                         .HasConversion(
+                          v => v.HasValue ? v.Value.ToUniversalTime() : v,
+                          v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
+                    }
+                }
+            }
         }
     }
 }

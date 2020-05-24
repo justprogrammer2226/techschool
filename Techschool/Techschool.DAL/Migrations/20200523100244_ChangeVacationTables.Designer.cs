@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Techschool.DAL;
 
 namespace Techschool.DAL.Migrations
 {
     [DbContext(typeof(TechschoolContext))]
-    partial class TechschoolContextModelSnapshot : ModelSnapshot
+    [Migration("20200523100244_ChangeVacationTables")]
+    partial class ChangeVacationTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -461,6 +463,9 @@ namespace Techschool.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AdditionalStudyVacationWorkingYearId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("EndOfVacationDate")
                         .HasColumnType("datetime2");
 
@@ -473,6 +478,22 @@ namespace Techschool.DAL.Migrations
                     b.Property<DateTime>("StartOfVacationDate")
                         .HasColumnType("datetime2");
 
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdditionalStudyVacationWorkingYearId");
+
+                    b.ToTable("AdditionalStudyVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacationWorkingYear", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdditionalInfo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("WorkingYearId")
                         .HasColumnType("nvarchar(450)");
 
@@ -480,7 +501,7 @@ namespace Techschool.DAL.Migrations
 
                     b.HasIndex("WorkingYearId");
 
-                    b.ToTable("AdditionalStudyVacations");
+                    b.ToTable("AdditionalStudyVacationWorkingYear");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AnnualVacation", b =>
@@ -489,6 +510,9 @@ namespace Techschool.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("AnnualVacationWorkingYearId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("EndOfVacationDate")
                         .HasColumnType("datetime2");
 
@@ -501,6 +525,22 @@ namespace Techschool.DAL.Migrations
                     b.Property<DateTime>("StartOfVacationDate")
                         .HasColumnType("datetime2");
 
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnnualVacationWorkingYearId");
+
+                    b.ToTable("AnnualVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AnnualVacationWorkingYear", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Days")
+                        .HasColumnType("int");
+
                     b.Property<string>("WorkingYearId")
                         .HasColumnType("nvarchar(450)");
 
@@ -508,7 +548,7 @@ namespace Techschool.DAL.Migrations
 
                     b.HasIndex("WorkingYearId");
 
-                    b.ToTable("AnnualVacations");
+                    b.ToTable("AnnualVacationWorkingYears");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacation", b =>
@@ -529,11 +569,27 @@ namespace Techschool.DAL.Migrations
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OtherVacationWorkingYearId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("StartOfVacationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TypeOfVacation")
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OtherVacationWorkingYearId");
+
+                    b.ToTable("OtherVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacationWorkingYear", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("WorkingYearId")
                         .HasColumnType("nvarchar(450)");
@@ -542,7 +598,7 @@ namespace Techschool.DAL.Migrations
 
                     b.HasIndex("WorkingYearId");
 
-                    b.ToTable("OtherVacations");
+                    b.ToTable("OtherVacationWorkingYears");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacation", b =>
@@ -560,8 +616,30 @@ namespace Techschool.DAL.Migrations
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SocialWithChildrenVacationWorkingYearId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("StartOfVacationDate")
                         .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SocialWithChildrenVacationWorkingYearId");
+
+                    b.ToTable("SocialWithChildrenVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacationWorkingYear", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ChildAge")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Days")
+                        .HasColumnType("int");
 
                     b.Property<string>("WorkingYearId")
                         .HasColumnType("nvarchar(450)");
@@ -570,7 +648,7 @@ namespace Techschool.DAL.Migrations
 
                     b.HasIndex("WorkingYearId");
 
-                    b.ToTable("SocialWithChildrenVacations");
+                    b.ToTable("SocialWithChildrenVacationWorkingYears");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacation", b =>
@@ -588,11 +666,27 @@ namespace Techschool.DAL.Migrations
                     b.Property<string>("OrderNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SocialWithPregnancyOrLookVacationWorkingYearId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("StartOfVacationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TypeOfVacation")
                         .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SocialWithPregnancyOrLookVacationWorkingYearId");
+
+                    b.ToTable("SocialWithPregnancyOrLookVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacationWorkingYear", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("WorkingYearId")
                         .HasColumnType("nvarchar(450)");
@@ -601,7 +695,7 @@ namespace Techschool.DAL.Migrations
 
                     b.HasIndex("WorkingYearId");
 
-                    b.ToTable("SocialWithPregnancyOrLookVacations");
+                    b.ToTable("SocialWithPregnancyOrLookVacationWorkingYears");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacation", b =>
@@ -625,6 +719,22 @@ namespace Techschool.DAL.Migrations
                     b.Property<DateTime>("StartOfVacationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("WithoutPayrollVacationWorkingYearId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WithoutPayrollVacationWorkingYearId");
+
+                    b.ToTable("WithoutPayrollVacations");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacationWorkingYear", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("WorkingYearId")
                         .HasColumnType("nvarchar(450)");
 
@@ -632,7 +742,7 @@ namespace Techschool.DAL.Migrations
 
                     b.HasIndex("WorkingYearId");
 
-                    b.ToTable("WithoutPayrollVacations");
+                    b.ToTable("WithoutPayrollVacationWorkingYears");
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WorkingYear", b =>
@@ -641,23 +751,11 @@ namespace Techschool.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AdditionalStudyVacationAdditionalInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("AnnualVacationDays")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("EndOfWorkingYear")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PersonalCardId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("SocialWithChildrenVacationChildAge")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SocialWithChildrenVacationDays")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartOfWorkingYear")
                         .HasColumnType("datetime2");
@@ -777,48 +875,90 @@ namespace Techschool.DAL.Migrations
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacation", b =>
                 {
-                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                    b.HasOne("Techschool.DAL.Entities.Vacations.AdditionalStudyVacationWorkingYear", "AdditionalStudyVacationWorkingYear")
                         .WithMany("AdditionalStudyVacations")
+                        .HasForeignKey("AdditionalStudyVacationWorkingYearId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AdditionalStudyVacationWorkingYear", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                        .WithMany("AdditionalStudyVacationWorkingYears")
                         .HasForeignKey("WorkingYearId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AnnualVacation", b =>
                 {
-                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                    b.HasOne("Techschool.DAL.Entities.Vacations.AnnualVacationWorkingYear", "AnnualVacationWorkingYear")
                         .WithMany("AnnualVacations")
+                        .HasForeignKey("AnnualVacationWorkingYearId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.AnnualVacationWorkingYear", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                        .WithMany("AnnualVacationWorkingYears")
                         .HasForeignKey("WorkingYearId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacation", b =>
                 {
-                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                    b.HasOne("Techschool.DAL.Entities.Vacations.OtherVacationWorkingYear", "OtherVacationWorkingYear")
                         .WithMany("OtherVacations")
+                        .HasForeignKey("OtherVacationWorkingYearId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.OtherVacationWorkingYear", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                        .WithMany("OtherVacationWorkingYears")
                         .HasForeignKey("WorkingYearId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacation", b =>
                 {
-                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                    b.HasOne("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacationWorkingYear", "SocialWithChildrenVacationWorkingYear")
                         .WithMany("SocialWithChildrenVacations")
+                        .HasForeignKey("SocialWithChildrenVacationWorkingYearId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithChildrenVacationWorkingYear", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                        .WithMany("SocialWithChildrenVacationWorkingYears")
                         .HasForeignKey("WorkingYearId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacation", b =>
                 {
-                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                    b.HasOne("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacationWorkingYear", "SocialWithPregnancyOrLookVacationWorkingYear")
                         .WithMany("SocialWithPregnancyOrLookVacations")
+                        .HasForeignKey("SocialWithPregnancyOrLookVacationWorkingYearId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.SocialWithPregnancyOrLookVacationWorkingYear", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                        .WithMany("SocialWithPregnancyOrLookVacationWorkingYears")
                         .HasForeignKey("WorkingYearId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacation", b =>
                 {
-                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WithoutPayrollVacationWorkingYear", "WithoutPayrollVacationWorkingYear")
                         .WithMany("WithoutPayrollVacations")
+                        .HasForeignKey("WithoutPayrollVacationWorkingYearId");
+                });
+
+            modelBuilder.Entity("Techschool.DAL.Entities.Vacations.WithoutPayrollVacationWorkingYear", b =>
+                {
+                    b.HasOne("Techschool.DAL.Entities.Vacations.WorkingYear", "WorkingYear")
+                        .WithMany("WithoutPayrollVacationWorkingYears")
                         .HasForeignKey("WorkingYearId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

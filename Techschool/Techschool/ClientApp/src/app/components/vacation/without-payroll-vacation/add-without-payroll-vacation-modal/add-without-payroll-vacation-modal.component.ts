@@ -7,8 +7,10 @@ import { ModalService } from '@services/modal.service';
 import { CustomValidator } from 'app/validators/custom.validator';
 import { VacationService } from '../../../../services/vacation.service';
 import { WithoutPayrollVacationModel } from './../../../../models/vacations/without-payroll-vacation.model';
+import { WorkingYearModel } from '@models/vacations/working-year.model';
 
 const vacationDateBefore = 'vacationDateBefore';
+const orderDateAfter = 'orderDateAfter';
 
 @Component({
   templateUrl: './add-without-payroll-vacation-modal.component.html',
@@ -19,7 +21,8 @@ const vacationDateBefore = 'vacationDateBefore';
 export class AddWithoutPayrollVacationModalComponent {
 
   public formGroup: FormGroup;
-  private formId: string;
+  
+  private workingYear: WorkingYearModel;
   private existingVacations: WithoutPayrollVacationModel[] = [];
 
   constructor(
@@ -40,9 +43,12 @@ export class AddWithoutPayrollVacationModalComponent {
       'notes': ['', Validators.required]
     },
     {
-      validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
+      validator: [
+        CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore),
+        CustomValidator.isAfter('startOfVacationDate', 'orderDate', orderDateAfter)
+      ]
     });
-    this.formId = data.formId;
+    this.workingYear = data.workingYear;
     this.existingVacations = data.existingVacations;
   }
 
@@ -71,6 +77,8 @@ export class AddWithoutPayrollVacationModalComponent {
       case 'orderDate':
         if (this.formGroup.get('orderDate').hasError('required')) {
           return 'Дата наказу обов\'язкова';
+        } else if (this.formGroup.get('orderDate').hasError(orderDateAfter)) {
+          return 'Дата наказу повинна бути до дати початку';
         } else {
           return 'Невідома помилка';
         }
@@ -92,10 +100,14 @@ export class AddWithoutPayrollVacationModalComponent {
     vacation.orderNumber = formValue.orderNumber;
     vacation.orderDate = formValue.orderDate;
     vacation.notes = formValue.notes;
-    vacation.withoutPayrollVacationFormId = this.formId;
+    vacation.workingYearId = this.workingYear.id;
     const isExist = this.existingVacations.find(_ => _.startOfVacationDate < vacation.endOfVacationDate && vacation.startOfVacationDate < _.endOfVacationDate);
     if (isExist) {
       this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
+    if (!(this.workingYear.startOfWorkingYear <= vacation.startOfVacationDate && vacation.endOfVacationDate <= this.workingYear.endOfWorkingYear)) {
+      this.modalService.showError('Помилка', 'Діапазон дат виходить за діапазон робочого року');
       return;
     }
     this.vacationService.saveWithoutPayrollVacation(vacation).subscribe(_ => {

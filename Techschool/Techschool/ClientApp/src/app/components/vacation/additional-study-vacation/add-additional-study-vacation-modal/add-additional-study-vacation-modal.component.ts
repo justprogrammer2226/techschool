@@ -1,3 +1,4 @@
+import { WorkingYearModel } from './../../../../models/vacations/working-year.model';
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -9,6 +10,7 @@ import { VacationService } from '../../../../services/vacation.service';
 import { AdditionalStudyVacationModel } from './../../../../models/vacations/additional-study-vacation.model';
 
 const vacationDateBefore = 'vacationDateBefore';
+const orderDateAfter = 'orderDateAfter';
 
 @Component({
   templateUrl: './add-additional-study-vacation-modal.component.html',
@@ -19,7 +21,8 @@ const vacationDateBefore = 'vacationDateBefore';
 export class AddAdditionalStudyVacationModalComponent {
 
   public formGroup: FormGroup;
-  private formId: string;
+  
+  private workingYear: WorkingYearModel;
   private existingVacations: AdditionalStudyVacationModel[] = [];
 
   constructor(
@@ -39,9 +42,12 @@ export class AddAdditionalStudyVacationModalComponent {
       'orderDate': ['', Validators.required]
     },
     {
-      validator: CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore)
+      validator: [
+        CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore),
+        CustomValidator.isAfter('startOfVacationDate', 'orderDate', orderDateAfter)
+      ]
     });
-    this.formId = data.formId;
+    this.workingYear = data.workingYear;
     this.existingVacations = data.existingVacations;
   }
 
@@ -70,6 +76,8 @@ export class AddAdditionalStudyVacationModalComponent {
       case 'orderDate':
         if (this.formGroup.get('orderDate').hasError('required')) {
           return 'Дата наказу обов\'язкова';
+        } else if (this.formGroup.get('orderDate').hasError(orderDateAfter)) {
+          return 'Дата наказу повинна бути до дати початку';
         } else {
           return 'Невідома помилка';
         }
@@ -84,10 +92,14 @@ export class AddAdditionalStudyVacationModalComponent {
     vacation.endOfVacationDate = formValue.endOfVacationDate;
     vacation.orderNumber = formValue.orderNumber;
     vacation.orderDate = formValue.orderDate;
-    vacation.additionalStudyVacationFormId = this.formId;
+    vacation.workingYearId = this.workingYear.id;
     const isExist = this.existingVacations.find(_ => _.startOfVacationDate < vacation.endOfVacationDate && vacation.startOfVacationDate < _.endOfVacationDate);
     if (isExist) {
       this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
+    if (!(this.workingYear.startOfWorkingYear <= vacation.startOfVacationDate && vacation.endOfVacationDate <= this.workingYear.endOfWorkingYear)) {
+      this.modalService.showError('Помилка', 'Діапазон дат виходить за діапазон робочого року');
       return;
     }
     this.vacationService.saveAdditionalStudyVacation(vacation).subscribe(_ => {

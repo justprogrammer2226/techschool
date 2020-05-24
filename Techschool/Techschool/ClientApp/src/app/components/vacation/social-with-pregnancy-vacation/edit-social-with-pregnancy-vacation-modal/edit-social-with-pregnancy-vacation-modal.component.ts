@@ -7,6 +7,11 @@ import { DisciplineService } from '@services/discipline.service';
 import { ModalService } from '@services/modal.service';
 import { NotificationModalComponent } from 'app/components/common/modals/notification-modal/notification-modal.component';
 import { VacationService } from '../../../../services/vacation.service';
+import { CustomValidator } from 'app/validators/custom.validator';
+import { WorkingYearModel } from '@models/vacations/working-year.model';
+
+const vacationDateBefore = 'vacationDateBefore';
+const orderDateAfter = 'orderDateAfter';
 
 @Component({
   templateUrl: './edit-social-with-pregnancy-vacation-modal.component.html',
@@ -18,6 +23,7 @@ export class EditSocialWithPregnancyOrLookVacationModalComponent {
 
   public formGroup: FormGroup;
   public vacation: SocialWithPregnancyOrLookVacationModel = new SocialWithPregnancyOrLookVacationModel();
+  private workingYear: WorkingYearModel;
   private existingVacations: SocialWithPregnancyOrLookVacationModel[] = [];
 
   constructor(
@@ -36,12 +42,19 @@ export class EditSocialWithPregnancyOrLookVacationModalComponent {
       'endOfVacationDate': ['', Validators.required],
       'orderNumber': ['', Validators.required],
       'orderDate': ['', Validators.required],
+    },
+    {
+      validator: [
+        CustomValidator.isBefore('startOfVacationDate', 'endOfVacationDate', vacationDateBefore),
+        CustomValidator.isAfter('startOfVacationDate', 'orderDate', orderDateAfter)
+      ]
     });
     if (data.vacation) {
       this.vacation = data.vacation;
       this.setFormGroupByVacation(this.vacation);
     }
     this.existingVacations = data.existingVacations;
+    this.workingYear = data.workingYear;
   }
 
   public getError(controlElementName): string {
@@ -73,6 +86,8 @@ export class EditSocialWithPregnancyOrLookVacationModalComponent {
       case 'orderDate':
         if (this.formGroup.get('orderDate').hasError('required')) {
           return 'Дата наказу обов\'язкова';
+        } else if (this.formGroup.get('orderDate').hasError(orderDateAfter)) {
+          return 'Дата наказу повинна бути до дати початку';
         } else {
           return 'Невідома помилка';
         }
@@ -90,6 +105,10 @@ export class EditSocialWithPregnancyOrLookVacationModalComponent {
     const isExist = this.existingVacations.find(_ => _.startOfVacationDate < this.vacation.endOfVacationDate && this.vacation.startOfVacationDate < _.endOfVacationDate && _.id != this.vacation.id);
     if (isExist) {
       this.modalService.showError('Помилка', 'Діапазон дат вказаний невірно');
+      return;
+    }
+    if (!(this.workingYear.startOfWorkingYear <= this.vacation.startOfVacationDate && this.vacation.endOfVacationDate <= this.workingYear.endOfWorkingYear)) {
+      this.modalService.showError('Помилка', 'Діапазон дат виходить за діапазон робочого року');
       return;
     }
     this.vacationService.saveSocialWithPregnancyOrLookVacation(this.vacation).subscribe(response => {

@@ -1,13 +1,11 @@
-import { DiplomaModel } from './../models/diploma.model';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { PersonalCardModel } from '@models/personal-card.model';
-import { map } from 'rxjs/operators';
-import { AnnualVacationModel } from '@models/vacations/annual-vacation.model';
-import { AnnualVacationFormModel } from '@models/vacations/annual-vacation-form.model';
-import { AnnualVacationFormComponent } from 'app/components/vacation/annual-vacation/annual-vacation-form/annual-vacation-form.component';
 import { FilterPersonalCards } from '@models/filters/filter-personal-card.model';
+import { PersonalCardModel } from '@models/personal-card.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DiplomaModel } from './../models/diploma.model';
+import { WorkingYearModel } from './../models/vacations/working-year.model';
 
 @Injectable({
     providedIn: 'root',
@@ -27,12 +25,20 @@ export class PersonalCardService {
   public getById(id: string): Observable<PersonalCardModel> {
     return this.http.get<PersonalCardModel>(this.baseUrl + 'api/personal-cards/' + id).pipe(
       map(personalCard => {
+        if (personalCard.birthday) personalCard.birthday = new Date(personalCard.birthday);
+        if (personalCard.fireDate) personalCard.fireDate = new Date(personalCard.fireDate);
+        if (personalCard.hireDate) personalCard.hireDate = new Date(personalCard.hireDate);
+        if (personalCard.teachingWorkExperienceOnDate) personalCard.teachingWorkExperienceOnDate = new Date(personalCard.teachingWorkExperienceOnDate);
+        if (personalCard.totalWorkExperienceOnDate) personalCard.totalWorkExperienceOnDate = new Date(personalCard.totalWorkExperienceOnDate);
         if (personalCard.photo) personalCard.photo = "data:image/jpg;base64," + personalCard.photo;
         personalCard.diplomas = personalCard.diplomas.map(_ => {
           const mappedDiploma = Object.assign(new DiplomaModel(), _);
           mappedDiploma.receiptDate = new Date(_.receiptDate);
           mappedDiploma.graduationDate = new Date(_.graduationDate);
           return mappedDiploma;
+        });
+        personalCard.workingYears = personalCard.workingYears.map(_ => {
+          return new WorkingYearModel(_);
         });
         return personalCard;
       })

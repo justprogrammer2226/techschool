@@ -1,0 +1,66 @@
+<form [formGroup]="formGroup" (ngSubmit)="saveWorkingYear(formGroup.value)" class="form">
+
+  <h1 mat-dialog-title class="title">Робочий рік</h1>
+
+
+  <div mat-dialog-content>
+    <p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker1" placeholder="Дата початку" formControlName="startOfWorkingYear">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls['startOfWorkingYear'].invalid">
+          {{getError('startOfWorkingYear')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker2" placeholder="Дата закінчення" formControlName="endOfWorkingYear">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+        <mat-error *ngIf="formGroup.controls['endOfWorkingYear'].invalid">
+          {{getError('endOfWorkingYear')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Навчальний заклад, курс" formControlName="additionalStudyVacationAdditionalInfo">
+        <mat-error *ngIf="formGroup.controls['additionalStudyVacationAdditionalInfo'].invalid">
+          {{getError('additionalStudyVacationAdditionalInfo')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Положено днів для щорічної відпустки" formControlName="annualVacationDays">
+        <mat-error *ngIf="formGroup.controls['annualVacationDays'].invalid">
+          {{getError('annualVacationDays')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Вік дитини" formControlName="socialWithChildrenVacationChildAge">
+        <mat-error *ngIf="formGroup.controls['socialWithChildrenVacationChildAge'].invalid">
+          {{getError('socialWithChildrenVacationChildAge')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="form-element">
+        <input type="text" matInput placeholder="Положено днів для соціальної відпустки" formControlName="socialWithChildrenVacationDays">
+        <mat-error *ngIf="formGroup.controls['socialWithChildrenVacationDays'].invalid">
+          {{getError('socialWithChildrenVacationDays')}}
+        </mat-error>
+      </mat-form-field>
+    </p>
+   
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" type="submit" class="button" [disabled]="formGroup.invalid">Зберегти</button>
+  </div>
+
+</form>

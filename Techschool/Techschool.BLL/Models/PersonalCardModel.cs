@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Techschool.BLL.Models.Vacations;
 using Techschool.DAL.Entities;
 
 namespace Techschool.BLL.Models
@@ -35,7 +36,9 @@ namespace Techschool.BLL.Models
         public CycleCommissionModel CycleCommission { get; set; }
         public DateTime? HireDate { get; set; }
         public DateTime? FireDate { get; set; }
-        public List<SubjectModel> Subjects { get; set; }
-        public List<DiplomaModel> Diplomas { get; set; }
+
+        public IEnumerable<SubjectModel> Subjects { get; set; }
+        public IEnumerable<DiplomaModel> Diplomas { get; set; }
+        public IEnumerable<WorkingYearModel> WorkingYears { get; set; }
     }
 }

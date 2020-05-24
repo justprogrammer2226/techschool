@@ -173,12 +173,12 @@
     
         <ng-container matColumnDef="receiptDate">
           <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата вступу </th>
-          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.receiptDate | date:'MM/dd/yyyy'}} </td>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.receiptDate | date:'dd/MM/yyyy'}} </td>
         </ng-container>
     
         <ng-container matColumnDef="graduationDate">
           <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата закінчення </th>
-          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate | date:'MM/dd/yyyy'}} </td>
+          <td mat-cell *matCellDef="let element" class="text-cell"> {{element.graduationDate | date:'dd/MM/yyyy'}} </td>
         </ng-container>
     
         <ng-container matColumnDef="specialization">
@@ -322,103 +322,321 @@
       </div>
 
     </mat-tab>
-    <mat-tab label="Відпустки">
+    <mat-tab label="Відпустки за робочі роки">
 
       <div class="marging-bottom-15"></div>
-      <div>
-        <mat-form-field class="form-element">
-          <mat-label>Тип відпустки</mat-label>
-          <mat-select [(ngModel)]="selectedVacationType" [ngModelOptions]="{standalone: true}">
-            <mat-option [value]="VacationType.Annual">Щорічна основна + передбачена договором</mat-option>
-            <mat-option [value]="VacationType.WithoutPayroll">Без збереження з/п</mat-option>
-            <mat-option [value]="VacationType.AdditionalStudy">Додаткова у зв'язку з навчанням</mat-option>
-            <mat-option [value]="VacationType.SocialWithChildren">Соціальна відпустка працівникам, що мають дітей</mat-option>
-            <mat-option [value]="VacationType.SocialWithPregnancyOrLook">Соціальна відпустка у зв'язку з вагітністю та пологами; Соціальна відпустка для догляду</mat-option>
-            <mat-option [value]="VacationType.Other">Інші види відпусток</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <ng-container [ngSwitch]="selectedVacationType">
 
-        <ng-container *ngSwitchCase="VacationType.AdditionalStudy">
-          <div>
-            <mat-icon (click)="openAddAdditionalStudyVacationFormModal()">add</mat-icon>
-            <span (click)="openAddAdditionalStudyVacationFormModal()">Додати відпустку для навчання</span>
-          </div>
-          <div class="block-wrapper vacation" *ngFor="let form of additionalStudyVacationForms" (click)="navigateToAdditionalStudyVacationForm(form)">
-            {{ form.title }}
-          </div>
+      <table mat-table [dataSource]="workingYearsDataSource" class="mat-elevation-z8" style="width: 100%">
+
+        <ng-container matColumnDef="add-edit">
+          <th mat-header-cell *matHeaderCellDef class="icon-cell green" (click)="openAddWorkingYearModal()"> <mat-icon>add</mat-icon> </th>
+          <td mat-cell *matCellDef="let element" class="icon-cell green" (click)="openEditWorkingYearModal(element)"> <mat-icon>edit</mat-icon> </td>
         </ng-container>
-
-        <ng-container *ngSwitchCase="VacationType.Annual">
-          <div>
-            <mat-icon (click)="openAddAnnualVacationFormModal()">add</mat-icon>
-            <span (click)="openAddAnnualVacationFormModal()">Додати щорічну відпустку</span>
-          </div>
-          <div>
-            Всього положено днів: {{getDaysOfAnnualVacationForm()}} 
-          </div>
-          <div class="block-wrapper vacation" *ngFor="let form of annualVacationForms" (click)="navigateToAnnualVacationForm(form)">
-            {{ form.title }}
-          </div>
-          <div>
-            Всього днів: {{getVacationDaysOfAnnualVacationForm()}} 
-          </div>
-          <div>
-            Залишок днів: {{getLeftDaysOfAnnualVacationForm()}} 
-          </div>
+    
+        <ng-container matColumnDef="startOfWorkingYear">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата початку робочого року </th>
+          <td mat-cell *matCellDef="let element" class="text-cell" [class.active]="isSelectedWorkingYear(element.id)" (click)="selectWorkingYear(element)"> <span style="cursor: pointer;">{{element.startOfWorkingYear | date:'dd/MM/yyyy'}}</span> </td>
         </ng-container>
-
-        <ng-container *ngSwitchCase="VacationType.WithoutPayroll">
-          <div>
-            <mat-icon (click)="openAddWithoutPayrollVacationFormModal()">add</mat-icon>
-            <span (click)="openAddWithoutPayrollVacationFormModal()">Додати відпустку без збереження з/п</span>
-          </div>
-          <div class="block-wrapper vacation" *ngFor="let form of withoutPayrollVacationForms" (click)="navigateToWithoutPayrollVacationForm(form)">
-            {{ form.title }}
-          </div>
+    
+        <ng-container matColumnDef="endOfWorkingYear">
+          <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата закінчення робочого року </th>
+          <td mat-cell *matCellDef="let element" class="text-cell" [class.active]="isSelectedWorkingYear(element.id)" (click)="selectWorkingYear(element)"> <span style="cursor: pointer;">{{element.endOfWorkingYear | date:'dd/MM/yyyy'}}</span> </td>
         </ng-container>
-
-        <ng-container *ngSwitchCase="VacationType.SocialWithChildren">
-          <div>
-            <mat-icon (click)="openAddSocialWithChildrenVacationFormModal()">add</mat-icon>
-            <span (click)="openAddSocialWithChildrenVacationFormModal()">Додати соціальну відпустку</span>
-          </div>
-          <div>
-            Всього положено днів: {{getDaysOfSocialWithChildrenVacationForm()}} 
-          </div>
-          <div class="block-wrapper vacation" *ngFor="let form of socialWithChildrenVacationForms" (click)="navigateToSocialWithChildrenVacationForm(form)">
-            {{ form.title }}
-          </div>
-          <div>
-            Всього днів: {{getVacationDaysOfSocialWithChildrenVacationForm()}} 
-          </div>
-          <div>
-            Залишок днів: {{getLeftDaysOfSocialWithChildrenVacationForm()}} 
-          </div>
+    
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+          <td mat-cell *matCellDef="let element" class="icon-cell" (click)="deleteWorkingYear(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
         </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="workingYearColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: workingYearColumns;"></tr>
+    
+      </table>
 
-        <ng-container *ngSwitchCase="VacationType.SocialWithPregnancyOrLook">
-          <div>
-            <mat-icon (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">add</mat-icon>
-            <span (click)="openAddSocialWithPregnancyOrLookVacationFormModal()">Додати соціальну відпустку</span>
-          </div>
-          <div class="block-wrapper vacation" *ngFor="let form of socialWithPregnancyOrLookVacationForms" (click)="navigateToSocialWithPregnancyOrLookVacationForm(form)">
-            {{ form.title }}
-          </div>
+
+      <ng-container *ngIf="selectedWorkingYear">
+        <div class="marging-bottom-15"></div>
+        <div>
+          <mat-form-field class="form-element">
+            <mat-label>Тип відпустки</mat-label>
+            <mat-select [(ngModel)]="selectedVacationType" [ngModelOptions]="{standalone: true}">
+              <mat-option [value]="VacationType.Annual">Щорічна основна + передбачена договором</mat-option>
+              <mat-option [value]="VacationType.WithoutPayroll">Без збереження з/п</mat-option>
+              <mat-option [value]="VacationType.AdditionalStudy">Додаткова у зв'язку з навчанням</mat-option>
+              <mat-option [value]="VacationType.SocialWithChildren">Соціальна відпустка працівникам, що мають дітей</mat-option>
+              <mat-option [value]="VacationType.SocialWithPregnancyOrLook">Соціальна відпустка у зв'язку з вагітністю та пологами; Соціальна відпустка для догляду</mat-option>
+              <mat-option [value]="VacationType.Other">Інші види відпусток</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <ng-container [ngSwitch]="selectedVacationType">
+  
+          <ng-container *ngSwitchCase="VacationType.AdditionalStudy">
+            <div>
+              Навчальний заклад, курс: {{selectedWorkingYear.additionalStudyVacationAdditionalInfo}} 
+            </div>
+            <div class="marging-bottom-15"></div>
+            <table mat-table [dataSource]="selectedWorkingYear.additionalStudyVacations" class="mat-elevation-z8" style="width: 100%">
+                    
+              <ng-container matColumnDef="add-edit">
+                <th mat-header-cell *matHeaderCellDef style="width: 48px" class="icon-cell" (click)="openAddAdditionalStudyVacationModal()"> <mat-icon>add</mat-icon> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="openEditAdditionalStudyVacationModal(element)"> <mat-icon>edit</mat-icon> </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="dateDiapason">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Період </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.startOfVacationDate | date:'dd/MM/yyyy'}} - {{element.endOfVacationDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="days">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Кількість днів </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{getDaysBetweenDates(element.startOfVacationDate, element.endOfVacationDate)}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> № наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderNumber}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderDate">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="deleteAdditionalStudyVacation(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="additionalStudyVacationsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: additionalStudyVacationsDisplayedColumns;"></tr>
+            </table>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="VacationType.Annual">
+            <div>
+              Всього положено днів: {{selectedWorkingYear.annualVacationDays + getAnnualLeftDaysFromPreviousYearsWorkingYears()}} <span class="text-details">(з них {{getAnnualLeftDaysFromPreviousYearsWorkingYears()}} з минулих робочих років)</span>
+            </div>
+            <div class="marging-bottom-15"></div>
+            <table mat-table [dataSource]="selectedWorkingYear.annualVacations" class="mat-elevation-z8" style="width: 100%">
+                    
+              <ng-container matColumnDef="add-edit">
+                <th mat-header-cell *matHeaderCellDef style="width: 48px" class="icon-cell" (click)="openAddAnnualVacationModal()"> <mat-icon>add</mat-icon> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="openEditAnnualVacationModal(element)"> <mat-icon>edit</mat-icon> </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="dateDiapason">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Період </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.startOfVacationDate | date:'dd/MM/yyyy'}} - {{element.endOfVacationDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="days">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Кількість днів </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{getDaysBetweenDates(element.startOfVacationDate, element.endOfVacationDate)}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> № наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderNumber}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderDate">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="deleteAnnualVacation(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="annualVacationsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: annualVacationsDisplayedColumns;"></tr>
+            </table>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="VacationType.WithoutPayroll">
+            <table mat-table [dataSource]="selectedWorkingYear.withoutPayrollVacations" class="mat-elevation-z8" style="width: 100%">
+          
+              <ng-container matColumnDef="add-edit">
+                <th mat-header-cell *matHeaderCellDef style="width: 48px" class="icon-cell" (click)="openAddWithoutPayrollVacationModal()"> <mat-icon>add</mat-icon> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="openEditWithoutPayrollVacationModal(element)"> <mat-icon>edit</mat-icon> </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="dateDiapason">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Період </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.startOfVacationDate | date:'dd/MM/yyyy'}} - {{element.endOfVacationDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="days">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Кількість днів </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{getDaysBetweenDates(element.startOfVacationDate, element.endOfVacationDate)}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> № наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderNumber}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderDate">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="notes">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Примітка </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.notes}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="deleteWithoutPayrollVacation(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="withoutPayrollVacationsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: withoutPayrollVacationsDisplayedColumns;"></tr>
+            </table>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="VacationType.SocialWithChildren">
+            <div>
+              Всього положено днів: {{selectedWorkingYear.socialWithChildrenVacationDays + getSocialWithChildrenLeftDaysFromPreviousYearsWorkingYears()}}  <span class="text-details">(з них {{getSocialWithChildrenLeftDaysFromPreviousYearsWorkingYears()}} з минулих робочих років)</span>
+            </div>
+            <div>
+              Вік дитини: {{selectedWorkingYear.socialWithChildrenVacationChildAge}} 
+            </div>
+            <div class="marging-bottom-15"></div>
+            <table mat-table [dataSource]="selectedWorkingYear.socialWithChildrenVacations" class="mat-elevation-z8" style="width: 100%">
+                    
+              <ng-container matColumnDef="add-edit">
+                <th mat-header-cell *matHeaderCellDef style="width: 48px" class="icon-cell" (click)="openAddSocialWithChildrenVacationModal()"> <mat-icon>add</mat-icon> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="openEditSocialWithChildrenVacationModal(element)"> <mat-icon>edit</mat-icon> </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="dateDiapason">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Період </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.startOfVacationDate | date:'dd/MM/yyyy'}} - {{element.endOfVacationDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="days">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Кількість днів </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{getDaysBetweenDates(element.startOfVacationDate, element.endOfVacationDate)}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> № наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderNumber}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderDate">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="deleteSocialWithChildrenVacation(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="socialWithChildrenVacationsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: socialWithChildrenVacationsDisplayedColumns;"></tr>
+            </table>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="VacationType.SocialWithPregnancyOrLook">
+            <table mat-table [dataSource]="selectedWorkingYear.socialWithPregnancyOrLookVacations" class="mat-elevation-z8" style="width: 100%">
+          
+              <ng-container matColumnDef="add-edit">
+                <th mat-header-cell *matHeaderCellDef style="width: 48px" class="icon-cell" (click)="openAddSocialWithPregnancyOrLookVacationModal()"> <mat-icon>add</mat-icon> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="openEditSocialWithPregnancyOrLookVacationModal(element)"> <mat-icon>edit</mat-icon> </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="typeOfVacation">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Тип відпустки </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.typeOfVacation}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="dateDiapason">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Період </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.startOfVacationDate | date:'dd/MM/yyyy'}} - {{element.endOfVacationDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="days">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Кількість днів </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{getDaysBetweenDates(element.startOfVacationDate, element.endOfVacationDate)}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> № наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderNumber}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderDate">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="deleteSocialWithPregnancyOrLookVacation(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="socialWithPregnancyOrLookVacationsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: socialWithPregnancyOrLookVacationsDisplayedColumns;"></tr>
+            </table>
+          </ng-container>
+  
+          <ng-container *ngSwitchCase="VacationType.Other">
+            <table mat-table [dataSource]="selectedWorkingYear.otherVacations" class="mat-elevation-z8" style="width: 100%">
+          
+              <ng-container matColumnDef="add-edit">
+                <th mat-header-cell *matHeaderCellDef style="width: 48px" class="icon-cell" (click)="openAddOtherVacationModal()"> <mat-icon>add</mat-icon> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="openEditOtherVacationModal(element)"> <mat-icon>edit</mat-icon> </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="typeOfVacation">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Тип відпустки </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.typeOfVacation}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="dateDiapason">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Період </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.startOfVacationDate | date:'dd/MM/yyyy'}} - {{element.endOfVacationDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="days">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Кількість днів </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{getDaysBetweenDates(element.startOfVacationDate, element.endOfVacationDate)}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderNumber">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> № наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderNumber}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="orderDate">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Дата наказу </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.orderDate | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="notes">
+                <th mat-header-cell *matHeaderCellDef class="text-cell"> Примітка </th>
+                <td mat-cell *matCellDef="let element" class="text-cell"> {{element.notes}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef class="icon-cell"> </th>
+                <td mat-cell *matCellDef="let element" class="icon-cell" (click)="deleteOtherVacation(element.id)"> <mat-icon style="color: #D33;">delete</mat-icon> </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="otherVacationsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: otherVacationsDisplayedColumns;"></tr>
+            </table>
+          </ng-container>
+  
         </ng-container>
-
-        <ng-container *ngSwitchCase="VacationType.Other">
-          <div>
-            <mat-icon (click)="openAddOtherVacationFormModal()">add</mat-icon>
-            <span (click)="openAddOtherVacationFormModal()">Додати відпустку іншого виду</span>
-          </div>
-          <div class="block-wrapper vacation" *ngFor="let form of otherVacationForms" (click)="navigateToOtherVacationForm(form)">
-            {{ form.title }}
-          </div>
-        </ng-container>
-
       </ng-container>
+   
 
     </mat-tab>
   </mat-tab-group>

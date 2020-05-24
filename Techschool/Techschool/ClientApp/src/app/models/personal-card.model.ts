@@ -1,6 +1,7 @@
 import { CycleCommissionModel } from "@models/cycle-commission.model";
 import { SubjectModel } from "@models/subject.model";
 import { DiplomaModel } from "./diploma.model";
+import { WorkingYearModel } from "./vacations/working-year.model";
 
 export enum Sex
 {
@@ -40,4 +41,5 @@ export class PersonalCardModel {
   hireDate: Date;
   subjects: SubjectModel[];
   diplomas: DiplomaModel[];
+  workingYears: WorkingYearModel[];
 }

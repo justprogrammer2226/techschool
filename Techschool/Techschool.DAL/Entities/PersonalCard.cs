@@ -49,13 +49,8 @@ namespace Techschool.DAL.Entities
         public DateTime? HireDate { get; set; }
         public DateTime? FireDate { get; set; }
 
-        public List<PersonalCardSubject> PersonalCardSubjects { get; set; }
-        public List<Diploma> Diplomas { get; set; }
-        public List<AdditionalStudyVacationForm> AdditionalStudyVacationForms { get; set; }
-        public List<AnnualVacationForm> AnnualVacationForms { get; set; }
-        public List<OtherVacationForm> OtherVacationForms { get; set; }
-        public List<SocialWithChildrenVacationForm> SocialWithChildrenVacationForms { get; set; }
-        public List<SocialWithPregnancyOrLookVacationForm> SocialWithPregnancyOrLookVacationForms { get; set; }
-        public List<WithoutPayrollVacationForm> WithoutPayrollVacationForms { get; set; }
+        public IEnumerable<PersonalCardSubject> PersonalCardSubjects { get; set; }
+        public IEnumerable<Diploma> Diplomas { get; set; }
+        public IEnumerable<WorkingYear> WorkingYears { get; set; }
     }
 }
